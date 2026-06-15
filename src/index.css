@@ -1,0 +1,232 @@
+/* stylelint-disable */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* PosifyPro Design System — Premium Enterprise SaaS */
+
+@layer base {
+  :root {
+    --radius: 0.375rem;
+
+    /* Light mode — #F8FAFC background, #0F172A text */
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Deep Slate primary (#0F172A) */
+    --primary: 222 47% 11%;
+    --primary-foreground: 210 40% 98%;
+
+    /* Light secondary surface (#F1F5F9) */
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Blue accent (#3B82F6) — low-saturation tint for surfaces */
+    --accent: 214 100% 97%;
+    --accent-foreground: 221 83% 53%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+
+    /* Semantic status */
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 221 83% 53%;
+    --info-foreground: 0 0% 100%;
+    --error: 0 72% 51%;
+    --error-foreground: 0 0% 100%;
+
+    /* Sidebar — Deep Slate (#0F172A / #1E293B) */
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 215 20% 70%;
+    --sidebar-primary: 221 83% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 40% 17%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 222 40% 16%;
+    --sidebar-ring: 221 83% 53%;
+
+    /* Charts — blue-anchored palette */
+    --chart-1: 221 83% 53%;
+    --chart-2: 142 71% 45%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 280 55% 55%;
+    --chart-5: 0 72% 51%;
+
+    /* Gradients */
+    --gradient-main: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #3B82F6 100%);
+    --gradient-premium: linear-gradient(135deg, #0F172A 0%, #1E40AF 50%, #60A5FA 100%);
+    --gradient-button: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
+    --gradient-card: linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(96,165,250,0.03) 100%);
+
+    /* Shadows */
+    --shadow-card: 0 1px 3px 0 rgba(15,23,42,0.06), 0 1px 2px -1px rgba(15,23,42,0.04);
+    --shadow-hover: 0 4px 16px 0 rgba(15,23,42,0.10);
+    --shadow-elevated: 0 8px 32px 0 rgba(15,23,42,0.12);
+    --shadow-modal: 0 20px 60px 0 rgba(15,23,42,0.18);
+
+    /* Education compat */
+    --education-blue: 221 83% 53%;
+    --education-green: 142 71% 45%;
+  }
+
+  .dark {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 96%;
+
+    --card: 222 47% 10%;
+    --card-foreground: 210 40% 96%;
+
+    --popover: 222 47% 12%;
+    --popover-foreground: 210 40% 96%;
+
+    /* Blue primary in dark mode */
+    --primary: 221 83% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 222 40% 16%;
+    --secondary-foreground: 210 40% 96%;
+
+    --muted: 222 40% 16%;
+    --muted-foreground: 215 20% 58%;
+
+    --accent: 221 83% 15%;
+    --accent-foreground: 221 83% 70%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 222 40% 18%;
+    --input: 222 40% 18%;
+    --ring: 221 83% 60%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 221 83% 60%;
+    --info-foreground: 0 0% 100%;
+    --error: 0 72% 51%;
+    --error-foreground: 0 0% 100%;
+
+    --sidebar-background: 222 47% 6%;
+    --sidebar-foreground: 215 20% 65%;
+    --sidebar-primary: 221 83% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 40% 13%;
+    --sidebar-accent-foreground: 210 40% 96%;
+    --sidebar-border: 222 40% 11%;
+    --sidebar-ring: 221 83% 60%;
+
+    --chart-1: 221 83% 60%;
+    --chart-2: 142 71% 50%;
+    --chart-3: 38 92% 55%;
+    --chart-4: 280 55% 62%;
+    --chart-5: 0 72% 58%;
+
+    --shadow-card: 0 1px 3px 0 rgba(0,0,0,0.25);
+    --shadow-hover: 0 4px 16px 0 rgba(0,0,0,0.35);
+    --shadow-elevated: 0 8px 32px 0 rgba(0,0,0,0.4);
+    --shadow-modal: 0 20px 60px 0 rgba(0,0,0,0.5);
+
+    --education-blue: 221 83% 60%;
+    --education-green: 142 71% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Custom scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  *::-webkit-scrollbar { width: 6px; height: 6px; background: transparent; }
+  *::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 3px; }
+}
+
+@layer utilities {
+  /* Gradient text */
+  .gradient-text {
+    background: var(--gradient-button);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  /* Premium gradient background */
+  .bg-gradient-main   { background: var(--gradient-main); }
+  .bg-gradient-premium { background: var(--gradient-premium); }
+  .bg-gradient-button { background: var(--gradient-button); }
+  .bg-gradient-card   { background: var(--gradient-card); }
+
+  /* KPI card accent border */
+  .kpi-card {
+    @apply bg-card border border-border rounded-lg p-5 flex flex-col gap-3 h-full;
+    box-shadow: var(--shadow-card);
+    transition: box-shadow 150ms ease, transform 150ms ease;
+  }
+  .kpi-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+  }
+
+  /* POS product button */
+  .pos-btn-active {
+    transition: transform 100ms ease;
+  }
+  .pos-btn-active:active {
+    transform: scale(0.97) translateY(1px);
+  }
+
+  /* Fade in animation */
+  .fade-in {
+    animation: fadeIn 200ms ease-out;
+  }
+
+  /* Skeleton pulse */
+  .skeleton {
+    @apply bg-muted animate-pulse rounded;
+  }
+
+  /* Status badge variants */
+  .badge-success { @apply bg-green-50 text-green-700 border border-green-200 dark:bg-green-950 dark:text-green-400 dark:border-green-800; }
+  .badge-warning { @apply bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800; }
+  .badge-danger  { @apply bg-red-50 text-red-700 border border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800; }
+  .badge-info    { @apply bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
