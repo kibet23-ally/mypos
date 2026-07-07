@@ -52,7 +52,7 @@ const OWSuppliers             = lazy(() => import('./owner/OWSuppliers'));
 const OWPurchases             = lazy(() => import('./owner/OWPurchases'));
 const OWPurchaseOrders        = lazy(() => import('./owner/OWPurchaseOrders'));
 const OWExpenses              = lazy(() => import('./owner/OWExpenses'));
-const OWProfitLoss            = lazy(() => import('./owner/OWOverview')); // points to OWOverview (profit section)
+const OWProfitLoss            = lazy(() => import('./owner/OWProfitLoss'));
 const OWRevenueReports        = lazy(() => import('./owner/OWRevenueReports'));
 const OWStaff                 = lazy(() => import('./owner/OWStaff'));
 const OWUsers                 = lazy(() => import('./owner/OWUsers'));
@@ -82,6 +82,8 @@ const MGCustomers             = lazy(() => import('./manager/MGCustomers'));
 const MGSuppliers             = lazy(() => import('./manager/MGSuppliers'));
 const MGPurchases             = lazy(() => import('./manager/MGPurchases'));
 const MGExpenses              = lazy(() => import('./manager/MGExpenses'));
+const MGPurchaseOrders        = lazy(() => import('./manager/MGPurchaseOrders'));
+const MGProfitLoss            = lazy(() => import('./manager/MGProfitLoss'));
 const MGRevenueReports        = lazy(() => import('./manager/MGRevenueReports'));
 const MGNotifications         = lazy(() => import('./manager/MGNotifications'));
 
@@ -181,7 +183,9 @@ const VIEW_MAP: Record<string, React.ReactNode> = {
   'mg-customers':             <MGCustomers />,
   'mg-suppliers':             <MGSuppliers />,
   'mg-purchases':             <MGPurchases />,
+  'mg-purchase-orders':       <MGPurchaseOrders />,
   'mg-expenses':              <MGExpenses />,
+  'mg-profit-loss':           <MGProfitLoss />,
   'mg-revenue-reports':       <MGRevenueReports />,
   'mg-notifications':         <MGNotifications />,
   // Cashier

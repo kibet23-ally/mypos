@@ -1,2 +1,1 @@
-import OWRevenueReports from '@/pages/owner/OWRevenueReports';
-export default function MGRevenueReports() { return <OWRevenueReports />; }
+export { default } from '@/pages/owner/OWRevenueReports';

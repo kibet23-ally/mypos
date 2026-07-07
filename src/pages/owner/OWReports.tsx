@@ -16,7 +16,7 @@ const CARD_STYLE = { background: '#ffffff', borderColor: '#E2E8F0' };
 const TT = { background: '#ffffff', border: '1px solid #E2E8F0', borderRadius: '8px', color: '#F8FAFC' };
 
 interface SaleItemJson { product_id: string; name: string; qty: number; price: number; }
-interface Sale { id: string; total: number; subtotal: number | null; items: SaleItemJson[]; created_at: string; }
+interface Sale { id: string; total: number; total_amount: number; subtotal: number | null; cogs_amount: number; profit_amount: number; items: SaleItemJson[]; created_at: string; }
 
 const MONTH_LABELS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -62,7 +62,7 @@ export default function OWReports() {
     const { data: salesData } = await withTimeout(
       supabase
         .from('sales')
-        .select('id, total, subtotal, items, created_at')
+        .select('id, total_amount, subtotal, cogs_amount, profit_amount, items, created_at')
         .eq('tenant_id', appUser.tenant_id)
         .eq('status', 'completed')
         .gte('created_at', sixMonthsAgo.toISOString())
@@ -80,7 +80,7 @@ export default function OWReports() {
     const historyStart = historyWindowStartISO();
     supabase
       .from('sales')
-      .select('id, total, subtotal, items, created_at')
+      .select('id, total_amount, subtotal, cogs_amount, profit_amount, items, created_at')
       .eq('tenant_id', appUser.tenant_id)
       .eq('status', 'completed')
       .gte('created_at', historyStart)
@@ -133,8 +133,9 @@ export default function OWReports() {
     }, 0);
     return {
       month: b.label,
-      sales: inMonth.reduce((t, s) => t + (s.total || 0), 0),
-      profit: inMonth.reduce((t, s) => t + (s.subtotal ?? s.total ?? 0), 0),
+      sales: inMonth.reduce((t, s) => t + (s.total_amount || s.total || 0), 0),
+      // Gross Profit = Revenue - COGS (use stored profit_amount; fallback for legacy rows)
+      profit: inMonth.reduce((t, s) => t + (s.profit_amount ?? ((s.total ?? s.total_amount ?? 0) - (s.cogs_amount ?? 0))), 0),
       txns: inMonth.length,
       itemCount: monthItemCount,
     };

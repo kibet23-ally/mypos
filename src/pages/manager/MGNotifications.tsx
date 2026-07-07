@@ -1,2 +1,1 @@
-import OWNotifications from '@/pages/owner/OWNotifications';
-export default function MGNotifications() { return <OWNotifications />; }
+export { default } from '@/pages/owner/OWNotifications';
