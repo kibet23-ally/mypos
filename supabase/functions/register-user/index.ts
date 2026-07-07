@@ -92,14 +92,58 @@ async function handleApplyTemplate(req: Request, supabaseAdmin: ReturnType<typeo
 // ─────────────────────────────────────────────────────────────────────────────
 // ACTION: register (self-service signup)
 // ─────────────────────────────────────────────────────────────────────────────
-async function handleRegister(body: Record<string, string>, supabaseAdmin: ReturnType<typeof createClient>) {
-  const { username, password, role, business_name, tenant_id } = body;
+async function handleRegister(
+  body: Record<string, string>,
+  supabaseAdmin: ReturnType<typeof createClient>,
+  req: Request,
+) {
+  const { username, password, role, business_name, tenant_id, full_name, branch_id } = body;
 
-  if (!username || !password || !role) {
-    return json({ error: "username, password, and role are required" }, 400);
+  // ── per-field validation with user-friendly messages ────────────────────
+  const missing: string[] = [];
+  if (!username) missing.push("username");
+  if (!password) missing.push("temporary password");
+  if (!role) missing.push("role");
+  if (role === "cashier" && !full_name) missing.push("full name");
+  if (missing.length > 0) {
+    return json({ error: `Missing required field(s): ${missing.join(", ")}` }, 400);
   }
+
   const validRoles = ["superadmin", "owner", "cashier"];
   if (!validRoles.includes(role)) return json({ error: "Invalid role" }, 400);
+  if (password.length < 8) return json({ error: "Password must be at least 8 characters" }, 400);
+  if (!/^[a-z0-9_]+$/.test(username)) {
+    return json({ error: "Username must contain only lowercase letters, numbers and underscores" }, 400);
+  }
+
+  // Staff (cashier) creation always requires a tenant + an authenticated,
+  // authorized caller (owner/superadmin of that tenant).
+  let callerId: string | null = null;
+  if (role === "cashier") {
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) return json({ error: "Missing authorization header" }, 401);
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user: caller }, error: callerErr } = await supabaseAdmin.auth.getUser(token);
+    if (callerErr || !caller) return json({ error: "Unauthorized" }, 401);
+
+    const { data: callerProfile } = await supabaseAdmin
+      .from("profiles").select("id, role, tenant_id").eq("id", caller.id).maybeSingle();
+    if (!callerProfile) return json({ error: "Caller profile not found" }, 403);
+    if (!["owner", "superadmin"].includes(callerProfile.role)) {
+      return json({ error: "Only business owners can add staff" }, 403);
+    }
+    if (!tenant_id) return json({ error: "tenant_id is required to add staff" }, 400);
+    if (callerProfile.role === "owner" && callerProfile.tenant_id !== tenant_id) {
+      return json({ error: "You can only add staff to your own business" }, 403);
+    }
+    callerId = caller.id;
+
+    if (branch_id) {
+      const { data: branch } = await supabaseAdmin.from("branches")
+        .select("id").eq("id", branch_id).eq("tenant_id", tenant_id).maybeSingle();
+      if (!branch) return json({ error: "Selected branch does not belong to this business" }, 400);
+    }
+  }
 
   const email = `${username}@posifypro.miaoda.com`;
 
@@ -120,9 +164,38 @@ async function handleRegister(body: Record<string, string>, supabaseAdmin: Retur
 
   const { data: authData, error: authErr } = await supabaseAdmin.auth.admin.createUser({
     email, password, email_confirm: true,
-    user_metadata: { username, role, tenant_id: metaTenantId },
+    user_metadata: {
+      username,
+      role,
+      tenant_id: metaTenantId,
+      full_name: full_name ?? null,
+      branch_id: branch_id ?? null,
+    },
   });
   if (authErr) throw authErr;
+
+  // handle_new_user() trigger only inserts id/email/username/role/tenant_id
+  // (see migration 00001) — full_name and branch_id are never picked up
+  // from raw_user_meta_data, so they must be patched in explicitly here.
+  if (full_name || branch_id) {
+    await supabaseAdmin.from("profiles")
+      .update({ full_name: full_name ?? undefined, branch_id: branch_id ?? undefined })
+      .eq("id", authData.user!.id);
+  }
+
+  if (role === "cashier") {
+    await supabaseAdmin.from("audit_logs").insert({
+      tenant_id: resolvedTenantId,
+      user_id: callerId,
+      action: "staff.created",
+      entity_type: "profiles",
+      entity_id: authData.user!.id,
+      new_data: { username, full_name: full_name ?? null, role, branch_id: branch_id ?? null },
+    });
+    // Staff created by an owner must NOT sign in as the new user — that
+    // would hijack the caller's own session on the client.
+    return json({ user: authData.user, tenant_id: resolvedTenantId });
+  }
 
   const supabaseAnon = createClient(
     Deno.env.get("SUPABASE_URL")!,
@@ -153,7 +226,7 @@ Deno.serve(async (req) => {
     if (action === "apply-template") return await handleApplyTemplate(req, supabaseAdmin);
 
     const body = await req.json();
-    return await handleRegister(body, supabaseAdmin);
+    return await handleRegister(body, supabaseAdmin, req);
 
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Internal server error";
