@@ -67,22 +67,20 @@ export function RouteGuard({ children }: RouteGuardProps) {
       return;
     }
 
-    // ── Owner / Cashier: no tenant yet → must register/activate business ──────
-    if (!hasTenant) {
-      if (path !== '/activate') navigate('/activate', { replace: true });
-      return;
-    }
+    // ── Owner / Cashier: no tenant, unactivated, or onboarding pending ──────────
+    // Only block PRIVATE routes. Public pages (/, /login, /register, /activate)
+    // remain accessible so users can browse the site or sign out before their
+    // license key is issued by the super admin.
+    const needsActivation =
+      !hasTenant ||
+      !isActivated ||
+      (role === 'owner' && !onboardingDone);
 
-    // ── Has tenant but not activated → must complete activation ───────────────
-    if (!isActivated) {
-      if (path !== '/activate') navigate('/activate', { replace: true });
-      return;
-    }
-
-    // ── Activated owner with incomplete onboarding ────────────────────────────
-    // Map to /activate (the existing setup flow) — /onboarding route does not exist.
-    if (role === 'owner' && !onboardingDone) {
-      if (path !== '/activate') navigate('/activate', { replace: true });
+    if (needsActivation) {
+      if (path === '/' || path === '/login' || path === '/register' || path === '/activate') {
+        return; // allow public/setup pages freely
+      }
+      navigate('/activate', { replace: true }); // block all private routes
       return;
     }
 
