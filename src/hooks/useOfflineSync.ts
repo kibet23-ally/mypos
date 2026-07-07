@@ -183,6 +183,9 @@ async function syncOneSale(sale: PendingSale): Promise<void> {
   if (existing) return; // already synced — skip
 
   // Insert the sale record
+  const saleCogs   = +sale.items.reduce((s, i) => s + i.cogs_amount, 0).toFixed(2);
+  const saleProfit = +sale.items.reduce((s, i) => s + i.profit_amount, 0).toFixed(2);
+
   const { data: inserted, error: saleErr } = await supabase
     .from('sales')
     .insert({
@@ -198,6 +201,9 @@ async function syncOneSale(sale: PendingSale): Promise<void> {
       change_due:       sale.change_due,
       payment_method:   sale.payment_method,
       status:           'completed',
+      cogs_amount:      saleCogs,
+      profit_amount:    saleProfit,
+      has_items:        false,
       notes:            `[offline] synced from device — local_id:${sale.local_id}`,
       created_at:       sale.created_at,
     })
@@ -225,4 +231,17 @@ async function syncOneSale(sale: PendingSale): Promise<void> {
 
   const { error: itemsErr } = await supabase.from('sale_items').insert(items);
   if (itemsErr) throw new Error(itemsErr.message);
+
+  await supabase.from('sales').update({ has_items: true }).eq('id', saleId);
+
+  // Deduct inventory now that the sale is confirmed synced. Same
+  // best-effort semantics as the online checkout path — don't roll back
+  // an already-recorded sale over a stock RPC hiccup.
+  const stockResults = await Promise.allSettled(
+    sale.items.map(item => supabase.rpc('decrement_product_stock', { p_product_id: item.product_id, p_qty: item.quantity }))
+  );
+  const stockFailures = stockResults.filter(r => r.status === 'rejected').length;
+  if (stockFailures > 0) {
+    console.error(`[offlineSync] ${stockFailures} stock decrement(s) failed for synced sale ${sale.receipt_number}`);
+  }
 }
