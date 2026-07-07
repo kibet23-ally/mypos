@@ -4,6 +4,36 @@ import type { User } from '@supabase/supabase-js';
 import type { AppUser, Profile, Tenant, RegisterPayload } from '@/types/index';
 import { toast } from 'sonner';
 
+/** Map raw Supabase / Edge Function error strings to user-friendly messages */
+function friendlyAuthError(raw: string): string {
+  const s = raw.toLowerCase();
+  if (s.includes('email rate limit') || s.includes('rate limit') || s.includes('too many') || s.includes('limit exceeded')) {
+    return 'Too many attempts. Please wait a few minutes and try again.';
+  }
+  if (s.includes('already registered') || s.includes('already taken') || s.includes('already exists')) {
+    return 'An account with this email or phone number already exists.';
+  }
+  if (s.includes('invalid login') || s.includes('invalid credentials')) {
+    return 'Invalid email or password. Please try again.';
+  }
+  if (s.includes('network') || s.includes('fetch')) {
+    return 'Network error. Please check your connection and try again.';
+  }
+  if (s.includes('password') && (s.includes('short') || s.includes('least 8'))) {
+    return 'Password must be at least 8 characters.';
+  }
+  if (s.includes('tenant') && s.includes('not found')) {
+    return 'Tenant ID not found. Ask your business owner for the correct ID.';
+  }
+  if (s.includes('invalid email')) {
+    return 'Please enter a valid email address.';
+  }
+  if (s.includes('invalid phone')) {
+    return 'Please enter a valid phone number (e.g. +1234567890).';
+  }
+  return raw;
+}
+
 export async function getProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await supabase
     .from('profiles')
@@ -41,6 +71,8 @@ async function buildAppUser(supabaseUser: User): Promise<AppUser | null> {
     role: profile.role,
     tenant_id: profile.tenant_id,
     branch_id: profile.branch_id ?? null,
+    phone_number: profile.phone_number ?? null,
+    display_name: profile.display_name ?? null,
     tenant,
     // Flatten for convenient access in guards and UI
     business_type: tenant?.business_type ?? null,
@@ -135,9 +167,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
       if (error) {
         const msg = await error?.context?.text?.();
-        throw new Error(msg || error.message);
+        throw new Error(friendlyAuthError(msg || error.message));
       }
-      if (data?.error) throw new Error(data.error);
+      if (data?.error) throw new Error(friendlyAuthError(data.error));
 
       // Set session from the Edge Function response
       if (data?.session) {

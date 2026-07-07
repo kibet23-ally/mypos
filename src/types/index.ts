@@ -57,6 +57,8 @@ export interface Profile {
   role: UserRole;
   tenant_id: string | null;
   branch_id: string | null;
+  phone_number?: string | null;
+  display_name?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -90,6 +92,7 @@ export interface AppUser {
   currency_symbol: string;
   currency_name: string;
   phone_number?: string | null;
+  display_name?: string | null;
 }
 
 // ─── Sidebar navigation ───────────────────────────────────────────────────────
