@@ -9,7 +9,7 @@
  *   COGS         = Σ (buying_cost_snapshot × qty)   [snapshot captured at sale time, NOT current cost]
  *   Gross Profit = Revenue − COGS
  *   Gross Margin = (Gross Profit ÷ Revenue) × 100
- *   Net Profit   = Gross Profit − Expenses − Returns  [no expenses table yet → same as GP]
+ *   Net Profit   = Gross Profit − Expenses − Returns  [see 00036 migration]
  *   Inventory Val= Σ (products.stock × products.cost_price)  [current cost, NOT snapshot]
  *
  * ⚠️  NEVER write profit as Revenue × fixed_percentage anywhere in the app.
