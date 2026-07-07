@@ -75,10 +75,19 @@ Deno.serve(async (req) => {
 
     const newUserId = inviteData.user.id;
     const { error: profileInsertErr } = await supabaseAdmin.from("profiles").insert({
-      id: newUserId, username, email: email.toLowerCase(),
+      id: newUserId, username, email: email.toLowerCase(), full_name,
       role: "cashier", tenant_id: tenantId, branch_id: branch_id ?? null,
     });
     if (profileInsertErr && !profileInsertErr.message.includes("duplicate")) throw profileInsertErr;
+
+    await supabaseAdmin.from("audit_logs").insert({
+      tenant_id: tenantId,
+      user_id: caller.id,
+      action: "staff.invited",
+      entity_type: "profiles",
+      entity_id: newUserId,
+      new_data: { username, full_name, role: "cashier", branch_id: branch_id ?? null },
+    });
 
     return json({ success: true, message: `Invitation sent to ${email}`, user_id: newUserId });
   } catch (err: unknown) {
