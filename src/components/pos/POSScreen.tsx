@@ -35,6 +35,7 @@ interface CartItem {
   product_id: string;
   product_name: string;
   unit_price: number;
+  cost_price: number;   // snapshot — captured from product.cost_price at add-to-cart time
   quantity: number;
   tax_rate: number;
   discount_pct: number; // 0-100 per-item discount
@@ -193,7 +194,7 @@ export default function POSScreen() {
   const addToCart = (p: CachedProduct) => setCart(prev => {
     const ex = prev.find(i => i.product_id === p.id);
     if (ex) return prev.map(i => i.product_id === p.id ? { ...i, quantity: i.quantity + 1 } : i);
-    return [...prev, { product_id: p.id, product_name: p.name, unit_price: p.price, quantity: 1, tax_rate: p.tax_rate ?? TAX_RATE_DEFAULT, discount_pct: 0 }];
+    return [...prev, { product_id: p.id, product_name: p.name, unit_price: p.price, cost_price: p.cost_price ?? 0, quantity: 1, tax_rate: p.tax_rate ?? TAX_RATE_DEFAULT, discount_pct: 0 }];
   });
 
   const updateQty = (id: string, delta: number) =>
@@ -256,15 +257,20 @@ export default function POSScreen() {
     const change = splitMode ? 0 : Math.max(0, paid - total);
     const finalMethod = splitMode ? 'split' : payMethod;
 
-    const saleItems: PendingSaleItem[] = cart.map(i => ({
-      product_id: i.product_id,
-      product_name: i.product_name,
-      quantity: i.quantity,
-      unit_price: i.unit_price,
-      discount_amount: +(i.unit_price * i.quantity * (i.discount_pct / 100)).toFixed(2),
-      tax_amount: +(i.unit_price * i.quantity * (1 - i.discount_pct / 100) * i.tax_rate).toFixed(2),
-      subtotal: +(i.unit_price * i.quantity * (1 - i.discount_pct / 100)).toFixed(2),
-    }));
+    const saleItems: PendingSaleItem[] = cart.map(i => {
+      const lineTotal = +(i.unit_price * i.quantity * (1 - i.discount_pct / 100)).toFixed(2);
+      const taxAmt    = +(lineTotal * i.tax_rate).toFixed(2);
+      return {
+        product_id:   i.product_id,
+        product_name: i.product_name,
+        quantity:     i.quantity,
+        unit_price:   i.unit_price,
+        cost_price:   i.cost_price,    // snapshot: cost at the moment of sale
+        discount_pct: i.discount_pct,
+        tax_amount:   taxAmt,
+        line_total:   lineTotal,       // revenue per line: price * qty − item discount
+      };
+    });
 
     try {
       if (isOnline) {

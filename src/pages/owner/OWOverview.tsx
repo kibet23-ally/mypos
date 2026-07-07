@@ -1,11 +1,10 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
-  LineChart, Line, ComposedChart,
+  ComposedChart, Line,
   XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
 } from 'recharts';
 import {
@@ -17,6 +16,23 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/db/supabase';
 import { formatCurrency, formatCurrencyCompact } from '@/lib/currency';
 import { toast } from 'sonner';
+import {
+  getFinancialSummary,
+  getFinancialSummaryByPeriod,
+  getInventoryValue,
+  getTopProducts,
+  getCategoryRevenue,
+  buildBuckets,
+  todayRange,
+  monthRange,
+  yearRange,
+  last6MonthsRange,
+  type FinancialSummary,
+  type InventorySummary,
+  type TopProduct,
+  type CategoryRevenue,
+  type PeriodRow,
+} from '@/services/calcEngine';
 
 const CHART_COLORS = [
   'hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))',
@@ -24,12 +40,15 @@ const CHART_COLORS = [
 ];
 
 interface DashStats {
-  todaySales: number; monthlySales: number; annualSales: number;
-  grossProfit: number; netProfit: number; totalOrders: number;
-  avgOrderValue: number; totalCustomers: number; newCustomers: number;
-  inventoryValue: number; lowStockCount: number; outOfStockCount: number;
-  activeStaff: number; topProductName: string; topCategory: string;
-  profitMargin: number;
+  todaySummary: FinancialSummary;
+  monthlySales: number;
+  annualSales: number;
+  totalCustomers: number;
+  newCustomers: number;
+  inventory: InventorySummary;
+  activeStaff: number;
+  topProductName: string;
+  topCategoryName: string;
 }
 
 export default function OWOverview() {
@@ -38,10 +57,10 @@ export default function OWOverview() {
   const tenantId = appUser?.tenant_id ?? '';
 
   const [stats,       setStats]       = useState<DashStats | null>(null);
-  const [dailyData,   setDailyData]   = useState<{ day: string; sales: number; orders: number }[]>([]);
-  const [monthlyData, setMonthlyData] = useState<{ month: string; revenue: number; profit: number; cost: number }[]>([]);
-  const [catData,     setCatData]     = useState<{ name: string; value: number }[]>([]);
-  const [topProducts, setTopProducts] = useState<{ name: string; qty: number; revenue: number }[]>([]);
+  const [dailyData,   setDailyData]   = useState<PeriodRow[]>([]);
+  const [monthlyData, setMonthlyData] = useState<PeriodRow[]>([]);
+  const [catData,     setCatData]     = useState<CategoryRevenue[]>([]);
+  const [topProducts, setTopProducts] = useState<TopProduct[]>([]);
   const [payMethods,  setPayMethods]  = useState<{ name: string; value: number }[]>([]);
   const [custGrowth,  setCustGrowth]  = useState<{ month: string; customers: number }[]>([]);
   const [loading,     setLoading]     = useState(true);
@@ -51,136 +70,91 @@ export default function OWOverview() {
     setLoading(true);
     try {
       const now = new Date();
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-      const yearStart  = new Date(now.getFullYear(), 0, 1).toISOString();
-      const last7Start = new Date(now.getTime() - 7 * 24 * 3600 * 1000).toISOString();
 
-      const [todaySalesRes, monthlySalesRes, annualSalesRes, customersRes,
-             inventoryRes, staffRes, saleItemsRes, paymentsRes, custMonthRes] = await Promise.all([
-        supabase.from('sales').select('total_amount, subtotal, tax_amount, discount_amount')
-          .eq('tenant_id', tenantId).eq('status', 'completed').gte('created_at', todayStart),
-        supabase.from('sales').select('total_amount, subtotal, discount_amount')
-          .eq('tenant_id', tenantId).eq('status', 'completed').gte('created_at', monthStart),
-        supabase.from('sales').select('total_amount, subtotal, discount_amount, created_at')
-          .eq('tenant_id', tenantId).eq('status', 'completed').gte('created_at', yearStart),
+      // Date ranges
+      const todayR  = todayRange();
+      const monthR  = monthRange();
+      const yearR   = yearRange();
+      const sixMonR = last6MonthsRange();
+
+      // Chart buckets
+      const dailyBuckets   = buildBuckets('weekly');   // last 7 days
+      const monthlyBuckets = buildBuckets('last6months');
+
+      // ── All data fetched in parallel ──────────────────────────────────
+      const [
+        todaySummary,
+        monthSummary,
+        yearSummary,
+        inventorySummary,
+        topProds,
+        catRevenue,
+        dailyPeriod,
+        monthlyPeriod,
+        customersRes,
+        staffRes,
+        paymentsRes,
+        custMonthRes,
+      ] = await Promise.all([
+        getFinancialSummary(tenantId, todayR.start, todayR.end),
+        getFinancialSummary(tenantId, monthR.start, monthR.end),
+        getFinancialSummary(tenantId, yearR.start,  yearR.end),
+        getInventoryValue(tenantId),
+        getTopProducts(tenantId, monthR.start, monthR.end, 5),
+        getCategoryRevenue(tenantId, monthR.start, monthR.end),
+        getFinancialSummaryByPeriod(tenantId, sixMonR.start, now.toISOString(), 'day', dailyBuckets),
+        getFinancialSummaryByPeriod(tenantId, sixMonR.start, now.toISOString(), 'month', monthlyBuckets),
         supabase.from('customers').select('id, created_at').eq('tenant_id', tenantId),
-        supabase.from('inventory').select('quantity_on_hand, reorder_level, product_id, products(cost_price)')
-          .eq('tenant_id', tenantId),
         supabase.from('profiles').select('id, role').eq('tenant_id', tenantId),
-        supabase.from('sale_items').select('product_name, quantity, subtotal, category:products(category_id, categories(name))')
-          .eq('sales.tenant_id', tenantId).gte('created_at', monthStart).limit(200),
-        supabase.from('sales').select('payment_method').eq('tenant_id', tenantId)
-          .gte('created_at', monthStart).eq('status', 'completed'),
+        supabase.from('sales').select('payment_method')
+          .eq('tenant_id', tenantId).eq('status', 'completed').gte('created_at', monthR.start),
         supabase.from('customers').select('created_at').eq('tenant_id', tenantId)
-          .gte('created_at', new Date(now.getFullYear(), now.getMonth() - 5, 1).toISOString()),
+          .gte('created_at', sixMonR.start),
       ]);
 
-      const todaySales  = todaySalesRes.data  ?? [];
-      const monthlySals = monthlySalesRes.data ?? [];
-      const annualSals  = annualSalesRes.data  ?? [];
-      const customers   = customersRes.data    ?? [];
-      const inventory   = inventoryRes.data    ?? [];
-      const staff       = staffRes.data        ?? [];
-      const saleItems   = saleItemsRes.data    ?? [];
-      const payments    = paymentsRes.data     ?? [];
-      const custMonths  = custMonthRes.data    ?? [];
-
-      const todayRev  = todaySales.reduce((s, x) => s + x.total_amount, 0);
-      const monthRev  = monthlySals.reduce((s, x) => s + x.total_amount, 0);
-      const annualRev = annualSals.reduce((s, x) => s + x.total_amount, 0);
-
-      // Cost approximation: subtotal − discount is revenue; profit ≈ 30% margin if no cost data
-      const grossProfit = todayRev * 0.35;
-      const netProfit   = todayRev * 0.22;
-
-      const inventoryVal  = inventory.reduce((s, i) => {
-        const cost = (i as { products?: { cost_price?: number } }).products?.cost_price ?? 0;
-        return s + i.quantity_on_hand * cost;
-      }, 0);
-      const lowStock  = inventory.filter(i => i.quantity_on_hand > 0 && i.quantity_on_hand <= i.reorder_level).length;
-      const outStock  = inventory.filter(i => i.quantity_on_hand <= 0).length;
-
-      const newCust = customers.filter(c =>
-        new Date(c.created_at) >= new Date(now.getFullYear(), now.getMonth(), 1)
-      ).length;
-
-      // Payment methods
+      // Payment methods breakdown
       const pmMap: Record<string, number> = {};
-      payments.forEach(p => { pmMap[p.payment_method] = (pmMap[p.payment_method] ?? 0) + 1; });
-      setPayMethods(Object.entries(pmMap).map(([name, value]) => ({ name: name.charAt(0).toUpperCase() + name.slice(1), value })));
-
-      // Top products from sale_items
-      const prodMap: Record<string, { qty: number; rev: number }> = {};
-      saleItems.forEach((item: { product_name?: string; quantity?: number; subtotal?: number }) => {
-        const name = item.product_name ?? 'Unknown';
-        if (!prodMap[name]) prodMap[name] = { qty: 0, rev: 0 };
-        prodMap[name].qty += item.quantity ?? 0;
-        prodMap[name].rev += item.subtotal ?? 0;
+      (paymentsRes.data ?? []).forEach((p: { payment_method: string }) => {
+        pmMap[p.payment_method] = (pmMap[p.payment_method] ?? 0) + 1;
       });
-      const sorted = Object.entries(prodMap).sort((a, b) => b[1].rev - a[1].rev).slice(0, 5);
-      setTopProducts(sorted.map(([name, d]) => ({ name, qty: d.qty, revenue: d.rev })));
-
-      // Daily data — last 7 days
-      const dayMap: Record<string, { sales: number; orders: number }> = {};
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(now.getTime() - i * 24 * 3600 * 1000);
-        dayMap[d.toISOString().split('T')[0]] = { sales: 0, orders: 0 };
-      }
-      annualSals.forEach(s => {
-        const day = (s as { created_at?: string }).created_at?.split('T')[0];
-        if (day && dayMap[day]) { dayMap[day].sales += s.total_amount; dayMap[day].orders++; }
-      });
-      setDailyData(Object.entries(dayMap).map(([d, v]) => ({
-        day: new Date(d).toLocaleDateString('en', { weekday: 'short' }), ...v,
+      setPayMethods(Object.entries(pmMap).map(([name, value]) => ({
+        name: name.charAt(0).toUpperCase() + name.slice(1), value,
       })));
 
-      // Monthly data — last 6 months
-      const months = Array.from({ length: 6 }, (_, i) => {
-        const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
-        return { key: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`, label: d.toLocaleString('default', { month: 'short' }) };
-      });
-      const mMap: Record<string, { rev: number; profit: number; cost: number }> = {};
-      months.forEach(m => { mMap[m.key] = { rev: 0, profit: 0, cost: 0 }; });
-      annualSals.forEach(s => {
-        const key = (s as { created_at?: string }).created_at?.substring(0, 7);
-        if (key && mMap[key]) {
-          mMap[key].rev += s.total_amount;
-          mMap[key].profit += s.total_amount * 0.3;
-          mMap[key].cost   += s.total_amount * 0.7;
-        }
-      });
-      setMonthlyData(months.map(m => ({ month: m.label, revenue: mMap[m.key].rev, profit: mMap[m.key].profit, cost: mMap[m.key].cost })));
-
-      // Customer growth
+      // Customer growth (cumulative over 6 months)
       const cmMap: Record<string, number> = {};
-      months.forEach(m => { cmMap[m.key] = 0; });
-      custMonths.forEach(c => {
+      monthlyBuckets.forEach(b => { cmMap[b.key] = 0; });
+      (custMonthRes.data ?? []).forEach((c: { created_at: string }) => {
         const key = c.created_at.substring(0, 7);
         if (cmMap[key] !== undefined) cmMap[key]++;
       });
       let cum = 0;
-      setCustGrowth(months.map(m => { cum += cmMap[m.key]; return { month: m.label, customers: cum }; }));
+      setCustGrowth(monthlyBuckets.map(b => {
+        cum += cmMap[b.key] ?? 0;
+        return { month: b.label, customers: cum };
+      }));
 
-      // Category distribution placeholder (real: join sale_items → products → categories)
-      setCatData([
-        { name: 'Food & Bev', value: 40 },
-        { name: 'Supplies',   value: 25 },
-        { name: 'Electronics', value: 20 },
-        { name: 'Other',      value: 15 },
-      ]);
+      const customers  = customersRes.data ?? [];
+      const staff      = staffRes.data     ?? [];
+      const newCust    = customers.filter(c =>
+        new Date(c.created_at) >= new Date(now.getFullYear(), now.getMonth(), 1)
+      ).length;
+
+      setDailyData(dailyPeriod);
+      setMonthlyData(monthlyPeriod);
+      setCatData(catRevenue);
+      setTopProducts(topProds);
 
       setStats({
-        todaySales: todayRev, monthlySales: monthRev, annualSales: annualRev,
-        grossProfit, netProfit,
-        totalOrders: todaySales.length,
-        avgOrderValue: todaySales.length > 0 ? todayRev / todaySales.length : 0,
-        totalCustomers: customers.length, newCustomers: newCust,
-        inventoryValue: inventoryVal, lowStockCount: lowStock, outOfStockCount: outStock,
-        activeStaff: staff.filter(s => s.role === 'cashier').length,
-        topProductName: sorted[0]?.[0] ?? '—',
-        topCategory: 'Food & Bev',
-        profitMargin: todayRev > 0 ? (netProfit / todayRev) * 100 : 0,
+        todaySummary,
+        monthlySales:    monthSummary.revenue,
+        annualSales:     yearSummary.revenue,
+        totalCustomers:  customers.length,
+        newCustomers:    newCust,
+        inventory:       inventorySummary,
+        activeStaff:     staff.filter(s => s.role === 'cashier').length,
+        topProductName:  topProds[0]?.productName ?? '—',
+        topCategoryName: catRevenue[0]?.categoryName ?? '—',
       });
     } catch (err) {
       toast.error('Failed to load dashboard');
@@ -193,22 +167,22 @@ export default function OWOverview() {
   useEffect(() => { load(); }, [load]);
 
   const kpis = stats ? [
-    { label: "Today's Sales",     value: formatCurrencyCompact(stats.todaySales, cc),    sub: `${stats.totalOrders} orders`, icon: DollarSign,  color: 'text-blue-600' },
-    { label: 'Monthly Revenue',   value: formatCurrencyCompact(stats.monthlySales, cc),  sub: 'This month',  icon: TrendingUp,    color: 'text-emerald-600' },
-    { label: 'Annual Revenue',    value: formatCurrencyCompact(stats.annualSales, cc),   sub: 'Year to date', icon: BarChart3,     color: 'text-violet-600' },
-    { label: 'Gross Profit',      value: formatCurrencyCompact(stats.grossProfit, cc),   sub: `~35% margin`, icon: TrendingUp,    color: 'text-green-600' },
-    { label: 'Net Profit',        value: formatCurrencyCompact(stats.netProfit, cc),     sub: `~22% margin`, icon: DollarSign,    color: 'text-sky-600' },
-    { label: 'Total Orders',      value: stats.totalOrders.toString(),                  sub: 'Today',       icon: ShoppingBag,   color: 'text-indigo-600' },
-    { label: 'Avg Order Value',   value: formatCurrencyCompact(stats.avgOrderValue, cc), sub: 'Per transaction', icon: TrendingUp, color: 'text-pink-600' },
-    { label: 'Total Customers',   value: stats.totalCustomers.toString(),               sub: `+${stats.newCustomers} new`, icon: Users, color: 'text-amber-600' },
-    { label: 'Inventory Value',   value: formatCurrencyCompact(stats.inventoryValue, cc), sub: 'Current stock', icon: Package,  color: 'text-teal-600' },
-    { label: 'Low Stock Items',   value: stats.lowStockCount.toString(),                sub: 'Need reorder', icon: AlertTriangle, color: 'text-orange-500' },
-    { label: 'Out of Stock',      value: stats.outOfStockCount.toString(),              sub: 'Unavailable',  icon: TrendingDown,  color: 'text-red-500' },
-    { label: 'Active Staff',      value: stats.activeStaff.toString(),                 sub: 'Cashiers',     icon: UserPlus,      color: 'text-cyan-600' },
-    { label: 'Top Product',       value: stats.topProductName.substring(0, 16),        sub: 'By revenue',   icon: Star,          color: 'text-yellow-600' },
-    { label: 'Top Category',      value: stats.topCategory,                            sub: 'By sales',     icon: Boxes,         color: 'text-lime-600' },
-    { label: 'New Customers',     value: stats.newCustomers.toString(),                sub: 'This month',   icon: UserPlus,      color: 'text-rose-600' },
-    { label: 'Profit Margin',     value: `${stats.profitMargin.toFixed(1)}%`,          sub: 'Net/Revenue',  icon: TrendingUp,    color: 'text-blue-500' },
+    { label: "Today's Revenue",   value: formatCurrencyCompact(stats.todaySummary.revenue, cc),           sub: `${stats.todaySummary.transactionCount} orders`,     icon: DollarSign,  color: 'text-blue-600' },
+    { label: 'Monthly Revenue',   value: formatCurrencyCompact(stats.monthlySales, cc),                    sub: 'This month',                                         icon: TrendingUp,  color: 'text-emerald-600' },
+    { label: 'Annual Revenue',    value: formatCurrencyCompact(stats.annualSales, cc),                     sub: 'Year to date',                                       icon: BarChart3,   color: 'text-violet-600' },
+    { label: 'Gross Profit',      value: formatCurrencyCompact(stats.todaySummary.grossProfit, cc),        sub: `${stats.todaySummary.marginPct.toFixed(1)}% margin`, icon: TrendingUp,  color: 'text-green-600' },
+    { label: 'Today COGS',        value: formatCurrencyCompact(stats.todaySummary.cogs, cc),               sub: 'Cost of goods sold',                                 icon: DollarSign,  color: 'text-sky-600' },
+    { label: 'Total Orders',      value: stats.todaySummary.transactionCount.toString(),                   sub: 'Today completed',                                    icon: ShoppingBag, color: 'text-indigo-600' },
+    { label: 'Avg Order Value',   value: formatCurrencyCompact(stats.todaySummary.avgOrderValue, cc),      sub: 'Per transaction',                                    icon: TrendingUp,  color: 'text-pink-600' },
+    { label: 'Total Customers',   value: stats.totalCustomers.toString(),                                  sub: `+${stats.newCustomers} this month`,                  icon: Users,       color: 'text-amber-600' },
+    { label: 'Inventory Value',   value: formatCurrencyCompact(stats.inventory.totalValue, cc),            sub: `${stats.inventory.totalSkuCount} SKUs`,              icon: Package,     color: 'text-teal-600' },
+    { label: 'Low Stock',         value: stats.inventory.lowStockCount.toString(),                        sub: 'Need reorder',                                       icon: AlertTriangle, color: 'text-orange-500' },
+    { label: 'Out of Stock',      value: stats.inventory.outOfStock.toString(),                           sub: 'Zero quantity',                                      icon: TrendingDown, color: 'text-red-500' },
+    { label: 'Active Staff',      value: stats.activeStaff.toString(),                                    sub: 'Cashiers',                                           icon: UserPlus,    color: 'text-cyan-600' },
+    { label: 'Top Product',       value: stats.topProductName.substring(0, 16),                           sub: 'By revenue this month',                              icon: Star,        color: 'text-yellow-600' },
+    { label: 'Top Category',      value: stats.topCategoryName.substring(0, 16),                         sub: 'By revenue',                                         icon: Boxes,       color: 'text-lime-600' },
+    { label: 'New Customers',     value: stats.newCustomers.toString(),                                   sub: 'This month',                                         icon: UserPlus,    color: 'text-rose-600' },
+    { label: 'Profit Margin',     value: `${stats.todaySummary.marginPct.toFixed(1)}%`,                  sub: 'Gross / Revenue today',                              icon: TrendingUp,  color: 'text-blue-500' },
   ] : [];
 
   return (

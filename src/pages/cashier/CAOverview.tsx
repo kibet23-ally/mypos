@@ -12,92 +12,76 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/db/supabase';
 import { formatCurrency, formatCurrencyCompact } from '@/lib/currency';
 import { toast } from 'sonner';
+import {
+  getCashierShiftSummary,
+  todayRange,
+  type CashierShiftSummary,
+} from '@/services/calcEngine';
 
 const CHART_COLORS = [
   'hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))',
 ];
 
-interface ShiftStats {
-  todaySales: number; ordersServed: number; avgSale: number;
-  productsSold: number; customersServed: number; refunds: number; shiftDuration: string;
-}
-
 export default function CAOverview() {
   const { appUser } = useAuth();
-  const cc = appUser?.currency_code ?? 'KES';
+  const cc        = appUser?.currency_code ?? 'KES';
   const cashierId = appUser?.id ?? '';
   const tenantId  = appUser?.tenant_id ?? '';
 
-  const [stats,       setStats]       = useState<ShiftStats | null>(null);
-  const [hourlyData,  setHourlyData]  = useState<{ h: string; sales: number; txn: number }[]>([]);
-  const [payMethods,  setPayMethods]  = useState<{ name: string; value: number }[]>([]);
-  const [loading,     setLoading]     = useState(true);
+  const [stats,      setStats]      = useState<CashierShiftSummary | null>(null);
+  const [hourlyData, setHourlyData] = useState<{ h: string; sales: number; txn: number }[]>([]);
+  const [payMethods, setPayMethods] = useState<{ name: string; value: number }[]>([]);
+  const [loading,    setLoading]    = useState(true);
 
   const load = useCallback(async () => {
     if (!cashierId) return;
     setLoading(true);
     try {
-      const todayStart = new Date();
-      todayStart.setHours(0, 0, 0, 0);
+      const { start, end } = todayRange();
 
-      const [salesRes, refundsRes] = await Promise.all([
+      // ── All queries in parallel ───────────────────────────────────
+      const [shiftSummary, hourlyRes, paymentsRes] = await Promise.all([
+        // 1. Shift KPIs from centralized engine (validates invariants)
+        getCashierShiftSummary(cashierId, tenantId, start, end),
+
+        // 2. Hourly breakdown from sales header (no item joins needed)
         supabase.from('sales')
-          .select('id, total_amount, payment_method, customer_id, created_at')
+          .select('total_amount, created_at, payment_method')
           .eq('cashier_id', cashierId)
           .eq('tenant_id', tenantId)
           .eq('status', 'completed')
-          .gte('created_at', todayStart.toISOString()),
+          .gte('created_at', start)
+          .lte('created_at', end),
+
+        // 3. Payment method distribution
         supabase.from('sales')
-          .select('id')
+          .select('payment_method')
           .eq('cashier_id', cashierId)
           .eq('tenant_id', tenantId)
-          .eq('status', 'refunded')
-          .gte('created_at', todayStart.toISOString()),
+          .eq('status', 'completed')
+          .gte('created_at', start)
+          .lte('created_at', end),
       ]);
 
-      const sales   = salesRes.data   ?? [];
-      const refunds = refundsRes.data ?? [];
+      setStats(shiftSummary);
 
-      const todaySales  = sales.reduce((s, x) => s + x.total_amount, 0);
-      const ordersServed = sales.length;
-      const avgSale     = ordersServed > 0 ? todaySales / ordersServed : 0;
-      const customersServed = new Set(sales.map(s => s.customer_id).filter(Boolean)).size;
-
-      // Products sold — count from sale_items
-      const saleIds = sales.map(s => s.id);
-      let productsSold = 0;
-      if (saleIds.length > 0) {
-        const { data: items } = await supabase.from('sale_items')
-          .select('quantity').in('sale_id', saleIds);
-        productsSold = (items ?? []).reduce((s, i) => s + i.quantity, 0);
-      }
-
-      // Hourly data
+      // Build hourly chart (07:00–20:00)
       const hMap: Record<number, { sales: number; txn: number }> = {};
       for (let h = 7; h <= 20; h++) hMap[h] = { sales: 0, txn: 0 };
-      sales.forEach(s => {
+      (hourlyRes.data ?? []).forEach((s: { total_amount: number; created_at: string }) => {
         const h = new Date(s.created_at).getHours();
         if (hMap[h]) { hMap[h].sales += s.total_amount; hMap[h].txn++; }
       });
-      setHourlyData(Object.entries(hMap).map(([h, v]) => ({
-        h: `${h}:00`,
-        sales: v.sales,
-        txn: v.txn,
-      })));
+      setHourlyData(Object.entries(hMap).map(([h, v]) => ({ h: `${h}:00`, sales: v.sales, txn: v.txn })));
 
-      // Payment methods
+      // Payment method breakdown
       const pmMap: Record<string, number> = {};
-      sales.forEach(s => { pmMap[s.payment_method] = (pmMap[s.payment_method] ?? 0) + 1; });
+      (paymentsRes.data ?? []).forEach((r: { payment_method: string }) => {
+        pmMap[r.payment_method] = (pmMap[r.payment_method] ?? 0) + 1;
+      });
       setPayMethods(Object.entries(pmMap).map(([name, value]) => ({
         name: name.charAt(0).toUpperCase() + name.slice(1), value,
       })));
-
-      // Shift duration
-      const clockIn = todayStart;
-      const elapsed = Math.floor((Date.now() - clockIn.getTime()) / 60000);
-      const shiftDuration = `${Math.floor(elapsed / 60)}h ${elapsed % 60}m`;
-
-      setStats({ todaySales, ordersServed, avgSale, productsSold, customersServed, refunds: refunds.length, shiftDuration });
     } catch (err) {
       toast.error('Failed to load shift data');
       console.error(err);
@@ -108,15 +92,19 @@ export default function CAOverview() {
 
   useEffect(() => { load(); }, [load]);
 
+  // Shift duration from midnight
+  const elapsed = Math.floor((Date.now() - new Date().setHours(0,0,0,0)) / 60000);
+  const shiftDuration = `${Math.floor(elapsed / 60)}h ${elapsed % 60}m`;
+
   const kpis = stats ? [
-    { label: "Today's Sales",    value: formatCurrencyCompact(stats.todaySales, cc), sub: 'Total shift revenue',   icon: DollarSign,  color: 'text-blue-600' },
-    { label: 'Orders Served',    value: stats.ordersServed.toString(),               sub: 'Completed transactions', icon: ShoppingBag, color: 'text-emerald-600' },
-    { label: 'Average Sale',     value: formatCurrencyCompact(stats.avgSale, cc),    sub: 'Per transaction',        icon: TrendingUp,  color: 'text-violet-600' },
-    { label: 'Products Sold',    value: stats.productsSold.toString(),               sub: 'Units today',            icon: Package,     color: 'text-amber-600' },
-    { label: 'Customers Served', value: stats.customersServed.toString(),            sub: 'Unique customers',       icon: Users,       color: 'text-sky-600' },
-    { label: 'Refunds',          value: stats.refunds.toString(),                   sub: 'Today',                  icon: TrendingUp,  color: 'text-red-500' },
-    { label: 'Shift Duration',   value: stats.shiftDuration,                        sub: 'Clocked in at 07:00',    icon: Clock,       color: 'text-indigo-600' },
-    { label: 'Shift Sales',      value: formatCurrencyCompact(stats.todaySales, cc), sub: 'Same as today',          icon: DollarSign,  color: 'text-teal-600' },
+    { label: "Today's Revenue",   value: formatCurrencyCompact(stats.revenue, cc),          sub: 'Total shift revenue',    icon: DollarSign,  color: 'text-blue-600' },
+    { label: 'Orders Served',     value: stats.transactionCount.toString(),                 sub: 'Completed transactions', icon: ShoppingBag, color: 'text-emerald-600' },
+    { label: 'Average Sale',      value: formatCurrencyCompact(stats.avgOrderValue, cc),    sub: 'Per transaction',        icon: TrendingUp,  color: 'text-violet-600' },
+    { label: 'Products Sold',     value: stats.itemsSold.toString(),                        sub: 'Units today',            icon: Package,     color: 'text-amber-600' },
+    { label: 'Customers Served',  value: stats.uniqueCustomers.toString(),                  sub: 'Unique customers',       icon: Users,       color: 'text-sky-600' },
+    { label: 'Refunds',           value: stats.refundCount.toString(),                      sub: 'Today',                  icon: TrendingUp,  color: 'text-red-500' },
+    { label: 'Shift Duration',    value: shiftDuration,                                     sub: 'Since 07:00',            icon: Clock,       color: 'text-indigo-600' },
+    { label: 'Shift Sales',       value: formatCurrencyCompact(stats.revenue, cc),          sub: 'Same as today',          icon: DollarSign,  color: 'text-teal-600' },
   ] : [];
 
   return (

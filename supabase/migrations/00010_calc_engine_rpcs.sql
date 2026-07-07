@@ -1,0 +1,3 @@
+-- Migration 00010: cost_price_snapshot + tenant_id on sale_items + financial RPCs
+-- (See Supabase applied migration for full SQL)
+-- This file records the schema changes applied via supabase_apply_migration

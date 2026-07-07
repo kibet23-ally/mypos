@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   AreaChart, Area, BarChart, Bar, ComposedChart, Line,
   XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell,
@@ -16,6 +15,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/db/supabase';
 import { formatCurrency, formatCurrencyCompact } from '@/lib/currency';
 import { toast } from 'sonner';
+import {
+  getFinancialSummaryByPeriod,
+  getFinancialSummary,
+  buildBuckets,
+  todayRange, monthRange, yearRange, last6MonthsRange, lastNDaysRange,
+  type PeriodRow,
+  type FinancialSummary,
+} from '@/services/calcEngine';
 
 const CHART_COLORS = [
   'hsl(var(--chart-1))','hsl(var(--chart-2))','hsl(var(--chart-3))',
@@ -24,45 +31,30 @@ const CHART_COLORS = [
 
 type ReportType = 'daily'|'weekly'|'monthly'|'annual'|'product'|'inventory'|'customer'|'profit'|'staff';
 
-interface SaleRow {
-  total_amount: number;
-  discount_amount: number;
-  tax_amount: number;
-  created_at: string;
-  payment_method: string;
-  status: string;
-}
-
-interface ReportData {
-  period: string;
-  revenue: number;
-  profit: number;
-  orders: number;
-  discount: number;
-  tax: number;
-}
+// ReportData is now PeriodRow — standardized via calcEngine
+type ReportData = PeriodRow & { period: string };
 
 const REPORT_META: Record<ReportType, { label: string; icon: React.ElementType; description: string }> = {
-  daily:     { label: 'Daily Sales',         icon: Calendar,     description: 'Sales summary for today' },
-  weekly:    { label: 'Weekly Report',        icon: TrendingUp,   description: 'Last 7 days performance' },
-  monthly:   { label: 'Monthly Report',       icon: DollarSign,   description: 'This month breakdown' },
-  annual:    { label: 'Annual Report',        icon: BarChart,     description: 'Year-to-date overview' },
-  product:   { label: 'Product Report',       icon: Package,      description: 'Top products by revenue' },
-  inventory: { label: 'Inventory Report',     icon: Package,      description: 'Stock levels & valuation' },
-  customer:  { label: 'Customer Report',      icon: Users,        description: 'Customer analytics' },
-  profit:    { label: 'Profit Report',        icon: DollarSign,   description: 'Revenue vs cost analysis' },
-  staff:     { label: 'Staff Performance',    icon: Users,        description: 'Cashier productivity' },
+  daily:     { label: 'Daily Sales',      icon: Calendar,   description: 'Hourly breakdown for today' },
+  weekly:    { label: 'Weekly Report',    icon: TrendingUp, description: 'Last 7 days performance' },
+  monthly:   { label: 'Monthly Report',   icon: DollarSign, description: 'This month day-by-day' },
+  annual:    { label: 'Annual Report',    icon: TrendingUp, description: '6-month overview' },
+  product:   { label: 'Product Report',   icon: Package,    description: 'Top products by revenue' },
+  inventory: { label: 'Inventory Report', icon: Package,    description: 'Stock levels & valuation' },
+  customer:  { label: 'Customer Report',  icon: Users,      description: 'Customer analytics' },
+  profit:    { label: 'P&L Report',       icon: DollarSign, description: 'Real Revenue vs COGS vs Profit' },
+  staff:     { label: 'Staff Report',     icon: Users,      description: 'Cashier productivity' },
 };
 
 function exportCSV(rows: ReportData[], type: ReportType) {
-  const header = 'Period,Revenue,Profit,Orders,Discount,Tax\n';
+  const header = 'Period,Revenue,COGS,Gross Profit,Margin%,Orders,Discount,Tax\n';
   const body   = rows.map(r =>
-    `${r.period},${r.revenue.toFixed(2)},${r.profit.toFixed(2)},${r.orders},${r.discount.toFixed(2)},${r.tax.toFixed(2)}`
+    `${r.period},${r.revenue.toFixed(2)},${r.cogs.toFixed(2)},${r.grossProfit.toFixed(2)},${r.marginPct.toFixed(1)},${r.orders},${r.discount.toFixed(2)},${r.tax.toFixed(2)}`
   ).join('\n');
   const blob = new Blob([header + body], { type: 'text/csv' });
   const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = `posifypro_${type}_report_${new Date().toISOString().split('T')[0]}.csv`;
+  const a    = document.createElement('a'); a.href = url;
+  a.download = `posifypro_${type}_report_${new Date().toISOString().split('T')[0]}.csv`;
   a.click(); URL.revokeObjectURL(url);
   toast.success('CSV exported');
 }
@@ -70,14 +62,39 @@ function exportCSV(rows: ReportData[], type: ReportType) {
 function exportJSON(rows: ReportData[], type: ReportType) {
   const blob = new Blob([JSON.stringify(rows, null, 2)], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href = url; a.download = `posifypro_${type}_report_${new Date().toISOString().split('T')[0]}.json`;
+  const a    = document.createElement('a'); a.href = url;
+  a.download = `posifypro_${type}_report_${new Date().toISOString().split('T')[0]}.json`;
   a.click(); URL.revokeObjectURL(url);
   toast.success('JSON exported');
 }
 
-function exportPrint() {
-  window.print();
+function exportPrint() { window.print(); }
+
+/** Map report type to calcEngine period + buckets */
+function getReportConfig(rt: ReportType): {
+  start: string; end: string;
+  period: 'hour' | 'day' | 'month';
+  buckets: { key: string; label: string }[];
+} {
+  const now = new Date();
+  switch (rt) {
+    case 'daily': {
+      const r = todayRange();
+      return { ...r, period: 'hour', buckets: buildBuckets('daily') };
+    }
+    case 'weekly': {
+      const r = lastNDaysRange(7);
+      return { ...r, period: 'day', buckets: buildBuckets('weekly') };
+    }
+    case 'monthly': {
+      const r = monthRange();
+      return { ...r, period: 'day', buckets: buildBuckets('monthly') };
+    }
+    default: { // annual, profit, product, inventory, customer, staff — use last 6 months by month
+      const r = last6MonthsRange();
+      return { ...r, period: 'month', buckets: buildBuckets('last6months') };
+    }
+  }
 }
 
 export default function OWReports() {
@@ -88,118 +105,49 @@ export default function OWReports() {
   const [reportType, setReportType] = useState<ReportType>('monthly');
   const [loading,    setLoading]    = useState(false);
   const [data,       setData]       = useState<ReportData[]>([]);
+  const [summary,    setSummary]    = useState<FinancialSummary | null>(null);
   const [loaded,     setLoaded]     = useState(false);
 
-  // Summary KPIs from data
-  const totalRevenue = data.reduce((s, r) => s + r.revenue, 0);
-  const totalProfit  = data.reduce((s, r) => s + r.profit, 0);
-  const totalOrders  = data.reduce((s, r) => s + r.orders, 0);
-  const totalDiscount= data.reduce((s, r) => s + r.discount, 0);
-  const margin       = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(1) : '0.0';
+  // KPI totals derived directly from calcEngine summary (not re-computed from period rows)
+  const totalRevenue  = summary?.revenue      ?? 0;
+  const totalProfit   = summary?.grossProfit  ?? 0;
+  const totalCogs     = summary?.cogs         ?? 0;
+  const totalOrders   = summary?.transactionCount ?? 0;
+  const totalDiscount = summary?.totalDiscount ?? 0;
+  const margin        = summary?.marginPct    ?? 0;
 
-  const buildDateRange = useCallback((): { start: string; end: string; buckets: { key: string; label: string }[] } => {
-    const now = new Date();
-    switch (reportType) {
-      case 'daily': {
-        const start = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-        const buckets = Array.from({ length: 12 }, (_, i) => {
-          const h = 7 + i;
-          return { key: String(h).padStart(2,'0'), label: `${h}:00` };
-        });
-        return { start, end: now.toISOString(), buckets };
-      }
-      case 'weekly': {
-        const start = new Date(now.getTime() - 7 * 24 * 3600 * 1000).toISOString();
-        const buckets = Array.from({ length: 7 }, (_, i) => {
-          const d = new Date(now.getTime() - (6 - i) * 24 * 3600 * 1000);
-          return { key: d.toISOString().split('T')[0], label: d.toLocaleDateString('en', { weekday: 'short', month: 'short', day: 'numeric' }) };
-        });
-        return { start, end: now.toISOString(), buckets };
-      }
-      case 'monthly': {
-        const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-        const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-        const buckets = Array.from({ length: Math.min(daysInMonth, now.getDate()) }, (_, i) => {
-          const d = new Date(now.getFullYear(), now.getMonth(), i + 1);
-          return { key: d.toISOString().split('T')[0], label: `${i + 1}` };
-        });
-        return { start, end: now.toISOString(), buckets };
-      }
-      default: { // annual, product, inventory, customer, profit, staff — use 6 months
-        const months = Array.from({ length: 6 }, (_, i) => {
-          const d = new Date(now.getFullYear(), now.getMonth() - (5 - i), 1);
-          return { key: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`, label: d.toLocaleString('default', { month: 'short', year: '2-digit' }) };
-        });
-        const start = new Date(now.getFullYear(), now.getMonth() - 5, 1).toISOString();
-        return { start, end: now.toISOString(), buckets: months };
-      }
-    }
-  }, [reportType]);
+  const [payData, setPayData] = useState<{ name: string; value: number }[]>([]);
 
-  const loadReport = useCallback(async () => {
+  const runReport = useCallback(async () => {
     if (!tenantId) return;
     setLoading(true);
     try {
-      const { start, end, buckets } = buildDateRange();
-      const { data: sales, error } = await supabase
-        .from('sales')
-        .select('total_amount, discount_amount, tax_amount, created_at, payment_method, status')
-        .eq('tenant_id', tenantId)
-        .eq('status', 'completed')
-        .gte('created_at', start)
-        .lte('created_at', end);
+      const cfg = getReportConfig(reportType);
 
-      if (error) throw error;
-      const rows: SaleRow[] = sales ?? [];
+      const [periodRows, overallSummary, paymentsRes] = await Promise.all([
+        getFinancialSummaryByPeriod(tenantId, cfg.start, cfg.end, cfg.period, cfg.buckets),
+        getFinancialSummary(tenantId, cfg.start, cfg.end),
+        supabase.from('sales').select('payment_method')
+          .eq('tenant_id', tenantId).eq('status', 'completed')
+          .gte('created_at', cfg.start).lte('created_at', cfg.end),
+      ]);
 
-      // Group by bucket
-      const map: Record<string, { revenue: number; profit: number; orders: number; discount: number; tax: number }> = {};
-      buckets.forEach(b => { map[b.key] = { revenue: 0, profit: 0, orders: 0, discount: 0, tax: 0 }; });
+      setData(periodRows.map(r => ({ ...r, period: r.periodKey })));
+      setSummary(overallSummary);
 
-      rows.forEach(s => {
-        let key = '';
-        if (reportType === 'daily') {
-          key = String(new Date(s.created_at).getHours()).padStart(2, '0');
-        } else if (reportType === 'weekly' || reportType === 'monthly') {
-          key = s.created_at.split('T')[0];
-        } else {
-          key = s.created_at.substring(0, 7);
-        }
-        if (!map[key]) return;
-        map[key].revenue  += s.total_amount;
-        map[key].profit   += s.total_amount * 0.30;
-        map[key].orders   += 1;
-        map[key].discount += s.discount_amount ?? 0;
-        map[key].tax      += s.tax_amount ?? 0;
+      const pm: Record<string, number> = {};
+      (paymentsRes.data ?? []).forEach((r: { payment_method: string }) => {
+        pm[r.payment_method] = (pm[r.payment_method] ?? 0) + 1;
       });
-
-      setData(buckets.map(b => ({
-        period: b.label,
-        ...map[b.key] ?? { revenue: 0, profit: 0, orders: 0, discount: 0, tax: 0 },
+      setPayData(Object.entries(pm).map(([name, value]) => ({
+        name: name.charAt(0).toUpperCase() + name.slice(1), value,
       })));
       setLoaded(true);
     } catch (err) {
       toast.error('Failed to load report');
       console.error(err);
     } finally { setLoading(false); }
-  }, [tenantId, buildDateRange, reportType]);
-
-  // Payment method breakdown
-  const [payData, setPayData] = useState<{name:string;value:number}[]>([]);
-  const loadPayBreakdown = useCallback(async () => {
-    if (!tenantId) return;
-    const { start } = buildDateRange();
-    const { data: s } = await supabase
-      .from('sales').select('payment_method')
-      .eq('tenant_id', tenantId).eq('status','completed').gte('created_at', start);
-    const m: Record<string,number> = {};
-    (s ?? []).forEach((r: { payment_method: string }) => { m[r.payment_method] = (m[r.payment_method] ?? 0) + 1; });
-    setPayData(Object.entries(m).map(([name, value]) => ({ name: name.charAt(0).toUpperCase() + name.slice(1), value })));
-  }, [tenantId, buildDateRange]);
-
-  const runReport = async () => {
-    await Promise.all([loadReport(), loadPayBreakdown()]);
-  };
+  }, [tenantId, reportType]);
 
   const reportMeta = REPORT_META[reportType];
 
@@ -271,10 +219,12 @@ export default function OWReports() {
       {loaded && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: 'Total Revenue',   value: formatCurrencyCompact(totalRevenue, cc), icon: DollarSign, color: 'text-blue-600' },
-            { label: 'Total Profit',    value: formatCurrencyCompact(totalProfit, cc),  icon: TrendingUp,  color: 'text-emerald-600' },
-            { label: 'Total Orders',    value: totalOrders.toString(),                  icon: ShoppingBag, color: 'text-violet-600' },
-            { label: 'Profit Margin',   value: `${margin}%`,                            icon: TrendingUp,  color: 'text-amber-600' },
+            { label: 'Total Revenue',    value: formatCurrencyCompact(totalRevenue, cc),  icon: DollarSign, color: 'text-blue-600' },
+            { label: 'Gross Profit',     value: formatCurrencyCompact(totalProfit, cc),   icon: TrendingUp,  color: 'text-emerald-600' },
+            { label: 'COGS',             value: formatCurrencyCompact(totalCogs, cc),     icon: ShoppingBag, color: 'text-orange-500' },
+            { label: 'Gross Margin',     value: `${margin.toFixed(1)}%`,                  icon: TrendingUp,  color: 'text-amber-600' },
+            { label: 'Total Orders',     value: totalOrders.toString(),                   icon: ShoppingBag, color: 'text-violet-600' },
+            { label: 'Total Discounts',  value: formatCurrencyCompact(totalDiscount, cc), icon: DollarSign,  color: 'text-sky-600' },
           ].map(k => (
             <div key={k.label} className="kpi-card">
               <k.icon className={`w-4 h-4 ${k.color}`} />
@@ -309,8 +259,9 @@ export default function OWReports() {
                         name.charAt(0).toUpperCase() + name.slice(1),
                       ]} />
                       <Legend layout="horizontal" wrapperStyle={{ paddingTop: 8 }} />
-                      <Bar dataKey="revenue" fill="hsl(var(--chart-1))" radius={[3,3,0,0]} name="revenue" />
-                      <Line type="monotone" dataKey="profit" stroke="hsl(var(--chart-2))" strokeWidth={2} dot={false} name="profit" />
+                      <Bar dataKey="revenue"     fill="hsl(var(--chart-1))" radius={[3,3,0,0]} name="Revenue" />
+                      <Line type="monotone" dataKey="grossProfit" stroke="hsl(var(--chart-2))" strokeWidth={2} dot={false} name="Gross Profit" />
+                      <Line type="monotone" dataKey="cogs"        stroke="hsl(var(--chart-4))" strokeWidth={1.5} dot={false} name="COGS" strokeDasharray="4 2" />
                     </ComposedChart>
                   </ResponsiveContainer>
                 </div>
@@ -380,7 +331,7 @@ export default function OWReports() {
                 <table className="w-full min-w-max text-sm">
                   <thead>
                     <tr className="border-b border-border">
-                      {['Period','Revenue','Profit','Orders','Discounts','Tax'].map(h => (
+                      {['Period','Revenue','COGS','Gross Profit','Margin %','Orders','Discounts','Tax'].map(h => (
                         <th key={h} className="px-3 py-2.5 text-left text-xs font-semibold text-muted-foreground whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
@@ -390,7 +341,9 @@ export default function OWReports() {
                       <tr key={i} className="border-b border-border hover:bg-secondary/40 transition-colors">
                         <td className="px-3 py-2.5 font-medium text-foreground whitespace-nowrap">{r.period}</td>
                         <td className="px-3 py-2.5 font-semibold text-foreground whitespace-nowrap">{formatCurrency(r.revenue, cc)}</td>
-                        <td className="px-3 py-2.5 text-[hsl(var(--success))] font-semibold whitespace-nowrap">{formatCurrency(r.profit, cc)}</td>
+                        <td className="px-3 py-2.5 text-muted-foreground whitespace-nowrap">{formatCurrency(r.cogs, cc)}</td>
+                        <td className="px-3 py-2.5 text-[hsl(var(--success))] font-semibold whitespace-nowrap">{formatCurrency(r.grossProfit, cc)}</td>
+                        <td className="px-3 py-2.5 text-foreground whitespace-nowrap">{r.marginPct.toFixed(1)}%</td>
                         <td className="px-3 py-2.5 text-foreground whitespace-nowrap">{r.orders}</td>
                         <td className="px-3 py-2.5 text-muted-foreground whitespace-nowrap">{formatCurrency(r.discount, cc)}</td>
                         <td className="px-3 py-2.5 text-muted-foreground whitespace-nowrap">{formatCurrency(r.tax, cc)}</td>
@@ -401,7 +354,9 @@ export default function OWReports() {
                     <tr className="border-t-2 border-border">
                       <td className="px-3 py-2.5 font-bold text-foreground">TOTAL</td>
                       <td className="px-3 py-2.5 font-bold text-foreground whitespace-nowrap">{formatCurrency(totalRevenue, cc)}</td>
+                      <td className="px-3 py-2.5 font-bold text-foreground whitespace-nowrap">{formatCurrency(totalCogs, cc)}</td>
                       <td className="px-3 py-2.5 font-bold text-[hsl(var(--success))] whitespace-nowrap">{formatCurrency(totalProfit, cc)}</td>
+                      <td className="px-3 py-2.5 font-bold text-foreground whitespace-nowrap">{margin.toFixed(1)}%</td>
                       <td className="px-3 py-2.5 font-bold text-foreground">{totalOrders}</td>
                       <td className="px-3 py-2.5 font-bold text-foreground whitespace-nowrap">{formatCurrency(totalDiscount, cc)}</td>
                       <td className="px-3 py-2.5 font-bold text-foreground whitespace-nowrap">{formatCurrency(data.reduce((s,r)=>s+r.tax,0), cc)}</td>
