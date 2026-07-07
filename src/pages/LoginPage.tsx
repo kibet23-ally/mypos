@@ -45,7 +45,7 @@ export default function LoginPage() {
       toast.error(error.message || 'Login failed. Please check your credentials.');
     } else {
       toast.success('Welcome back!');
-      navigate('/dashboard');
+      // RouteGuard drives post-auth navigation based on role + activation state.
     }
   };
 
@@ -88,8 +88,8 @@ export default function LoginPage() {
       toast.error(error.message || 'Registration failed');
     } else {
       toast.success('Account created successfully!');
-      // Owners go to activation → onboarding; cashiers go straight to dashboard
-      navigate(regRole === 'owner' ? '/activate' : '/dashboard');
+      // RouteGuard will redirect owners to /activate, cashiers to /dashboard
+      // based on their tenant and activation state — no hardcoded navigate.
     }
   };
 

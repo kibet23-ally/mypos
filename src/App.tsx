@@ -20,7 +20,7 @@ const App: React.FC = () => {
                 element={route.element}
               />
             ))}
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            {/* Unknown paths → public landing page for unauthenticated visitors */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
           <Toaster richColors closeButton />

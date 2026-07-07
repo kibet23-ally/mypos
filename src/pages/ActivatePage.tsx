@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/db/supabase';
 import { Button } from '@/components/ui/button';
@@ -12,18 +11,14 @@ import { ShoppingCart, Key, CheckCircle, Copy, Loader2, LogOut } from 'lucide-re
 
 export default function ActivatePage() {
   const { appUser, signOut, refreshUser } = useAuth();
-  const navigate = useNavigate();
   const [paymentRef, setPaymentRef] = useState('');
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const licenseKey = appUser?.tenant?.license_key || '';
 
-  useEffect(() => {
-    if (appUser?.tenant?.is_activated) {
-      navigate('/dashboard', { replace: true });
-    }
-  }, [appUser, navigate]);
+  // NOTE: No useEffect redirect here — RouteGuard detects is_activated=true
+  // at /activate and redirects to /dashboard automatically, preventing a loop.
 
   const handleCopy = async () => {
     if (!licenseKey) return;
@@ -70,7 +65,7 @@ export default function ActivatePage() {
 
       await refreshUser();
       toast.success('License activated! Welcome to PosifyPro.');
-      navigate('/dashboard', { replace: true });
+      // refreshUser updates appUser.tenant.is_activated → RouteGuard redirects to /dashboard.
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Activation failed';
       toast.error(msg);

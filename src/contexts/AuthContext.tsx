@@ -132,8 +132,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     supabase.auth
       .getSession()
-      .then(({ data: { session } }) => {
-        loadUser(session?.user ?? null);
+      .then(async ({ data: { session } }) => {
+        // Await loadUser so appUser is populated before loading becomes false.
+        // Without this, RouteGuard fires with loading=false but appUser=null,
+        // causing a flash-redirect to /login for authenticated users.
+        await loadUser(session?.user ?? null);
       })
       .catch((error) => {
         toast.error(`Session error: ${error.message}`);

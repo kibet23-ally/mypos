@@ -37,61 +37,63 @@ export function RouteGuard({ children }: RouteGuardProps) {
   useEffect(() => {
     if (loading) return;
 
-    const isPublic = matchPublicRoute(location.pathname, PUBLIC_ROUTES);
+    const path = location.pathname;
+    const isPublic = matchPublicRoute(path, PUBLIC_ROUTES);
 
-    // Not logged in → login
-    if (!user && !isPublic) {
-      navigate('/login', { state: { from: location.pathname }, replace: true });
+    // ── Not authenticated ─────────────────────────────────────────────────────
+    if (!user) {
+      // Public routes (including '/') are always accessible without login.
+      if (!isPublic) {
+        navigate('/login', { state: { from: path }, replace: true });
+      }
       return;
     }
 
-    if (user && appUser) {
-      const role = appUser.role;
-      const tenant = appUser.tenant;
+    // ── Auth user not yet hydrated (transient — buildAppUser still resolving) ─
+    if (!appUser) return;
 
-      // Already authenticated — bounce away from login/register
-      if (location.pathname === '/login' || location.pathname === '/register') {
+    const role = appUser.role;
+    const tenant = appUser.tenant;
+    const hasTenant = !!appUser.tenant_id;
+    const isActivated = !!tenant?.is_activated;
+    const onboardingDone = !!appUser.onboarding_completed;
+
+    // ── Superadmin: skip all tenant / onboarding checks ───────────────────────
+    if (role === 'superadmin') {
+      if (path === '/' || path === '/login' || path === '/register' ||
+          path === '/activate' || path === '/onboarding') {
         navigate('/dashboard', { replace: true });
-        return;
       }
-
-      // Superadmin: skip all tenant checks
-      if (role === 'superadmin') {
-        if (['/activate', '/onboarding'].includes(location.pathname)) {
-          navigate('/dashboard', { replace: true });
-        }
-        return;
-      }
-
-      // Owner / Cashier: must have activated tenant
-      if (!tenant?.is_activated && location.pathname !== '/activate') {
-        navigate('/activate', { replace: true });
-        return;
-      }
-      if (tenant?.is_activated && location.pathname === '/activate') {
-        // After activation, owners must complete onboarding first
-        if (role === 'owner' && !appUser.onboarding_completed) {
-          navigate('/onboarding', { replace: true });
-        } else {
-          navigate('/dashboard', { replace: true });
-        }
-        return;
-      }
-
-      // Owner: activated but onboarding not done → force onboarding
-      if (role === 'owner' && tenant?.is_activated && !appUser.onboarding_completed) {
-        if (location.pathname !== '/onboarding') {
-          navigate('/onboarding', { replace: true });
-          return;
-        }
-      }
-
-      // Onboarding already done → skip onboarding page
-      if (location.pathname === '/onboarding' && appUser.onboarding_completed) {
-        navigate('/dashboard', { replace: true });
-        return;
-      }
+      return;
     }
+
+    // ── Owner / Cashier: no tenant yet → must register/activate business ──────
+    if (!hasTenant) {
+      if (path !== '/activate') navigate('/activate', { replace: true });
+      return;
+    }
+
+    // ── Has tenant but not activated → must complete activation ───────────────
+    if (!isActivated) {
+      if (path !== '/activate') navigate('/activate', { replace: true });
+      return;
+    }
+
+    // ── Activated owner with incomplete onboarding ────────────────────────────
+    // Map to /activate (the existing setup flow) — /onboarding route does not exist.
+    if (role === 'owner' && !onboardingDone) {
+      if (path !== '/activate') navigate('/activate', { replace: true });
+      return;
+    }
+
+    // ── Fully onboarded: redirect away from auth / setup / landing pages ──────
+    if (path === '/' || path === '/login' || path === '/register' ||
+        path === '/activate' || path === '/onboarding') {
+      navigate('/dashboard', { replace: true });
+      return;
+    }
+
+    // All other private routes: authenticated + onboarded → allow.
   }, [user, appUser, loading, location.pathname, navigate]);
 
   if (loading) {
