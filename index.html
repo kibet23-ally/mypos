@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#2563EB" />
+    <title>PosifyPro</title>
+    <!-- Prevent browsers from serving a cached index.html after a new deploy -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- Inline emergency fallback: shown only if the JS bundle fails to load at all -->
+    <noscript>
+      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:sans-serif;background:#f8fafc;padding:1rem">
+        <div style="text-align:center">
+          <h1 style="font-size:1.25rem;font-weight:700;color:#0f172a">JavaScript Required</h1>
+          <p style="color:#64748b;margin-top:.5rem">PosifyPro requires JavaScript to run.</p>
+        </div>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
