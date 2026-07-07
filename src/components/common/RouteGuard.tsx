@@ -53,12 +53,11 @@ export function RouteGuard({ children }: RouteGuardProps) {
     if (!appUser) return;
 
     const role = appUser.role;
-    const tenant = appUser.tenant;
-    const hasTenant = !!appUser.tenant_id;
-    const isActivated = !!tenant?.is_activated;
+    const hasTenant      = !!appUser.tenant_id;
+    const isActivated    = !!appUser.tenant?.is_activated;
     const onboardingDone = !!appUser.onboarding_completed;
 
-    // ── Superadmin: skip all tenant / onboarding checks ───────────────────────
+    // ── Superadmin: bypass all tenant / onboarding checks ────────────────────
     if (role === 'superadmin') {
       if (path === '/' || path === '/login' || path === '/register' ||
           path === '/activate' || path === '/onboarding') {
@@ -67,31 +66,34 @@ export function RouteGuard({ children }: RouteGuardProps) {
       return;
     }
 
-    // ── Owner / Cashier: no tenant, unactivated, or onboarding pending ──────────
-    // Only block PRIVATE routes. Public pages (/, /login, /register, /activate)
-    // remain accessible so users can browse the site or sign out before their
-    // license key is issued by the super admin.
-    const needsActivation =
-      !hasTenant ||
-      !isActivated ||
-      (role === 'owner' && !onboardingDone);
-
-    if (needsActivation) {
+    // ── Step 1 — No tenant, or tenant not yet activated ───────────────────────
+    // Public browsing pages stay accessible; everything else forces /activate.
+    if (!hasTenant || !isActivated) {
       if (path === '/' || path === '/login' || path === '/register' || path === '/activate') {
-        return; // allow public/setup pages freely
+        return;
       }
-      navigate('/activate', { replace: true }); // block all private routes
+      navigate('/activate', { replace: true });
       return;
     }
 
-    // ── Fully onboarded: redirect away from auth / setup / landing pages ──────
+    // ── Step 2 — Activated tenant but onboarding not yet complete ─────────────
+    // Allow public pages + /onboarding itself; block every other private route.
+    if (!onboardingDone) {
+      if (path === '/' || path === '/login' || path === '/register' || path === '/onboarding') {
+        return;
+      }
+      navigate('/onboarding', { replace: true });
+      return;
+    }
+
+    // ── Step 3 — Fully onboarded: redirect away from auth / setup pages ───────
     if (path === '/' || path === '/login' || path === '/register' ||
         path === '/activate' || path === '/onboarding') {
       navigate('/dashboard', { replace: true });
       return;
     }
 
-    // All other private routes: authenticated + onboarded → allow.
+    // All other private routes: authenticated + fully onboarded → allow.
   }, [user, appUser, loading, location.pathname, navigate]);
 
   if (loading) {

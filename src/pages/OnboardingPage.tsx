@@ -44,10 +44,13 @@ export default function OnboardingPage() {
       });
   }, []);
 
-  // ── Guard: already onboarded ──────────────────────────────────────────────
+  // ── Guard: redirect to correct step based on auth/activation/onboarding state
   useEffect(() => {
-    if (appUser?.tenant?.onboarding_completed) {
+    if (!appUser) return;
+    if (appUser.onboarding_completed) {
       navigate('/dashboard', { replace: true });
+    } else if (!appUser.tenant_id || !appUser.tenant?.is_activated) {
+      navigate('/activate', { replace: true });
     }
   }, [appUser, navigate]);
 
@@ -103,7 +106,10 @@ export default function OnboardingPage() {
     }
   };
 
-  const handleContinue = () => navigate('/dashboard', { replace: true });
+  const handleContinue = async () => {
+    await refreshUser();
+    navigate('/dashboard', { replace: true });
+  };
 
   const selectedTemplate = templates.find(t => t.business_type === selected);
 
