@@ -2,12 +2,16 @@ import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { routes } from '@/routes';
+<<<<<<< HEAD
 import type { UserRole } from '@/types/index';
+=======
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 
 interface RouteGuardProps {
   children: React.ReactNode;
 }
 
+<<<<<<< HEAD
 const SYSTEM_PUBLIC_ROUTES = ['/login', '/register', '/activate', '/onboarding', '/403', '/404'];
 const routePublicPaths = routes.filter(r => r.public).map(r => r.path);
 const PUBLIC_ROUTES = [...SYSTEM_PUBLIC_ROUTES, ...routePublicPaths];
@@ -19,6 +23,12 @@ const ROLE_ALLOWED_PREFIXES: Record<UserRole, string[]> = {
   cashier:    ['ca-'],
 };
 
+=======
+const SYSTEM_PUBLIC_ROUTES = ['/login', '/register', '/activate', '/403', '/404'];
+const routePublicPaths = routes.filter(r => r.public).map(r => r.path);
+const PUBLIC_ROUTES = [...SYSTEM_PUBLIC_ROUTES, ...routePublicPaths];
+
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 function matchPublicRoute(path: string, patterns: string[]) {
   return patterns.some(pattern => {
     if (pattern.includes('*')) {
@@ -39,7 +49,10 @@ export function RouteGuard({ children }: RouteGuardProps) {
 
     const isPublic = matchPublicRoute(location.pathname, PUBLIC_ROUTES);
 
+<<<<<<< HEAD
     // Not logged in → login
+=======
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
     if (!user && !isPublic) {
       navigate('/login', { state: { from: location.pathname }, replace: true });
       return;
@@ -49,12 +62,17 @@ export function RouteGuard({ children }: RouteGuardProps) {
       const role = appUser.role;
       const tenant = appUser.tenant;
 
+<<<<<<< HEAD
       // Already authenticated — bounce away from login/register
+=======
+      // Redirect away from login/register if already authenticated
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
       if (location.pathname === '/login' || location.pathname === '/register') {
         navigate('/dashboard', { replace: true });
         return;
       }
 
+<<<<<<< HEAD
       // Superadmin: skip all tenant checks
       if (role === 'superadmin') {
         if (['/activate', '/onboarding'].includes(location.pathname)) {
@@ -90,6 +108,25 @@ export function RouteGuard({ children }: RouteGuardProps) {
       if (location.pathname === '/onboarding' && appUser.onboarding_completed) {
         navigate('/dashboard', { replace: true });
         return;
+=======
+      // Superadmin skips license check
+      if (role !== 'superadmin') {
+        // If tenant not activated, redirect to activation (except if already there)
+        if (!tenant?.is_activated && location.pathname !== '/activate') {
+          navigate('/activate', { replace: true });
+          return;
+        }
+        // If activated, don't stay on activate page
+        if (tenant?.is_activated && location.pathname === '/activate') {
+          navigate('/dashboard', { replace: true });
+          return;
+        }
+      } else {
+        if (location.pathname === '/activate') {
+          navigate('/dashboard', { replace: true });
+          return;
+        }
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
       }
     }
   }, [user, appUser, loading, location.pathname, navigate]);
@@ -107,6 +144,7 @@ export function RouteGuard({ children }: RouteGuardProps) {
 
   return <>{children}</>;
 }
+<<<<<<< HEAD
 
 // ─── Helper used by DashboardPage to guard individual view keys ───────────────
 export function canAccessView(role: UserRole | undefined, viewKey: string): boolean {
@@ -114,3 +152,5 @@ export function canAccessView(role: UserRole | undefined, viewKey: string): bool
   const allowed = ROLE_ALLOWED_PREFIXES[role] ?? [];
   return allowed.some(prefix => viewKey.startsWith(prefix));
 }
+=======
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)

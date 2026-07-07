@@ -3,7 +3,10 @@ import { miaodaDevPlugin } from "miaoda-sc-plugin";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 import path from "path";
+<<<<<<< HEAD
 import { VitePWA } from "vite-plugin-pwa";
+=======
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,6 +20,7 @@ export default defineConfig({
         namedExport: "ReactComponent",
       },
     }),
+<<<<<<< HEAD
     VitePWA({
       registerType: "autoUpdate",
       devOptions: { enabled: true },
@@ -70,6 +74,8 @@ export default defineConfig({
         ],
       },
     }),
+=======
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
   ],
   resolve: {
     alias: {

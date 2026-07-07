@@ -8,6 +8,7 @@ export interface Option {
 }
 
 // ─── RBAC ───────────────────────────────────────────────────────────────────
+<<<<<<< HEAD
 export type UserRole = 'superadmin' | 'owner' | 'cashier';
 export type LicenseStatus = 'pending' | 'active' | 'revoked';
 export type BusinessType =
@@ -18,11 +19,16 @@ export type BusinessType =
   | 'electronics'
   | 'salon'
   | 'general';
+=======
+export type UserRole = 'superadmin' | 'owner' | 'manager' | 'cashier';
+export type LicenseStatus = 'pending' | 'active' | 'revoked';
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 
 // ─── Database models ─────────────────────────────────────────────────────────
 export interface Tenant {
   id: string;
   business_name: string;
+<<<<<<< HEAD
   business_type: BusinessType | null;
   license_key: string;
   is_activated: boolean;
@@ -31,10 +37,20 @@ export interface Tenant {
   currency_code: string;
   currency_symbol: string;
   currency_name: string;
+=======
+  license_key: string;
+  is_activated: boolean;
+  activated_at: string | null;
+  /** Sales tax rate as a percentage, e.g. 8.5 means 8.5%. Always sourced from the database — never hardcoded. */
+  tax_rate: number;
+  /** ISO currency code for this tenant, e.g. 'KES', 'USD'. Used by useCurrency() for all money formatting. */
+  currency: string;
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
   created_at: string;
   updated_at: string;
 }
 
+<<<<<<< HEAD
 // ─── Business template ───────────────────────────────────────────────────────
 export interface BusinessTemplate {
   id: string;
@@ -50,15 +66,28 @@ export interface BusinessTemplate {
   created_at: string;
 }
 
+=======
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 export interface Profile {
   id: string;
   username: string;
   email: string;
+<<<<<<< HEAD
   role: UserRole;
   tenant_id: string | null;
   branch_id: string | null;
   phone_number?: string | null;
   display_name?: string | null;
+=======
+  /** Contact phone collected at registration. */
+  phone_number: string | null;
+  /** Person's legal/full name stored in the `full_name` DB column. */
+  full_name: string | null;
+  /** Legacy display label stored in the `display_name` DB column (older accounts). */
+  display_name: string | null;
+  role: UserRole;
+  tenant_id: string | null;
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
   created_at: string;
   updated_at: string;
 }
@@ -81,6 +110,7 @@ export interface AppUser {
   id: string;
   username: string;
   email: string;
+<<<<<<< HEAD
   role: UserRole;
   tenant_id: string | null;
   branch_id: string | null;
@@ -96,21 +126,50 @@ export interface AppUser {
 }
 
 // ─── Sidebar navigation ───────────────────────────────────────────────────────
+=======
+  phone_number: string | null;
+  /** Preferred display name — falls back to full_name, then username, in UI code. */
+  display_name: string | null;
+  role: UserRole;
+  tenant_id: string | null;
+  tenant?: Tenant | null;
+}
+
+// ─── Sidebar navigation ───────────────────────────────────────────────────────
+export interface NavSection {
+  key: string;
+  title: string;
+  items: NavItem[];
+}
+
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 export interface NavItem {
   label: string;
   icon: LucideIcon;
   key: string;
   badge?: string;
+<<<<<<< HEAD
+=======
+  comingSoon?: boolean;
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 }
 
 // ─── Registration payload ─────────────────────────────────────────────────────
 export interface RegisterPayload {
+<<<<<<< HEAD
   username: string;
+=======
+  full_name: string;
+  username: string;
+  email: string;
+  phone_number: string;
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
   password: string;
   role: UserRole;
   business_name?: string;
   tenant_id?: string;
 }
+<<<<<<< HEAD
 
 // ─── POS domain models ────────────────────────────────────────────────────────
 export interface Branch {
@@ -215,3 +274,5 @@ export interface Customer {
   created_at: string;
   updated_at: string;
 }
+=======
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)

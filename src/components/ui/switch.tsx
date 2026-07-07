@@ -1,6 +1,9 @@
 import * as React from "react"
 import * as SwitchPrimitives from "@radix-ui/react-switch"
+<<<<<<< HEAD
 
+=======
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 import { cn } from "@/lib/utils"
 
 const Switch = React.forwardRef<
@@ -16,9 +19,13 @@ const Switch = React.forwardRef<
     ref={ref}
   >
     <SwitchPrimitives.Thumb
+<<<<<<< HEAD
       className={cn(
         "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0"
       )}
+=======
+      className={cn("pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0")}
+>>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
     />
   </SwitchPrimitives.Root>
 ))
