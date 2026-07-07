@@ -89,6 +89,7 @@ export interface AppUser {
   currency_code: string;
   currency_symbol: string;
   currency_name: string;
+  phone_number?: string | null;
 }
 
 // ─── Sidebar navigation ───────────────────────────────────────────────────────

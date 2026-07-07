@@ -3,7 +3,7 @@ import type { NavItem, UserRole } from '@/types/index';
 import {
   LayoutDashboard, Building2, Users, BarChart3, Settings,
   ShoppingCart, Package, FileText, UserCheck,
-  History, User, Boxes, UserCircle2,
+  History, User, Boxes, UserCircle2, Receipt,
 } from 'lucide-react';
 
 const SUPERADMIN_NAV: NavItem[] = [
@@ -19,6 +19,7 @@ const OWNER_NAV: NavItem[] = [
   { key: 'ow-pos',         label: 'Point of Sale',       icon: ShoppingCart },
   { key: 'ow-products',    label: 'Products',            icon: Package },
   { key: 'ow-inventory',   label: 'Inventory',           icon: Boxes },
+  { key: 'ow-invoices',    label: 'Invoices',            icon: Receipt },
   { key: 'ow-customers',   label: 'Customers',           icon: UserCircle2 },
   { key: 'ow-reports',     label: 'Reports Center',      icon: FileText },
   { key: 'ow-staff',       label: 'Staff',               icon: UserCheck },
@@ -29,6 +30,7 @@ const CASHIER_NAV: NavItem[] = [
   { key: 'ca-overview',  label: 'Dashboard Overview', icon: LayoutDashboard },
   { key: 'ca-pos',       label: 'Point of Sale',      icon: ShoppingCart },
   { key: 'ca-products',  label: 'Products',           icon: Package },
+  { key: 'ca-invoices',  label: 'Invoices',           icon: Receipt },
   { key: 'ca-history',   label: 'Sales History',      icon: History },
   { key: 'ca-profile',   label: 'Profile',            icon: User },
 ];

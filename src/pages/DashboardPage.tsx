@@ -16,6 +16,7 @@ const OWOverview    = lazy(() => import('./owner/OWOverview'));
 const OWPOS         = lazy(() => import('./owner/OWPOS'));
 const OWProducts    = lazy(() => import('./owner/OWProducts'));
 const OWInventory   = lazy(() => import('./owner/OWInventory'));
+const OWInvoices    = lazy(() => import('./owner/OWInvoices'));
 const OWCustomers   = lazy(() => import('./owner/OWCustomers'));
 const OWReports     = lazy(() => import('./owner/OWReports'));
 const OWStaff       = lazy(() => import('./owner/OWStaff'));
@@ -23,6 +24,7 @@ const OWSettings    = lazy(() => import('./owner/OWSettings'));
 const CAOverview    = lazy(() => import('./cashier/CAOverview'));
 const CAPOS         = lazy(() => import('./cashier/CAPOS'));
 const CAProducts    = lazy(() => import('./cashier/CAProducts'));
+const CAInvoices    = lazy(() => import('./cashier/CAInvoices'));
 const CASalesHistory = lazy(() => import('./cashier/CASalesHistory'));
 const CAProfile     = lazy(() => import('./cashier/CAProfile'));
 
@@ -48,6 +50,7 @@ const VIEWS: Record<string, React.ReactNode> = {
   'ow-pos':         <OWPOS />,
   'ow-products':    <OWProducts />,
   'ow-inventory':   <OWInventory />,
+  'ow-invoices':    <OWInvoices />,
   'ow-customers':   <OWCustomers />,
   'ow-reports':     <OWReports />,
   'ow-staff':       <OWStaff />,
@@ -55,6 +58,7 @@ const VIEWS: Record<string, React.ReactNode> = {
   'ca-overview':    <CAOverview />,
   'ca-pos':         <CAPOS />,
   'ca-products':    <CAProducts />,
+  'ca-invoices':    <CAInvoices />,
   'ca-history':     <CASalesHistory />,
   'ca-profile':     <CAProfile />,
 };
