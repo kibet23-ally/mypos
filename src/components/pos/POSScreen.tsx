@@ -277,6 +277,12 @@ export default function POSScreen() {
       };
     });
 
+    // Sale-level aggregates — sales.cogs_amount / profit_amount mirror the
+    // per-line sums so reports can query sales directly without always
+    // joining sale_items.
+    const saleCogs   = +saleItems.reduce((s, i) => s + i.cogs_amount, 0).toFixed(2);
+    const saleProfit = +saleItems.reduce((s, i) => s + i.profit_amount, 0).toFixed(2);
+
     try {
       if (isOnline) {
         const { data: sale, error: saleErr } = await supabase.from('sales').insert({
@@ -291,12 +297,30 @@ export default function POSScreen() {
           change_due: +change.toFixed(2),
           payment_method: finalMethod,
           status: 'completed',
+          cogs_amount: saleCogs,
+          profit_amount: saleProfit,
+          has_items: false, // flipped to true below only once sale_items actually lands
           created_at: now,
         }).select('id').single();
 
         if (saleErr) throw new Error(saleErr.message);
-        const { error: itemsErr } = await supabase.from('sale_items').insert(saleItems.map(item => ({ ...item, sale_id: sale.id, tenant_id: tenantId })));
+        const { error: itemsErr } = await supabase.from('sale_items').insert(saleItems.map(item => ({ ...item, sale_id: sale.id })));
         if (itemsErr) throw new Error(itemsErr.message);
+
+        await supabase.from('sales').update({ has_items: true }).eq('id', sale.id);
+
+        // Deduct inventory — atomic per-line RPC avoids stale-stock race
+        // conditions between concurrent cashiers. Best-effort: a stock
+        // deduction failure should not roll back a already-completed sale,
+        // but we do surface it so it can be reconciled.
+        const stockResults = await Promise.allSettled(
+          cart.map(i => supabase.rpc('decrement_product_stock', { p_product_id: i.product_id, p_qty: i.quantity }))
+        );
+        const stockFailures = stockResults.filter(r => r.status === 'rejected').length;
+        if (stockFailures > 0) {
+          console.error(`[POS] ${stockFailures} stock decrement(s) failed for sale ${receiptNumber}`);
+          toast.error('Sale completed, but inventory may not have updated correctly for some items. Check stock levels.');
+        }
 
         // Update customer total spent
         if (selCustomer) {
