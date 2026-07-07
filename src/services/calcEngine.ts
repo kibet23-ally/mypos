@@ -5,15 +5,15 @@
  * inventory-value calculations across the entire application.
  *
  * Canonical formulae (enforced here and in matching Supabase RPCs):
- *   Revenue      = Σ (unit_price × qty − item_discount)   [= line_total per item]
- *   COGS         = Σ (cost_price_snapshot × qty)           [uses snapshot, not current cost]
+ *   Revenue      = Σ sale_items.subtotal            [= unit_price×qty − discount_amount]
+ *   COGS         = Σ (buying_cost_snapshot × qty)   [snapshot captured at sale time, NOT current cost]
  *   Gross Profit = Revenue − COGS
  *   Gross Margin = (Gross Profit ÷ Revenue) × 100
- *   Net Profit   = Gross Profit − Expenses − Returns       [no expenses table yet → same as GP]
- *   Inventory Val= Σ (quantity_on_hand × current_cost_price)
+ *   Net Profit   = Gross Profit − Expenses − Returns  [no expenses table yet → same as GP]
+ *   Inventory Val= Σ (products.stock × products.cost_price)  [current cost, NOT snapshot]
  *
- * ⚠️  NEVER compute profit as Revenue × fixed_percentage anywhere in the app.
- * ⚠️  NEVER use current product cost_price for historical sales. Always use the snapshot.
+ * ⚠️  NEVER write profit as Revenue × fixed_percentage anywhere in the app.
+ * ⚠️  NEVER use products.cost_price for historical sale COGS. Always use buying_cost_snapshot.
  */
 
 import { supabase } from '@/db/supabase';

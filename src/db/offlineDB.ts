@@ -52,10 +52,12 @@ export interface PendingSaleItem {
   product_name: string;
   quantity: number;
   unit_price: number;
-  cost_price: number;      // snapshot at sale time — NEVER use current product cost
-  discount_pct: number;    // 0–100 per-item discount percentage
+  buying_cost_snapshot: number; // cost captured from products.cost_price at sale time
+  discount_amount: number;      // absolute discount on this line (unit_price * qty * discount_pct/100)
   tax_amount: number;
-  line_total: number;      // unit_price * qty * (1 - discount_pct/100) — the revenue column
+  subtotal: number;             // unit_price * qty * (1 - discount_pct/100) — the revenue column
+  cogs_amount: number;          // buying_cost_snapshot * quantity
+  profit_amount: number;        // subtotal - cogs_amount
 }
 
 export interface PendingSale {

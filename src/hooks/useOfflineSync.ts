@@ -208,17 +208,19 @@ async function syncOneSale(sale: PendingSale): Promise<void> {
 
   const saleId = inserted.id;
 
-  // Insert sale items
+  // Insert sale items — mapped to exact sale_items DB columns
   const items = sale.items.map(item => ({
-    sale_id:      saleId,
-    product_id:   item.product_id,
-    product_name: item.product_name,
-    quantity:     item.quantity,
-    unit_price:   item.unit_price,
-    cost_price:   item.cost_price,    // snapshot at sale time
-    discount_pct: item.discount_pct,
-    tax_amount:   item.tax_amount,
-    line_total:   item.line_total,    // revenue per line
+    sale_id:              saleId,
+    product_id:           item.product_id,
+    product_name:         item.product_name,
+    quantity:             item.quantity,
+    unit_price:           item.unit_price,
+    buying_cost_snapshot: item.buying_cost_snapshot,
+    discount_amount:      item.discount_amount,
+    tax_amount:           item.tax_amount,
+    subtotal:             item.subtotal,
+    cogs_amount:          item.cogs_amount,
+    profit_amount:        item.profit_amount,
   }));
 
   const { error: itemsErr } = await supabase.from('sale_items').insert(items);
