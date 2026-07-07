@@ -4,7 +4,7 @@
 
 | Property | Value |
 |----------|-------|
-| Endpoint | `POST https://app-cfk4gxvsmygz-api-DY8MNQoqOnMa.gateway.appmedo.com/v1/audio/transcriptions` |
+| Endpoint | `POST https://app-c786uxp01gxt-api-DY8MNQoqOnMa.gateway.appmedo.com/v1/audio/transcriptions` |
 | HTTP Method | `POST` |
 | Request Content-Type | `multipart/form-data` (file upload) or `application/x-www-form-urlencoded` (URL submission) |
 | Auth Header | `X-Gateway-Authorization: Bearer <AUTH_VALUE>` |
@@ -149,7 +149,7 @@ async function transcribeAudio(options: TranscriptionOptions): Promise<Transcrip
     params["timestamp_granularities[]"] = options.timestampGranularities.join(",");
   }
 
-  const response = await fetch("https://app-cfk4gxvsmygz-api-DY8MNQoqOnMa.gateway.appmedo.com/v1/audio/transcriptions", {
+  const response = await fetch("https://app-c786uxp01gxt-api-DY8MNQoqOnMa.gateway.appmedo.com/v1/audio/transcriptions", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -202,7 +202,7 @@ async function transcribeLocalFile(
     }
   }
 
-  const response = await fetch("https://app-cfk4gxvsmygz-api-DY8MNQoqOnMa.gateway.appmedo.com/v1/audio/transcriptions", {
+  const response = await fetch("https://app-c786uxp01gxt-api-DY8MNQoqOnMa.gateway.appmedo.com/v1/audio/transcriptions", {
     method: "POST",
     headers: {
       // DO NOT set Content-Type manually — let fetch set the multipart boundary automatically
@@ -297,7 +297,7 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   // --- Call upstream ---
-  const upstream = await fetch("https://app-cfk4gxvsmygz-api-DY8MNQoqOnMa.gateway.appmedo.com/v1/audio/transcriptions", {
+  const upstream = await fetch("https://app-c786uxp01gxt-api-DY8MNQoqOnMa.gateway.appmedo.com/v1/audio/transcriptions", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
@@ -408,6 +408,6 @@ async function transcribeAudio(params: {
 - **Pricing**: Each call costs $0.05 (discounted), original price $0.10. For long audio, confirm the content before calling to avoid unnecessary repeated requests.
 - **Speaker diarization**: `speaker_labels=true` requires `response_format=verbose_json`; speaker labels will not appear in the response otherwise.
 - **File upload vs URL**: Local files must be uploaded via `multipart/form-data` (do not set `Content-Type` manually — let fetch fill in the boundary automatically); URL submission uses `application/x-www-form-urlencoded` and is simpler.
-- **EU compliance**: To process data on EU servers, replace `app-cfk4gxvsmygz-api-DY8MNQoqOnMa.gateway.appmedo.com` with `eu-app-cfk4gxvsmygz-api-DY8MNQoqOnMa.gateway.appmedo.com`. Note: EU processing incurs a 20% surcharge (i.e., $0.60 per 3 hours instead of $0.50).
+- **EU compliance**: To process data on EU servers, replace `app-c786uxp01gxt-api-DY8MNQoqOnMa.gateway.appmedo.com` with `eu-app-c786uxp01gxt-api-DY8MNQoqOnMa.gateway.appmedo.com`. Note: EU processing incurs a 20% surcharge (i.e., $0.60 per 3 hours instead of $0.50).
 - **Async transcription**: For longer audio (tens of minutes or more), use the `callback_url` parameter to trigger async transcription and avoid request timeouts.
 - **Subtitle generation**: `srt` and `vtt` formats can be used directly as video subtitle files — no additional parsing needed.

@@ -12,7 +12,7 @@ Cost-effective multimodal image generation and editing powered by `gemini-3.1-fl
 
 | Item | Value |
 |------|-------|
-| Endpoint | `POST https://app-cfk4gxvsmygz-api-rLobRWZ712b9.gateway.appmedo.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent` |
+| Endpoint | `POST https://app-c786uxp01gxt-api-rLobRWZ712b9.gateway.appmedo.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent` |
 | Auth | Platform-managed — `INTEGRATIONS_API_KEY` injected by platform |
 | Content-Type | `application/json` |
 | Output | Base64-encoded PNG embedded in response body (no URL) |
@@ -80,7 +80,7 @@ echo "<base64_data>" | base64 -d > output.png
 
 ```typescript
 const apiKey = process.env["INTEGRATIONS_API_KEY"]!;
-// POST to: https://app-cfk4gxvsmygz-api-rLobRWZ712b9.gateway.appmedo.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent
+// POST to: https://app-c786uxp01gxt-api-rLobRWZ712b9.gateway.appmedo.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent
 // Header: "X-Gateway-Authorization": `Bearer ${apiKey}`
 // Body:   JSON with contents[].parts[] containing text + optional inlineData
 ```

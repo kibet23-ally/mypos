@@ -12,12 +12,12 @@ Access weather data for any coordinate worldwide via the OpenWeatherMap One Call
 
 | Capability | Endpoint | API ID |
 |------------|----------|--------|
-| Current weather + forecast (minutely 1 h / hourly 48 h / daily 8 d) + alerts | `GET https://app-cfk4gxvsmygz-api-wL1zlmgJGAlY.gateway.appmedo.com/data/3.0/onecall` | `api-wL1zlmgJGAlY` |
-| Historical weather for a timestamp (1979-01-01 to +4 days) | `GET https://app-cfk4gxvsmygz-api-Aa2PZmgJq5OL.gateway.appmedo.com/data/3.0/onecall/timemachine` | `api-Aa2PZmgJq5OL` |
-| Daily aggregated weather statistics (1979-01-02 to +1.5 years) | `GET https://app-cfk4gxvsmygz-api-2Y00zmgJ8lBY.gateway.appmedo.com/data/3.0/onecall/day_summary` | `api-2Y00zmgJ8lBY` |
-| AI-generated weather overview (today / tomorrow natural-language summary) | `GET https://app-cfk4gxvsmygz-api-oYA6ZxVqenDa.gateway.appmedo.com/data/3.0/onecall/overview` | `api-oYA6ZxVqenDa` |
-| AI Weather Assistant — start new session | `POST https://app-cfk4gxvsmygz-api-79jKPlpvAJ0L.gateway.appmedo.com/assistant/session` | `api-79jKPlpvAJ0L` |
-| AI Weather Assistant — resume existing session | `POST https://app-cfk4gxvsmygz-api-oYA6ZxVqyK8a.gateway.appmedo.com/assistant/session/{session_id}` | `api-oYA6ZxVqyK8a` |
+| Current weather + forecast (minutely 1 h / hourly 48 h / daily 8 d) + alerts | `GET https://app-c786uxp01gxt-api-wL1zlmgJGAlY.gateway.appmedo.com/data/3.0/onecall` | `api-wL1zlmgJGAlY` |
+| Historical weather for a timestamp (1979-01-01 to +4 days) | `GET https://app-c786uxp01gxt-api-Aa2PZmgJq5OL.gateway.appmedo.com/data/3.0/onecall/timemachine` | `api-Aa2PZmgJq5OL` |
+| Daily aggregated weather statistics (1979-01-02 to +1.5 years) | `GET https://app-c786uxp01gxt-api-2Y00zmgJ8lBY.gateway.appmedo.com/data/3.0/onecall/day_summary` | `api-2Y00zmgJ8lBY` |
+| AI-generated weather overview (today / tomorrow natural-language summary) | `GET https://app-c786uxp01gxt-api-oYA6ZxVqenDa.gateway.appmedo.com/data/3.0/onecall/overview` | `api-oYA6ZxVqenDa` |
+| AI Weather Assistant — start new session | `POST https://app-c786uxp01gxt-api-79jKPlpvAJ0L.gateway.appmedo.com/assistant/session` | `api-79jKPlpvAJ0L` |
+| AI Weather Assistant — resume existing session | `POST https://app-c786uxp01gxt-api-oYA6ZxVqyK8a.gateway.appmedo.com/assistant/session/{session_id}` | `api-oYA6ZxVqyK8a` |
 
 - **Authentication**: `platform_managed` — API key is injected by the platform gateway; use `X-Gateway-Authorization: Bearer ${apiKey}` where `apiKey` comes from `process.env["INTEGRATIONS_API_KEY"]`
 - **Data refresh**: Updated every 10 minutes (based on OpenWeather proprietary models)

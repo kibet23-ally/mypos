@@ -4,7 +4,7 @@
 
 | Item | Details |
 |------|---------|
-| Endpoint | `POST https://app-cfk4gxvsmygz-api-GYX1bbkRQj4a.gateway.appmedo.com/v1/images/editing/expand` |
+| Endpoint | `POST https://app-c786uxp01gxt-api-GYX1bbkRQj4a.gateway.appmedo.com/v1/images/editing/expand` |
 | Function | Submits an image expansion task that extends the original image outward in four directions. Returns a `task_id` for subsequent polling. |
 | Billing | Discounted price ¥2.80 / request |
 
@@ -54,7 +54,7 @@ async function createExpandTask(params: {
   external_task_id?: string;
 }): Promise<{ task_id: string; task_status: string }> {
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-GYX1bbkRQj4a.gateway.appmedo.com/v1/images/editing/expand",
+    "https://app-c786uxp01gxt-api-GYX1bbkRQj4a.gateway.appmedo.com/v1/images/editing/expand",
     {
       method: "POST",
       headers: {
@@ -125,7 +125,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    "https://app-cfk4gxvsmygz-api-GYX1bbkRQj4a.gateway.appmedo.com/v1/images/editing/expand",
+    "https://app-c786uxp01gxt-api-GYX1bbkRQj4a.gateway.appmedo.com/v1/images/editing/expand",
     {
       method: "POST",
       headers: {

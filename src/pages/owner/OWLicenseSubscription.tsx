@@ -148,7 +148,7 @@ export default function OWLicenseSubscription() {
                           <Zap className="w-3.5 h-3.5 mr-1" />Upgrade to {p.name}
                         </Button>
                       )}
-                      {isCurrentPlan && <Button variant="outline" className="w-full" size="sm" disabled>Current Plan</Button>}
+                      {isCurrentPlan && <Button variant="outline" className="w-full" size="sm" disabled onClick={() => {}}>Current Plan</Button>}
                     </CardContent>
                   </Card>
                 );

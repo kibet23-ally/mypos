@@ -10,7 +10,7 @@ The AI weather assistant supports 50+ languages and retains location context wit
 
 ## Endpoint 1 — Start New Session
 
-**Endpoint**: `POST https://app-cfk4gxvsmygz-api-79jKPlpvAJ0L.gateway.appmedo.com/assistant/session`
+**Endpoint**: `POST https://app-c786uxp01gxt-api-79jKPlpvAJ0L.gateway.appmedo.com/assistant/session`
 
 Initiates a new AI weather assistant conversation to obtain weather information, activity recommendations, or weather-related advice.
 
@@ -34,7 +34,7 @@ Initiates a new AI weather assistant conversation to obtain weather information,
 
 ## Endpoint 2 — Resume Existing Session
 
-**Endpoint**: `POST https://app-cfk4gxvsmygz-api-oYA6ZxVqyK8a.gateway.appmedo.com/assistant/session/{session_id}`
+**Endpoint**: `POST https://app-c786uxp01gxt-api-oYA6ZxVqyK8a.gateway.appmedo.com/assistant/session/{session_id}`
 
 Continues an existing conversation; the assistant retains previous messages and location context. This endpoint is not billed and is suitable for multi-turn follow-up scenarios.
 
@@ -72,7 +72,7 @@ interface AssistantResponse {
 
 async function startAssistantSession(prompt: string): Promise<AssistantResponse> {
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-79jKPlpvAJ0L.gateway.appmedo.com/assistant/session",
+    "https://app-c786uxp01gxt-api-79jKPlpvAJ0L.gateway.appmedo.com/assistant/session",
     {
       method: "POST",
       headers: {
@@ -93,7 +93,7 @@ async function resumeAssistantSession(
   prompt: string
 ): Promise<AssistantResponse> {
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-oYA6ZxVqyK8a.gateway.appmedo.com/assistant/session/${sessionId}`,
+    `https://app-c786uxp01gxt-api-oYA6ZxVqyK8a.gateway.appmedo.com/assistant/session/${sessionId}`,
     {
       method: "POST",
       headers: {
@@ -157,7 +157,7 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   const upstream = await fetch(
-    "https://app-cfk4gxvsmygz-api-79jKPlpvAJ0L.gateway.appmedo.com/assistant/session",
+    "https://app-c786uxp01gxt-api-79jKPlpvAJ0L.gateway.appmedo.com/assistant/session",
     {
       method: "POST",
       headers: {
@@ -225,7 +225,7 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-oYA6ZxVqyK8a.gateway.appmedo.com/assistant/session/${sessionId}`,
+    `https://app-c786uxp01gxt-api-oYA6ZxVqyK8a.gateway.appmedo.com/assistant/session/${sessionId}`,
     {
       method: "POST",
       headers: {

@@ -1,6 +1,6 @@
 # Intraday Data (Adjusted) API
 
-**Endpoint:** `GET https://app-cfk4gxvsmygz-api-pLVzJ8y7V3KL.gateway.appmedo.com/v1/data/intraday`
+**Endpoint:** `GET https://app-c786uxp01gxt-api-pLVzJ8y7V3KL.gateway.appmedo.com/v1/data/intraday`
 
 Retrieve intraday OHLCV data for a US-listed stock at minute or hour granularity, adjusted for splits. Supports filtering by date range and sorting order.
 
@@ -91,7 +91,7 @@ async function getIntradayData(symbol: string, params: IntradayParams = {}): Pro
   if (params.format)           query.set("format", params.format);
 
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-pLVzJ8y7V3KL.gateway.appmedo.com/v1/data/intraday?${query.toString()}`,
+    `https://app-c786uxp01gxt-api-pLVzJ8y7V3KL.gateway.appmedo.com/v1/data/intraday?${query.toString()}`,
     { method: "GET", headers: { "Accept": "application/json" } }
   );
 
@@ -154,7 +154,7 @@ serve(async (req: Request): Promise<Response> => {
   const query = new URLSearchParams({ symbols, ...extraParams });
 
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-pLVzJ8y7V3KL.gateway.appmedo.com/v1/data/intraday?${query.toString()}`,
+    `https://app-c786uxp01gxt-api-pLVzJ8y7V3KL.gateway.appmedo.com/v1/data/intraday?${query.toString()}`,
     {
       method: "GET",
       headers: {

@@ -4,7 +4,7 @@
 
 | Property | Value |
 |----------|-------|
-| Endpoint | `POST https://app-cfk4gxvsmygz-api-W9z3M6eONl3L.gateway.appmedo.com/parse/image` |
+| Endpoint | `POST https://app-c786uxp01gxt-api-W9z3M6eONl3L.gateway.appmedo.com/parse/image` |
 | Content-Type | `multipart/form-data` |
 | Authentication | user_managed (API Key passed directly) |
 | Auth Header | `X-Gateway-Authorization: K87649693488957` |
@@ -150,7 +150,7 @@ async function ocrParseImage(params: {
   if (params.detectOrientation !== undefined) form.append("detectOrientation", String(params.detectOrientation));
   if (params.OCREngine !== undefined)         form.append("OCREngine",         String(params.OCREngine));
 
-  const response = await fetch("https://app-cfk4gxvsmygz-api-W9z3M6eONl3L.gateway.appmedo.com/parse/image", {
+  const response = await fetch("https://app-c786uxp01gxt-api-W9z3M6eONl3L.gateway.appmedo.com/parse/image", {
     method: "POST",
     headers: {
       "X-Gateway-Authorization": AUTH_VALUE,
@@ -243,7 +243,7 @@ serve(async (req: Request): Promise<Response> => {
   if (isTable !== undefined)           form.append("isTable",           String(isTable));
 
   // --- Call upstream ---
-  const upstream = await fetch("https://app-cfk4gxvsmygz-api-W9z3M6eONl3L.gateway.appmedo.com/parse/image", {
+  const upstream = await fetch("https://app-c786uxp01gxt-api-W9z3M6eONl3L.gateway.appmedo.com/parse/image", {
     method: "POST",
     headers: {
       "X-Gateway-Authorization": apiKey,

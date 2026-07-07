@@ -12,7 +12,7 @@ Converts text into a synthesized speech audio file using the LemonFox TTS API, w
 
 | Property | Value |
 |----------|-------|
-| Endpoint | `POST https://app-cfk4gxvsmygz-api-GYX1lzGw01Xa.gateway.appmedo.com/v1/audio/speech` |
+| Endpoint | `POST https://app-c786uxp01gxt-api-GYX1lzGw01Xa.gateway.appmedo.com/v1/audio/speech` |
 | Auth | Bearer Token (platform_managed) |
 | Request Format | `application/json` |
 | Response Format | Binary audio file (`application/octet-stream`) |

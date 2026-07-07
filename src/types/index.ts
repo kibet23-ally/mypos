@@ -31,6 +31,19 @@ export interface Tenant {
   currency_code: string;
   currency_symbol: string;
   currency_name: string;
+  /** Convenience alias used by some pages — same value as currency_code */
+  currency?: string;
+  /** Default tax rate percentage (e.g. 16 for 16% VAT) */
+  tax_rate?: number;
+  // Receipt / contact fields (stored as tenant metadata, may be absent)
+  phone?: string | null;
+  email?: string | null;
+  address?: string | null;
+  receipt_header?: string | null;
+  receipt_footer?: string | null;
+  receipt_paper_size?: string | null;
+  show_qr_on_receipt?: boolean | null;
+  tax_inclusive?: boolean | null;
   created_at: string;
   updated_at: string;
 }

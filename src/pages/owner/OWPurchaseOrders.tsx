@@ -38,7 +38,7 @@ const EMPTY_ITEM: POItem = { product_id: '', name: '', qty: 1, unit_cost: 0, tot
 export default function OWPurchaseOrders() {
   const { appUser } = useAuth();
   const { format: fmt } = useCurrency();
-  const canEdit = appUser?.role === 'owner' || appUser?.role === 'manager';
+  const canEdit = appUser?.role === 'owner' || (appUser?.role as string) === 'manager';
   const [orders, setOrders] = useState<PurchaseOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');

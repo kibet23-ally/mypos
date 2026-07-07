@@ -5,7 +5,7 @@
 | Field | Value |
 |-------|-------|
 | Method | `POST` |
-| URL | `https://app-cfk4gxvsmygz-api-GYX1lzGw0DQa.gateway.appmedo.com/image-generation/task` |
+| URL | `https://app-c786uxp01gxt-api-GYX1lzGw0DQa.gateway.appmedo.com/image-generation/task` |
 | Content-Type | `application/json` |
 | Auth | `X-Gateway-Authorization: Bearer <key>` |
 
@@ -95,7 +95,7 @@ interface TaskResult {
 
 async function queryTask(taskId: string): Promise<TaskResult> {
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-GYX1lzGw0DQa.gateway.appmedo.com/image-generation/task",
+    "https://app-c786uxp01gxt-api-GYX1lzGw0DQa.gateway.appmedo.com/image-generation/task",
     {
       method: "POST",
       headers: {
@@ -195,7 +195,7 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   const upstream = await fetch(
-    "https://app-cfk4gxvsmygz-api-GYX1lzGw0DQa.gateway.appmedo.com/image-generation/task",
+    "https://app-c786uxp01gxt-api-GYX1lzGw0DQa.gateway.appmedo.com/image-generation/task",
     {
       method: "POST",
       headers: {

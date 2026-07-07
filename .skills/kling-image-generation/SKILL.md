@@ -12,8 +12,8 @@ Powered by Kling AI, this skill submits image generation tasks and polls for res
 
 | Item | Details |
 |------|---------|
-| Create Task Endpoint | `POST https://app-cfk4gxvsmygz-api-DY8MnRlwkXKa.gateway.appmedo.com/v1/images/generations` |
-| Query Task Endpoint | `GET https://app-cfk4gxvsmygz-api-M9v0wzOkZXGY.gateway.appmedo.com/v1/images/generations/{task_id}` |
+| Create Task Endpoint | `POST https://app-c786uxp01gxt-api-DY8MnRlwkXKa.gateway.appmedo.com/v1/images/generations` |
+| Query Task Endpoint | `GET https://app-c786uxp01gxt-api-M9v0wzOkZXGY.gateway.appmedo.com/v1/images/generations/{task_id}` |
 | Authentication | Platform-managed — key injected via `INTEGRATIONS_API_KEY` |
 | Billing | List price ¥0.50 / call, discounted ¥0.35 / call (create task only) |
 | Async Mode | Returns `task_id` on submission; poll until `task_status` is `succeed` or `failed` |
@@ -78,7 +78,7 @@ async function createImageTask(params: {
   external_task_id?: string;
 }): Promise<{ task_id: string; task_status: string }> {
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-DY8MnRlwkXKa.gateway.appmedo.com/v1/images/generations",
+    "https://app-c786uxp01gxt-api-DY8MnRlwkXKa.gateway.appmedo.com/v1/images/generations",
     {
       method: "POST",
       headers: {
@@ -102,7 +102,7 @@ async function queryImageTask(taskId: string): Promise<{
   task_result?: { images: Array<{ index: number; url: string; watermark_url?: string }> };
 }> {
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-M9v0wzOkZXGY.gateway.appmedo.com/v1/images/generations/${taskId}`,
+    `https://app-c786uxp01gxt-api-M9v0wzOkZXGY.gateway.appmedo.com/v1/images/generations/${taskId}`,
     {
       method: "GET",
       headers: {

@@ -40,7 +40,7 @@ const TYPE_CONFIG: Record<string, { label: string; color: string; icon: React.FC
 export default function OWStockMovements() {
   const { appUser } = useAuth();
   const { format: fmt } = useCurrency();
-  const canManage = appUser?.role === 'owner' || appUser?.role === 'manager';
+  const canManage = appUser?.role === 'owner' || (appUser?.role as string) === 'manager';
   const [movements, setMovements] = useState<StockMovement[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');

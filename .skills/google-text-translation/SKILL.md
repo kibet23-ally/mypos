@@ -12,7 +12,7 @@ Translate any text into a specified target language via the Google Cloud Transla
 
 | Item | Details |
 |------|---------|
-| Endpoint | `POST https://app-cfk4gxvsmygz-api-GaDwZ8DX7jPY.gateway.appmedo.com/language/translate/v2` |
+| Endpoint | `POST https://app-c786uxp01gxt-api-GaDwZ8DX7jPY.gateway.appmedo.com/language/translate/v2` |
 | Auth | platform_managed — key injected via `INTEGRATIONS_API_KEY` |
 | Billing | Original price ¥0.50 / call, discount price ¥0.40 / call |
 
@@ -69,7 +69,7 @@ interface TranslationResult {
 
 async function translateText(params: TranslateParams): Promise<TranslationResult[]> {
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-GaDwZ8DX7jPY.gateway.appmedo.com/language/translate/v2",
+    "https://app-c786uxp01gxt-api-GaDwZ8DX7jPY.gateway.appmedo.com/language/translate/v2",
     {
       method: "POST",
       headers: {
@@ -151,7 +151,7 @@ serve(async (req: Request): Promise<Response> => {
   if (format) requestBody.format = format;
 
   const upstream = await fetch(
-    "https://app-cfk4gxvsmygz-api-GaDwZ8DX7jPY.gateway.appmedo.com/language/translate/v2",
+    "https://app-c786uxp01gxt-api-GaDwZ8DX7jPY.gateway.appmedo.com/language/translate/v2",
     {
       method: "POST",
       headers: {

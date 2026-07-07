@@ -1,6 +1,6 @@
 # Stock Prices API
 
-**Endpoint:** `GET https://app-cfk4gxvsmygz-api-oYA6Z8wDBN1a.gateway.appmedo.com/v1/data/quote`
+**Endpoint:** `GET https://app-c786uxp01gxt-api-oYA6Z8wDBN1a.gateway.appmedo.com/v1/data/quote`
 
 Retrieve real-time stock quote data for one or more US-listed stocks, including price, daily high/low, 52-week range, market cap, volume, and pre/post-market data.
 
@@ -87,7 +87,7 @@ async function getStockPrices(
   if (options.keyByTicker !== undefined)   query.set("key_by_ticker", String(options.keyByTicker));
 
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-oYA6Z8wDBN1a.gateway.appmedo.com/v1/data/quote?${query.toString()}`,
+    `https://app-c786uxp01gxt-api-oYA6Z8wDBN1a.gateway.appmedo.com/v1/data/quote?${query.toString()}`,
     { method: "GET", headers: { "Accept": "application/json" } }
   );
 
@@ -146,7 +146,7 @@ serve(async (req: Request): Promise<Response> => {
   if (keyByTicker !== undefined)   query.set("key_by_ticker", keyByTicker);
 
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-oYA6Z8wDBN1a.gateway.appmedo.com/v1/data/quote?${query.toString()}`,
+    `https://app-c786uxp01gxt-api-oYA6Z8wDBN1a.gateway.appmedo.com/v1/data/quote?${query.toString()}`,
     {
       method: "GET",
       headers: {

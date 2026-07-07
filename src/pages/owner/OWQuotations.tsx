@@ -42,7 +42,7 @@ const EMPTY_FORM = { customer_id: '', customer_name: '', notes: '', valid_until:
 export default function OWQuotations() {
   const { appUser } = useAuth();
   const { format: fmt } = useCurrency();
-  const canEdit = appUser?.role === 'owner' || appUser?.role === 'manager';
+  const canEdit = appUser?.role === 'owner' || (appUser?.role as string) === 'manager';
   const [quotes, setQuotes] = useState<Quotation[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');

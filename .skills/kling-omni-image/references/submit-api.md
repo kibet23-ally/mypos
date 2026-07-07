@@ -1,7 +1,7 @@
 # Submit Task — Omni-Image Create
 
 **API ID:** `api-2Y00Vzbe0MBY`
-**Endpoint:** `POST https://app-cfk4gxvsmygz-api-2Y00Vzbe0MBY.gateway.appmedo.com/v1/images/omni-image`
+**Endpoint:** `POST https://app-c786uxp01gxt-api-2Y00Vzbe0MBY.gateway.appmedo.com/v1/images/omni-image`
 
 ## Overview
 
@@ -99,7 +99,7 @@ async function submitOmniImageTask(params: SubmitParams): Promise<SubmitResult> 
   }
 
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-2Y00Vzbe0MBY.gateway.appmedo.com/v1/images/omni-image",
+    "https://app-c786uxp01gxt-api-2Y00Vzbe0MBY.gateway.appmedo.com/v1/images/omni-image",
     {
       method: "POST",
       headers: {
@@ -199,7 +199,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    "https://app-cfk4gxvsmygz-api-2Y00Vzbe0MBY.gateway.appmedo.com/v1/images/omni-image",
+    "https://app-c786uxp01gxt-api-2Y00Vzbe0MBY.gateway.appmedo.com/v1/images/omni-image",
     {
       method: "POST",
       headers: {

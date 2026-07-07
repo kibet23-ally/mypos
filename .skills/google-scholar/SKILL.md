@@ -12,7 +12,7 @@ Calls the Google Scholar search engine via SerpApi to retrieve academic literatu
 
 | Property | Value |
 |----------|-------|
-| Endpoint | `GET https://app-cfk4gxvsmygz-api-Xa6JZq2055oa.gateway.appmedo.com/search` |
+| Endpoint | `GET https://app-c786uxp01gxt-api-Xa6JZq2055oa.gateway.appmedo.com/search` |
 | Authentication | platform_managed (API Key read from `INTEGRATIONS_API_KEY` environment variable) |
 | Search Engine | Google Scholar (`engine=google_scholar` fixed value) |
 | Data Types | Academic papers, citation information, version clusters |
@@ -79,7 +79,7 @@ Calls the Google Scholar search engine via SerpApi to retrieve academic literatu
   ],
   "pagination": {
     "current": 1,
-    "next": "https://app-cfk4gxvsmygz-api-Xa6JZq2055oa.gateway.appmedo.com/search?start=10"
+    "next": "https://app-c786uxp01gxt-api-Xa6JZq2055oa.gateway.appmedo.com/search?start=10"
   }
 }
 ```
@@ -135,7 +135,7 @@ async function searchGoogleScholar(params: ScholarSearchParams): Promise<Scholar
   });
 
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-Xa6JZq2055oa.gateway.appmedo.com/search?${queryParams.toString()}`,
+    `https://app-c786uxp01gxt-api-Xa6JZq2055oa.gateway.appmedo.com/search?${queryParams.toString()}`,
     {
       method: "GET",
       headers: {
@@ -215,7 +215,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-Xa6JZq2055oa.gateway.appmedo.com/search?${queryParams.toString()}`,
+    `https://app-c786uxp01gxt-api-Xa6JZq2055oa.gateway.appmedo.com/search?${queryParams.toString()}`,
     {
       method: "GET",
       headers: {

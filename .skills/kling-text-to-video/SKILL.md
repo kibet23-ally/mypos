@@ -12,8 +12,8 @@ Converts text descriptions into short videos using the Kling AI model, supportin
 
 | Property | Value |
 |----------|-------|
-| Submit Endpoint | `POST https://app-cfk4gxvsmygz-api-qYGWo8XA7JVY.gateway.appmedo.com/v1/videos/text2video` |
-| Query Endpoint | `GET https://app-cfk4gxvsmygz-api-oLpZ7eD5j2Pa.gateway.appmedo.com/v1/videos/text2video/{id}` |
+| Submit Endpoint | `POST https://app-c786uxp01gxt-api-qYGWo8XA7JVY.gateway.appmedo.com/v1/videos/text2video` |
+| Query Endpoint | `GET https://app-c786uxp01gxt-api-oLpZ7eD5j2Pa.gateway.appmedo.com/v1/videos/text2video/{id}` |
 | Auth | Bearer Token (platform_managed) |
 | Request Format | `application/json` |
 | Response Format | JSON (includes video URL) |

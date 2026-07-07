@@ -1,3 +1,4 @@
+// @ts-expect-error — virtual module provided by vite-plugin-pwa at build time
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import { RefreshCw, X } from 'lucide-react';
 
@@ -12,7 +13,7 @@ export default function PWAUpdatePrompt() {
     offlineReady: [offlineReady, setOfflineReady],
     updateServiceWorker,
   } = useRegisterSW({
-    onRegisteredSW(swUrl, registration) {
+    onRegisteredSW(swUrl: string, registration: ServiceWorkerRegistration | undefined) {
       console.log('[PWA] Service worker registered:', swUrl);
       if (registration) {
         // Poll for SW updates every 60 s so long-lived POS sessions catch deploys.
@@ -22,7 +23,7 @@ export default function PWAUpdatePrompt() {
         }, 60_000);
       }
     },
-    onRegisterError(error) {
+    onRegisterError(error: unknown) {
       console.error('[PWA] Service worker registration failed:', error);
     },
     onOfflineReady() {

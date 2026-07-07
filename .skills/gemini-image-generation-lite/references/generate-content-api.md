@@ -10,7 +10,7 @@ Plugin: Image Generation (Lite Version) · `a02d2a73-a173-4f8c-8565-c8df8fa929a1
 | Item | Value |
 |------|-------|
 | Method | `POST` |
-| Endpoint | `https://app-cfk4gxvsmygz-api-rLobRWZ712b9.gateway.appmedo.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent` |
+| Endpoint | `https://app-c786uxp01gxt-api-rLobRWZ712b9.gateway.appmedo.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent` |
 | Content-Type | `application/json` |
 | Auth header | `X-Gateway-Authorization: Bearer ${INTEGRATIONS_API_KEY}` |
 
@@ -107,7 +107,7 @@ async function generateOrEditImage(
   if (options?.n !== undefined) body.n = options.n;
 
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-rLobRWZ712b9.gateway.appmedo.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent",
+    "https://app-c786uxp01gxt-api-rLobRWZ712b9.gateway.appmedo.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent",
     {
       method: "POST",
       headers: {
@@ -213,7 +213,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    "https://app-cfk4gxvsmygz-api-rLobRWZ712b9.gateway.appmedo.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent",
+    "https://app-c786uxp01gxt-api-rLobRWZ712b9.gateway.appmedo.com/v1beta/models/gemini-3.1-flash-image-preview:generateContent",
     {
       method: "POST",
       headers: {

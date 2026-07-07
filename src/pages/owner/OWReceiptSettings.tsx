@@ -22,14 +22,14 @@ export default function OWReceiptSettings() {
   const [preview, setPreview] = useState(false);
   const [form, setForm] = useState({
     business_name: appUser?.tenant?.business_name ?? '',
-    phone: (appUser?.tenant as Record<string,unknown>)?.phone as string ?? '',
-    email: (appUser?.tenant as Record<string,unknown>)?.email as string ?? '',
-    address: (appUser?.tenant as Record<string,unknown>)?.address as string ?? '',
-    receipt_header: (appUser?.tenant as Record<string,unknown>)?.receipt_header as string ?? '',
-    receipt_footer: (appUser?.tenant as Record<string,unknown>)?.receipt_footer as string ?? 'Thank you for shopping with us!',
-    receipt_paper_size: (appUser?.tenant as Record<string,unknown>)?.receipt_paper_size as string ?? 'A4',
-    show_qr_on_receipt: Boolean((appUser?.tenant as Record<string,unknown>)?.show_qr_on_receipt ?? false),
-    tax_inclusive: Boolean((appUser?.tenant as Record<string,unknown>)?.tax_inclusive ?? false),
+    phone: appUser?.tenant?.phone ?? '',
+    email: appUser?.tenant?.email ?? '',
+    address: appUser?.tenant?.address ?? '',
+    receipt_header: appUser?.tenant?.receipt_header ?? '',
+    receipt_footer: appUser?.tenant?.receipt_footer ?? 'Thank you for shopping with us!',
+    receipt_paper_size: appUser?.tenant?.receipt_paper_size ?? 'A4',
+    show_qr_on_receipt: Boolean(appUser?.tenant?.show_qr_on_receipt ?? false),
+    tax_inclusive: Boolean(appUser?.tenant?.tax_inclusive ?? false),
     tax_rate: String(appUser?.tenant?.tax_rate ?? '16'),
   });
 

@@ -16,6 +16,12 @@ export interface ReceiptData {
   total: number;
   paymentMethod: string;
   timestamp: Date;
+  /** Optional discount applied to the sale */
+  discount?: number;
+  /** Cash handed over by the customer */
+  cashTendered?: number;
+  /** Change returned to the customer */
+  changeDue?: number;
 }
 
 function fmt(n: number) {

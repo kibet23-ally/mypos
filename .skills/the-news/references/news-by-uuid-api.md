@@ -1,6 +1,6 @@
 # News by UUID API
 
-**Endpoint:** `GET https://app-cfk4gxvsmygz-api-qYGWo8XA7M7Y.gateway.appmedo.com/v1/news/uuid/{uuid}`
+**Endpoint:** `GET https://app-c786uxp01gxt-api-qYGWo8XA7M7Y.gateway.appmedo.com/v1/news/uuid/{uuid}`
 
 Retrieve detailed information for a specific article using its unique UUID identifier. Ideal for fetching previously stored articles or accessing specific content directly.
 
@@ -69,7 +69,7 @@ interface NewsArticle {
 
 async function getNewsByUuid(uuid: string): Promise<NewsArticle> {
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-qYGWo8XA7M7Y.gateway.appmedo.com/v1/news/uuid/${encodeURIComponent(uuid)}`,
+    `https://app-c786uxp01gxt-api-qYGWo8XA7M7Y.gateway.appmedo.com/v1/news/uuid/${encodeURIComponent(uuid)}`,
     {
       method: "GET",
       headers: {
@@ -120,7 +120,7 @@ serve(async (req: Request): Promise<Response> => {
   const apiKey = Deno.env.get("INTEGRATIONS_API_KEY") ?? "";
 
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-qYGWo8XA7M7Y.gateway.appmedo.com/v1/news/uuid/${encodeURIComponent(uuid)}`,
+    `https://app-c786uxp01gxt-api-qYGWo8XA7M7Y.gateway.appmedo.com/v1/news/uuid/${encodeURIComponent(uuid)}`,
     {
       method: "GET",
       headers: {

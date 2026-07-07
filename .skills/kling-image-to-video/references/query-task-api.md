@@ -11,7 +11,7 @@ Query the status and result of a previously submitted image-to-video generation 
 
 | Property | Value |
 |----------|-------|
-| **Endpoint** | `GET https://app-cfk4gxvsmygz-api-rLobzpqX85m9.gateway.appmedo.com/v1/videos/image2video/{id}` |
+| **Endpoint** | `GET https://app-c786uxp01gxt-api-rLobzpqX85m9.gateway.appmedo.com/v1/videos/image2video/{id}` |
 | **Content-Type** | `application/json` |
 | **Auth** | `X-Gateway-Authorization: Bearer ${INTEGRATIONS_API_KEY}` |
 
@@ -88,7 +88,7 @@ async function queryImage2VideoTask(taskId: string): Promise<{
   task_result?: { videos: { id: string; url: string; duration: string }[] };
 }> {
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-rLobzpqX85m9.gateway.appmedo.com/v1/videos/image2video/${taskId}`,
+    `https://app-c786uxp01gxt-api-rLobzpqX85m9.gateway.appmedo.com/v1/videos/image2video/${taskId}`,
     {
       method: "GET",
       headers: {
@@ -184,7 +184,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-rLobzpqX85m9.gateway.appmedo.com/v1/videos/image2video/${taskId}`,
+    `https://app-c786uxp01gxt-api-rLobzpqX85m9.gateway.appmedo.com/v1/videos/image2video/${taskId}`,
     {
       method: "GET",
       headers: {

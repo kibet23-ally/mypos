@@ -39,7 +39,7 @@ const EMPTY_ITEM: PurchaseItem = { product_id: '', name: '', qty: 1, unit_cost: 
 export default function OWPurchases() {
   const { appUser } = useAuth();
   const { format: fmt } = useCurrency();
-  const canEdit = appUser?.role === 'owner' || appUser?.role === 'manager';
+  const canEdit = appUser?.role === 'owner' || (appUser?.role as string) === 'manager';
   const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');

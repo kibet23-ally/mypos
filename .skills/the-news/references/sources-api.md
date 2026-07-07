@@ -1,6 +1,6 @@
 # Sources API
 
-**Endpoint:** `GET https://app-cfk4gxvsmygz-api-oLpZ7eD5jJ5a.gateway.appmedo.com/v1/news/sources`
+**Endpoint:** `GET https://app-c786uxp01gxt-api-oLpZ7eD5jJ5a.gateway.appmedo.com/v1/news/sources`
 
 Access the complete list of available news sources with their identifiers, domains, languages, and categories. Use this endpoint to discover `source_ids` and `domains` values for filtering other news endpoints.
 
@@ -68,7 +68,7 @@ async function getSources(params: SourcesParams = {}): Promise<SourcesResponse> 
 
   const qs = query.toString();
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-oLpZ7eD5jJ5a.gateway.appmedo.com/v1/news/sources${qs ? `?${qs}` : ""}`,
+    `https://app-c786uxp01gxt-api-oLpZ7eD5jJ5a.gateway.appmedo.com/v1/news/sources${qs ? `?${qs}` : ""}`,
     {
       method: "GET",
       headers: {
@@ -121,7 +121,7 @@ serve(async (req: Request): Promise<Response> => {
   const query = new URLSearchParams(params);
   const qs = query.toString();
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-oLpZ7eD5jJ5a.gateway.appmedo.com/v1/news/sources${qs ? `?${qs}` : ""}`,
+    `https://app-c786uxp01gxt-api-oLpZ7eD5jJ5a.gateway.appmedo.com/v1/news/sources${qs ? `?${qs}` : ""}`,
     {
       method: "GET",
       headers: {

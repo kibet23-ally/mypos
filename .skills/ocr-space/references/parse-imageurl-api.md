@@ -4,7 +4,7 @@
 
 | Property | Value |
 |----------|-------|
-| Endpoint | `GET https://app-cfk4gxvsmygz-api-m9xKXDbRplNa.gateway.appmedo.com/parse/imageurl` |
+| Endpoint | `GET https://app-c786uxp01gxt-api-m9xKXDbRplNa.gateway.appmedo.com/parse/imageurl` |
 | Content-Type | N/A (GET request; parameters passed via Query String) |
 | Authentication | user_managed (API Key passed directly) |
 | Auth Header | `X-Gateway-Authorization: K87649693488957` |
@@ -117,7 +117,7 @@ async function ocrParseImageUrl(
   });
 
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-m9xKXDbRplNa.gateway.appmedo.com/parse/imageurl?${params.toString()}`,
+    `https://app-c786uxp01gxt-api-m9xKXDbRplNa.gateway.appmedo.com/parse/imageurl?${params.toString()}`,
     {
       method: "GET",
       headers: {
@@ -202,7 +202,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-m9xKXDbRplNa.gateway.appmedo.com/parse/imageurl?${params.toString()}`,
+    `https://app-c786uxp01gxt-api-m9xKXDbRplNa.gateway.appmedo.com/parse/imageurl?${params.toString()}`,
     {
       method: "GET",
       headers: {

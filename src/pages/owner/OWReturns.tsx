@@ -40,7 +40,7 @@ const REFUND_METHODS = ['cash', 'mpesa', 'card', 'store_credit'];
 export default function OWReturns() {
   const { appUser } = useAuth();
   const { format: fmt } = useCurrency();
-  const canApprove = appUser?.role === 'owner' || appUser?.role === 'manager';
+  const canApprove = appUser?.role === 'owner' || (appUser?.role as string) === 'manager';
   const [returns, setReturns] = useState<SaleReturn[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');

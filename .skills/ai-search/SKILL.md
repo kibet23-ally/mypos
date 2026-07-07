@@ -10,7 +10,7 @@ license: MIT
 
 Calls the Huayan AI Search endpoint backed by the Gemini 2.5 Flash model and Google real-time search to perform web-grounded retrieval on any question and return an intelligent summary with cited sources.
 
-- **Endpoint**: `POST https://app-cfk4gxvsmygz-api-zYm4ze3j7XvL.gateway.appmedo.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse`
+- **Endpoint**: `POST https://app-c786uxp01gxt-api-zYm4ze3j7XvL.gateway.appmedo.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse`
 - **Response mode**: SSE streaming (Server-Sent Events). The first token may take up to 30 seconds; adjust timeout settings accordingly.
 - **Pricing**: Standard price ¥0.30 / call; discounted price ¥0.19 / call
 

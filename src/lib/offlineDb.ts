@@ -147,7 +147,7 @@ export async function queuePendingSale(sale: Omit<PendingSale, 'localId' | 'sync
   const localId = `offline-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const record: PendingSale = { ...sale, localId, synced: false };
   await db.put('pendingSales', record);
-  console.log('[OfflineDB] Queued offline sale for later sync:', localId, '— total:', sale.total);
+  console.log('[OfflineDB] Queued offline sale for later sync:', localId, '— total:', sale.total_amount);
   return record;
 }
 

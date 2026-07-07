@@ -4,7 +4,7 @@
 
 | Property | Value |
 |----------|-------|
-| Endpoint | `POST https://app-cfk4gxvsmygz-api-qYGWo8XA7JVY.gateway.appmedo.com/v1/videos/text2video` |
+| Endpoint | `POST https://app-c786uxp01gxt-api-qYGWo8XA7JVY.gateway.appmedo.com/v1/videos/text2video` |
 | HTTP Method | `POST` |
 | Request Header Content-Type | `application/json` |
 | Auth Header | `X-Gateway-Authorization: Bearer <AUTH_VALUE>` |
@@ -79,7 +79,7 @@ async function submitTextToVideo(
   }
 ): Promise<{ taskId: string }> {
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-qYGWo8XA7JVY.gateway.appmedo.com/v1/videos/text2video",
+    "https://app-c786uxp01gxt-api-qYGWo8XA7JVY.gateway.appmedo.com/v1/videos/text2video",
     {
       method: "POST",
       headers: {
@@ -165,7 +165,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    "https://app-cfk4gxvsmygz-api-qYGWo8XA7JVY.gateway.appmedo.com/v1/videos/text2video",
+    "https://app-c786uxp01gxt-api-qYGWo8XA7JVY.gateway.appmedo.com/v1/videos/text2video",
     {
       method: "POST",
       headers: {

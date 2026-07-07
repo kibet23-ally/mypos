@@ -12,7 +12,7 @@ Covers two endpoints:
 
 | Item | Details |
 |------|---------|
-| Endpoint | `GET https://app-cfk4gxvsmygz-api-AalZkkAG5w7L.gateway.appmedo.com/v1/images/editing/expand/{task_id}` |
+| Endpoint | `GET https://app-c786uxp01gxt-api-AalZkkAG5w7L.gateway.appmedo.com/v1/images/editing/expand/{task_id}` |
 | Function | Queries the status and result of a single image expansion task, including generated image URLs |
 | Billing | Free |
 
@@ -50,7 +50,7 @@ Covers two endpoints:
 
 | Item | Details |
 |------|---------|
-| Endpoint | `GET https://app-cfk4gxvsmygz-api-pLVzAAkGZwDL.gateway.appmedo.com/v1/images/editing/expand` |
+| Endpoint | `GET https://app-c786uxp01gxt-api-pLVzAAkGZwDL.gateway.appmedo.com/v1/images/editing/expand` |
 | Function | Retrieves a paginated list of all image expansion tasks |
 | Billing | Free |
 
@@ -87,7 +87,7 @@ async function queryExpandTask(taskId: string): Promise<{
   updated_at: number;
 }> {
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-AalZkkAG5w7L.gateway.appmedo.com/v1/images/editing/expand/${taskId}`,
+    `https://app-c786uxp01gxt-api-AalZkkAG5w7L.gateway.appmedo.com/v1/images/editing/expand/${taskId}`,
     {
       method: "GET",
       headers: {
@@ -109,7 +109,7 @@ async function listExpandTasks(pageNum = 1, pageSize = 30): Promise<Array<{
   task_result?: { images: Array<{ index: number; url: string; watermark_url?: string }> };
 }>> {
   const url = new URL(
-    "https://app-cfk4gxvsmygz-api-pLVzAAkGZwDL.gateway.appmedo.com/v1/images/editing/expand"
+    "https://app-c786uxp01gxt-api-pLVzAAkGZwDL.gateway.appmedo.com/v1/images/editing/expand"
   );
   url.searchParams.set("pageNum", String(pageNum));
   url.searchParams.set("pageSize", String(pageSize));
@@ -202,7 +202,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-AalZkkAG5w7L.gateway.appmedo.com/v1/images/editing/expand/${task_id}`,
+    `https://app-c786uxp01gxt-api-AalZkkAG5w7L.gateway.appmedo.com/v1/images/editing/expand/${task_id}`,
     {
       method: "GET",
       headers: {

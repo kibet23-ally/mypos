@@ -4,7 +4,7 @@
 
 | Property | Value |
 |----------|-------|
-| Endpoint | `POST https://app-cfk4gxvsmygz-api-GYX1lzGw01Xa.gateway.appmedo.com/v1/audio/speech` |
+| Endpoint | `POST https://app-c786uxp01gxt-api-GYX1lzGw01Xa.gateway.appmedo.com/v1/audio/speech` |
 | HTTP Method | `POST` |
 | Request Content-Type | `application/json` |
 | Auth Header | `X-Gateway-Authorization: Bearer <AUTH_VALUE>` |
@@ -43,7 +43,7 @@ async function textToSpeech(
   voice: string = "heart",
   responseFormat: string = "mp3"
 ): Promise<ArrayBuffer> {
-  const response = await fetch("https://app-cfk4gxvsmygz-api-GYX1lzGw01Xa.gateway.appmedo.com/v1/audio/speech", {
+  const response = await fetch("https://app-c786uxp01gxt-api-GYX1lzGw01Xa.gateway.appmedo.com/v1/audio/speech", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -70,7 +70,7 @@ This endpoint returns **binary audio data directly** (no URL). After obtaining t
 Save the binary response directly using `curl` (recommended):
 
 ```bash
-curl -s -X POST "https://app-cfk4gxvsmygz-api-GYX1lzGw01Xa.gateway.appmedo.com/v1/audio/speech" \
+curl -s -X POST "https://app-c786uxp01gxt-api-GYX1lzGw01Xa.gateway.appmedo.com/v1/audio/speech" \
   -H "Content-Type: application/json" \
   -H "X-Gateway-Authorization: Bearer $INTEGRATIONS_API_KEY" \
   -d '{"input": "Hello, world!", "voice": "heart", "response_format": "mp3"}' \
@@ -130,7 +130,7 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   // --- Call upstream ---
-  const upstream = await fetch("https://app-cfk4gxvsmygz-api-GYX1lzGw01Xa.gateway.appmedo.com/v1/audio/speech", {
+  const upstream = await fetch("https://app-c786uxp01gxt-api-GYX1lzGw01Xa.gateway.appmedo.com/v1/audio/speech", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

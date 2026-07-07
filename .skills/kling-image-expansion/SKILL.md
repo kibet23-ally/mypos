@@ -12,9 +12,9 @@ Powered by Kling AI, this skill submits image expansion tasks and polls for resu
 
 | Item | Details |
 |------|---------|
-| Create Task Endpoint | `POST https://app-cfk4gxvsmygz-api-GYX1bbkRQj4a.gateway.appmedo.com/v1/images/editing/expand` |
-| Query Task (Single) Endpoint | `GET https://app-cfk4gxvsmygz-api-AalZkkAG5w7L.gateway.appmedo.com/v1/images/editing/expand/{task_id}` |
-| Query Task (List) Endpoint | `GET https://app-cfk4gxvsmygz-api-pLVzAAkGZwDL.gateway.appmedo.com/v1/images/editing/expand` |
+| Create Task Endpoint | `POST https://app-c786uxp01gxt-api-GYX1bbkRQj4a.gateway.appmedo.com/v1/images/editing/expand` |
+| Query Task (Single) Endpoint | `GET https://app-c786uxp01gxt-api-AalZkkAG5w7L.gateway.appmedo.com/v1/images/editing/expand/{task_id}` |
+| Query Task (List) Endpoint | `GET https://app-c786uxp01gxt-api-pLVzAAkGZwDL.gateway.appmedo.com/v1/images/editing/expand` |
 | Authentication | Platform-managed — key injected via `INTEGRATIONS_API_KEY` |
 | Billing | Original price ¥3.40 / request, discounted price ¥2.80 / request (billed on task creation only) |
 | Async Mode | Returns `task_id` after submission; poll until `task_status` becomes `succeed` or `failed` |
@@ -77,7 +77,7 @@ async function createExpandTask(params: {
   external_task_id?: string;
 }): Promise<{ task_id: string; task_status: string }> {
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-GYX1bbkRQj4a.gateway.appmedo.com/v1/images/editing/expand",
+    "https://app-c786uxp01gxt-api-GYX1bbkRQj4a.gateway.appmedo.com/v1/images/editing/expand",
     {
       method: "POST",
       headers: {
@@ -101,7 +101,7 @@ async function queryExpandTask(taskId: string): Promise<{
   task_result?: { images: Array<{ index: number; url: string }> };
 }> {
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-AalZkkAG5w7L.gateway.appmedo.com/v1/images/editing/expand/${taskId}`,
+    `https://app-c786uxp01gxt-api-AalZkkAG5w7L.gateway.appmedo.com/v1/images/editing/expand/${taskId}`,
     {
       method: "GET",
       headers: {

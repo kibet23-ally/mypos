@@ -8,7 +8,7 @@ license: MIT
 
 Extract structured article content from any web page URL using the Diffbot Article API, including body text, cleaned HTML, author, publication date, images, tags, categories, and sentiment scores. Also supports directly submitting an HTML string for extraction without remote fetching.
 
-- **Endpoint**: `GET/POST https://app-cfk4gxvsmygz-api-Q9KWZ8R7Qv09.gateway.appmedo.com/v3/article`
+- **Endpoint**: `GET/POST https://app-c786uxp01gxt-api-Q9KWZ8R7Qv09.gateway.appmedo.com/v3/article`
 - **Core capabilities**: Automatically extract body content and related metadata from news articles, blog posts, and long-form pages; supports comment extraction, quote extraction, and summary generation
 - **Limitations**: Each request corresponds to a single URL; the `quotes` field only supports English-language pages; `discussion` (comments) is enabled by default — disable it explicitly when comments are not needed to improve response speed
 
@@ -106,7 +106,7 @@ async function callWebpageContentExtract(
   const hasBody = options?.html !== undefined || options?.text !== undefined;
 
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-Q9KWZ8R7Qv09.gateway.appmedo.com/v3/article?${params.toString()}`,
+    `https://app-c786uxp01gxt-api-Q9KWZ8R7Qv09.gateway.appmedo.com/v3/article?${params.toString()}`,
     {
       method: hasBody ? "POST" : "GET",
       headers: {
@@ -225,7 +225,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-Q9KWZ8R7Qv09.gateway.appmedo.com/v3/article?${params.toString()}`,
+    `https://app-c786uxp01gxt-api-Q9KWZ8R7Qv09.gateway.appmedo.com/v3/article?${params.toString()}`,
     {
       method: hasBody ? "POST" : "GET",
       headers: {

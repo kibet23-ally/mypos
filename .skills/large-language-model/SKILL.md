@@ -10,7 +10,7 @@ license: MIT
 
 Call the Gemini 2.5 Flash multimodal large language model via the API Gateway. Supports text conversation and image understanding, with responses returned as an SSE stream.
 
-- **Endpoint**: `POST https://app-cfk4gxvsmygz-api-VaOwP8E7dJqa.gateway.appmedo.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse`
+- **Endpoint**: `POST https://app-c786uxp01gxt-api-VaOwP8E7dJqa.gateway.appmedo.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse`
 - **Response mode**: SSE streaming (Server-Sent Events)
 - **Supported modalities**: Multi-turn text conversation, Base64 inline images, file URI images
 - **First-token latency**: Up to 30 seconds; extend API timeout settings accordingly

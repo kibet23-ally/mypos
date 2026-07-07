@@ -46,7 +46,7 @@ function downloadCSV(rows: string[][], filename: string) {
 export default function OWExpenses() {
   const { appUser } = useAuth();
   const { format: fmt } = useCurrency();
-  const canEdit = appUser?.role === 'owner' || appUser?.role === 'manager';
+  const canEdit = appUser?.role === 'owner' || (appUser?.role as string) === 'manager';
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');

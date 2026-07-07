@@ -19,7 +19,8 @@ import {
 } from 'recharts';
 
 interface SaleItem { product_id: string; name: string; qty: number; price: number; }
-interface Sale {
+/** Local shape that matches what the OWSales Supabase query actually returns. */
+interface LocalSale {
   id: string;
   transaction_id: string;
   total: number;
@@ -51,7 +52,7 @@ export default function OWSales() {
   const { appUser } = useAuth();
   const { format: fmt } = useCurrency();
   const [tab, setTab] = useState<Tab>('history');
-  const [sales, setSales] = useState<Sale[]>([]);
+  const [sales, setSales] = useState<LocalSale[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [dateFrom, setDateFrom] = useState('');
@@ -59,7 +60,7 @@ export default function OWSales() {
   const [payFilter, setPayFilter] = useState('');
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
-  const [detail, setDetail] = useState<Sale | null>(null);
+  const [detail, setDetail] = useState<LocalSale | null>(null);
   const [receiptModal, setReceiptModal] = useState<ReceiptData | null>(null);
   const [period, setPeriod] = useState<'daily'|'weekly'|'monthly'>('daily');
 
@@ -76,7 +77,7 @@ export default function OWSales() {
     if (dateTo) q = q.lte('created_at', dateTo + 'T23:59:59');
     if (payFilter) q = q.eq('payment_method', payFilter);
     const { data, count } = await q;
-    setSales(Array.isArray(data) ? data : []);
+    setSales(Array.isArray(data) ? (data as unknown as LocalSale[]) : []);
     setTotal(count ?? 0);
     setLoading(false);
   }, [appUser?.tenant_id, page, search, dateFrom, dateTo, payFilter]);
@@ -105,8 +106,7 @@ export default function OWSales() {
   const todaySales = sales.filter(s => s.created_at.slice(0, 10) === new Date().toISOString().slice(0, 10));
   const avgOrder = sales.length ? totalRevenue / sales.length : 0;
 
-  const openReceipt = (s: Sale) => {
-    // Use stored subtotal if available; otherwise derive from total using tenant tax rate
+  const openReceipt = (s: LocalSale) => {
     const tenantTaxRate = appUser?.tenant?.tax_rate ?? 0;
     const subtotal = s.subtotal ?? (tenantTaxRate > 0 ? s.total / (1 + tenantTaxRate / 100) : s.total);
     const tax = s.total - subtotal;
@@ -125,7 +125,7 @@ export default function OWSales() {
     setReceiptModal(r);
   };
 
-  const handleRefund = async (s: Sale) => {
+  const handleRefund = async (s: LocalSale) => {
     if (!confirm(`Refund transaction ${s.transaction_id}?`)) return;
     const { error } = await supabase.from('sales').update({ status: 'refunded' }).eq('id', s.id);
     if (error) toast.error(error.message); else { toast.success('Sale marked as refunded'); load(); }

@@ -4,7 +4,7 @@
 
 | Property | Value |
 |----------|-------|
-| Endpoint | `GET https://app-cfk4gxvsmygz-api-pLVzAEz1ZQOL.gateway.appmedo.com/v1/videos/omni-video/{task_id}` |
+| Endpoint | `GET https://app-c786uxp01gxt-api-pLVzAEz1ZQOL.gateway.appmedo.com/v1/videos/omni-video/{task_id}` |
 | HTTP Method | `GET` |
 | Request Header Content-Type | `application/json` |
 | Authorization Header | `X-Gateway-Authorization: Bearer ${INTEGRATIONS_API_KEY}` |
@@ -98,7 +98,7 @@ interface OmniVideoQueryResult {
 
 async function queryOmniVideoTask(taskId: string): Promise<OmniVideoQueryResult> {
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-pLVzAEz1ZQOL.gateway.appmedo.com/v1/videos/omni-video/${encodeURIComponent(taskId)}`,
+    `https://app-c786uxp01gxt-api-pLVzAEz1ZQOL.gateway.appmedo.com/v1/videos/omni-video/${encodeURIComponent(taskId)}`,
     {
       method: "GET",
       headers: {
@@ -213,7 +213,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-pLVzAEz1ZQOL.gateway.appmedo.com/v1/videos/omni-video/${encodeURIComponent(taskId)}`,
+    `https://app-c786uxp01gxt-api-pLVzAEz1ZQOL.gateway.appmedo.com/v1/videos/omni-video/${encodeURIComponent(taskId)}`,
     {
       method: "GET",
       headers: {
