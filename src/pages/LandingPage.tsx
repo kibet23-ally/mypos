@@ -1,565 +1,712 @@
-import { Link } from 'react-router-dom';
-import {
-  BarChart3, ShieldCheck, Users, Zap, Package, TrendingUp,
-  Star, CheckCircle, ArrowRight, Menu, X, ChevronRight,
-  Building2, Clock, CreditCard,
-} from 'lucide-react';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import React from "react";
 
-/* ─── colour palette helpers (inline so no CSS token bleed into landing) ─── */
-const E = '#10B981'; // emerald accent
-
-/* ─── data ─── */
-const FEATURES = [
-  {
-    icon: Zap,
-    title: 'Lightning-Fast POS',
-    desc: 'Process transactions in under 3 seconds with our optimised checkout interface — built for high-volume retail.',
-  },
-  {
-    icon: BarChart3,
-    title: 'Real-Time Analytics',
-    desc: 'Live revenue charts, hourly sales trends, and profit breakdowns updated every second, no refresh required.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Role-Based Security',
-    desc: 'Granular RBAC for SuperAdmin, Owner, and Cashier roles. Every API request is JWT-validated at the server.',
-  },
-  {
-    icon: Package,
-    title: 'Smart Inventory',
-    desc: 'Automatic low-stock alerts, reorder thresholds, and category-level stock visibility across your entire catalogue.',
-  },
-  {
-    icon: Users,
-    title: 'Staff Management',
-    desc: 'Track cashier performance, monitor shift durations, and review individual transaction histories effortlessly.',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Financial Reports',
-    desc: 'Monthly P&L, expense breakdowns, and YTD revenue summaries exported-ready in one premium dashboard.',
-  },
-];
-
-const STATS = [
-  { value: '2,400+', label: 'Businesses Powered' },
-  { value: '$180M+', label: 'Transactions Processed' },
-  { value: '99.9%', label: 'Platform Uptime' },
-  { value: '<3s', label: 'Avg Checkout Time' },
-];
-
-const REVIEWS = [
-  {
-    name: 'Marcus T.',
-    role: 'Owner, City Bakehouse',
-    avatar: 'MT',
-    rating: 5,
-    text: 'PosifyPro completely transformed how we run our bakery. The real-time analytics alone saved us 4 hours of manual reporting every week. Worth every penny.',
-    img: 'https://miaoda-site-img.s3cdn.medo.dev/images/KLing_47da78ec-752f-4500-bf49-026c9f8947d3.jpg',
-  },
-  {
-    name: 'Priya S.',
-    role: 'Owner, Spice Garden Restaurant',
-    avatar: 'PS',
-    rating: 5,
-    text: 'The multi-role access is a game-changer. My cashiers see exactly what they need, and I get the full financial picture. The dashboard is genuinely beautiful.',
-    img: 'https://miaoda-site-img.s3cdn.medo.dev/images/KLing_12f25b70-5324-4472-8c4e-3d87591c974f.jpg',
-  },
-  {
-    name: 'James O.',
-    role: 'Owner, Blue Wave Café',
-    avatar: 'JO',
-    rating: 5,
-    text: 'Switched from our old clunky system in an afternoon. The one-time license means no monthly surprises. The POS is fast, clean, and my staff picked it up instantly.',
-    img: 'https://miaoda-site-img.s3cdn.medo.dev/images/KLing_25025eb9-d5da-4f2d-853d-8f8464383dbf.jpg',
-  },
-  {
-    name: 'Amelia K.',
-    role: 'Owner, Bloom Boutique',
-    avatar: 'AK',
-    rating: 5,
-    text: "Inventory tracking finally makes sense. I can see stock levels across all categories in one view and the reorder alerts mean I've never run out of a bestseller again.",
-    img: 'https://miaoda-site-img.s3cdn.medo.dev/images/KLing_47da78ec-752f-4500-bf49-026c9f8947d3.jpg',
-  },
-  {
-    name: 'David L.',
-    role: 'Owner, Fresh Market Co.',
-    avatar: 'DL',
-    rating: 5,
-    text: 'The staff performance module is outstanding. I can see who is processing the most transactions and where bottlenecks occur. Decision-making is now data-driven.',
-    img: 'https://miaoda-site-img.s3cdn.medo.dev/images/KLing_12f25b70-5324-4472-8c4e-3d87591c974f.jpg',
-  },
-  {
-    name: 'Sofia R.',
-    role: 'Owner, The Corner Deli',
-    avatar: 'SR',
-    rating: 5,
-    text: "I was sceptical about a one-time license model but PosifyPro proved me wrong. Regular updates, premium support, and the product keeps getting better every month.",
-    img: 'https://miaoda-site-img.s3cdn.medo.dev/images/KLing_25025eb9-d5da-4f2d-853d-8f8464383dbf.jpg',
-  },
-];
-
-const PRICING_FEATURES = [
-  'Unlimited transactions',
-  'Up to 20 cashier accounts',
-  'Real-time sales dashboard',
-  'Inventory & stock alerts',
-  'Staff performance tracking',
-  'Financial reports & P&L',
-  'Role-based access control',
-  'Lifetime license — pay once',
-  'Free product updates',
-  'Priority email support',
-];
-
-const NAV_LINKS = ['Features', 'Pricing', 'Reviews'];
-
-/* ─── sub-components ─── */
-function StarRating({ count }: { count: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {Array.from({ length: count }).map((_, i) => (
-        <Star key={i} className="w-4 h-4 fill-[#F59E0B] text-[#F59E0B]" />
-      ))}
-    </div>
-  );
-}
-
-/* ─── main component ─── */
 export default function LandingPage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    setMobileMenuOpen(false);
-  };
-
   return (
-    <div className="min-h-screen bg-white font-inter antialiased overflow-x-hidden">
-
-      {/* ── NAVBAR ── */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#0F172A]/95 backdrop-blur-md border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between gap-4">
-          {/* Logo */}
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: E }}>
-              <CreditCard className="w-4 h-4 text-white" />
+    <div style={{ minHeight: "100vh", background: "#F8FAFC", color: "#0F172A" }}>
+      <header
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+          background: "rgba(248, 250, 252, 0.85)",
+          backdropFilter: "blur(8px)",
+          borderBottom: "1px solid rgba(15, 23, 42, 0.08)",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 1120,
+            margin: "0 auto",
+            padding: "14px 20px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 16,
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div
+              style={{
+                width: 34,
+                height: 34,
+                borderRadius: 10,
+                background: "linear-gradient(135deg, #2563EB, #60A5FA)",
+                boxShadow: "0 10px 25px rgba(37, 99, 235, 0.18)",
+              }}
+            />
+            <div>
+              <div style={{ fontWeight: 900, letterSpacing: "-0.02em" }}>posifypro</div>
+              <div style={{ fontSize: 12, color: "#475569", fontWeight: 650 }}>
+                Modern POS for Kenyan businesses
+              </div>
             </div>
-            <span className="text-white font-bold text-xl tracking-tight">posify<span style={{ color: E }}>pro</span></span>
           </div>
 
-          {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map(l => (
-              <button key={l} onClick={() => scrollTo(l.toLowerCase())}
-                className="text-sm text-slate-300 hover:text-white transition-colors duration-150 font-medium">
-                {l}
-              </button>
-            ))}
+          <nav style={{ display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap" }}>
+            <a href="#features" style={linkStyle}>
+              Features
+            </a>
+            <a href="#how-it-works" style={linkStyle}>
+              How it works
+            </a>
+            <a href="#pricing" style={linkStyle}>
+              Pricing
+            </a>
+            <a href="/login" style={secondaryBtnStyle}>
+              Log in
+            </a>
+            <a href="/login" style={primaryBtnStyle}>
+              Start free trial
+            </a>
           </nav>
-
-          {/* Desktop CTA */}
-          <div className="hidden md:flex items-center gap-3 shrink-0">
-            <Link to="/login">
-              <Button variant="ghost" size="sm" className="h-9 text-slate-300 hover:text-white border border-white/15 hover:bg-white/10 font-medium">
-                Sign In
-              </Button>
-            </Link>
-            <Link to="/register">
-              <Button size="sm" className="h-9 font-semibold gap-1.5 text-white" style={{ background: E, border: 'none' }}>
-                Get Started <ChevronRight className="w-4 h-4" />
-              </Button>
-            </Link>
-          </div>
-
-          {/* Mobile hamburger */}
-          <button className="md:hidden text-white p-1" onClick={() => setMobileMenuOpen(v => !v)}>
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
         </div>
-
-        {/* Mobile menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-[#0F172A] border-t border-white/10 px-4 py-4 space-y-3">
-            {NAV_LINKS.map(l => (
-              <button key={l} onClick={() => scrollTo(l.toLowerCase())}
-                className="block w-full text-left text-slate-300 hover:text-white text-sm font-medium py-2">
-                {l}
-              </button>
-            ))}
-            <div className="pt-2 flex flex-col gap-2">
-              <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="outline" className="w-full h-10 border-white/20 text-slate-200 bg-transparent hover:bg-white/10 hover:text-white font-medium">Sign In</Button>
-              </Link>
-              <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
-                <Button className="w-full h-10 font-semibold text-white" style={{ background: E, border: 'none' }}>Get Started</Button>
-              </Link>
-            </div>
-          </div>
-        )}
       </header>
 
-      {/* ── HERO ── */}
-      <section className="relative pt-16 min-h-[92vh] flex items-center overflow-hidden" style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 60%, #0F2A1A 100%)' }}>
-        {/* subtle grid overlay */}
-        <div className="absolute inset-0 opacity-[0.04]"
-          style={{ backgroundImage: 'linear-gradient(#10B981 1px, transparent 1px), linear-gradient(90deg, #10B981 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
+      <main>
+        <section
+          style={{
+            maxWidth: 1120,
+            margin: "0 auto",
+            padding: "52px 20px 18px",
+            display: "grid",
+            gridTemplateColumns: "1.15fr 0.85fr",
+            gap: 28,
+            alignItems: "start",
+          }}
+        >
+          <div>
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "8px 12px",
+                borderRadius: 999,
+                background: "rgba(37, 99, 235, 0.08)",
+                color: "#1D4ED8",
+                border: "1px solid rgba(37, 99, 235, 0.18)",
+                fontWeight: 750,
+                fontSize: 13,
+              }}
+            >
+              <span style={{ width: 8, height: 8, borderRadius: 999, background: "#1D4ED8" }} />
+              One-time payment license
+            </div>
 
-        {/* emerald glow */}
-        <div className="absolute top-1/3 right-1/4 w-96 h-96 rounded-full blur-[120px] opacity-15" style={{ background: E }} />
-        <div className="absolute bottom-1/4 left-1/4 w-64 h-64 rounded-full blur-[100px] opacity-10" style={{ background: E }} />
-
-        <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-20 md:py-28 w-full">
-          <div className="max-w-3xl">
-            <Badge className="mb-6 text-xs font-semibold px-3 py-1 rounded-full border-0 text-white" style={{ background: `${E}22`, color: E }}>
-              ✦ The #1 POS System for Growing Businesses
-            </Badge>
-
-            <h1 className="text-4xl md:text-6xl font-bold text-white leading-[1.1] mb-6 text-balance">
-              Run Your Business<br />
-              <span style={{ color: E }}>Smarter, Faster,</span><br />
-              With Confidence.
+            <h1 style={{ margin: "16px 0 12px", fontSize: 44, lineHeight: 1.05, letterSpacing: "-0.04em" }}>
+              Run sales, inventory, and reports—fast and confidently.
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-300 leading-relaxed mb-10 max-w-xl text-pretty">
-              PosifyPro is the all-in-one point-of-sale platform trusted by 2,400+ businesses. One-time payment. Lifetime access. No subscriptions.
+            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.7, color: "#334155", maxWidth: 580 }}>
+              posifypro helps shops and service businesses in Kenya manage orders, track stock, and generate clear
+              reports—so you spend less time on paperwork and more time growing.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/register">
-                <Button size="lg" className="h-13 px-8 text-base font-bold text-white gap-2 shadow-lg shadow-emerald-900/40 hover:opacity-90 transition-opacity" style={{ background: E, border: 'none' }}>
-                  Start Free Trial <ArrowRight className="w-5 h-5" />
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button size="lg" variant="ghost" className="h-13 px-8 text-base font-semibold border border-white/20 text-white hover:bg-white/10 gap-2">
-                  Sign In to Dashboard
-                </Button>
-              </Link>
+            <div style={{ display: "flex", gap: 12, marginTop: 22, flexWrap: "wrap" }}>
+              <a href="/login" style={{ ...primaryBtnStyle, padding: "12px 16px" }}>
+                Start free trial
+              </a>
+              <a href="#pricing" style={{ ...secondaryBtnStyle, padding: "12px 16px" }}>
+                View pricing
+              </a>
             </div>
 
-            {/* trust badges */}
-            <div className="mt-12 flex flex-wrap items-center gap-6">
-              {['No monthly fees', 'One-time license', 'Free updates'].map(t => (
-                <div key={t} className="flex items-center gap-1.5 text-sm text-slate-400">
-                  <CheckCircle className="w-4 h-4 shrink-0" style={{ color: E }} />
-                  <span>{t}</span>
-                </div>
-              ))}
+            <div style={{ marginTop: 18, display: "flex", gap: 14, flexWrap: "wrap" }}>
+              <div style={pillStyle}>
+                <span style={checkStyle} />
+                Quick setup
+              </div>
+              <div style={pillStyle}>
+                <span style={checkStyle} />
+                Built for shops & services
+              </div>
+              <div style={pillStyle}>
+                <span style={checkStyle} />
+                Pay once, keep going
+              </div>
             </div>
           </div>
 
-          {/* hero image — offset right on large screens */}
-          <div className="hidden xl:block absolute right-8 top-1/2 -translate-y-1/2 w-[480px]">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-black/50 ring-1 ring-white/10">
-              <img
-                src="https://miaoda-site-img.s3cdn.medo.dev/images/KLing_06975c56-ded8-48ef-af5d-a13bfa6f7f83.jpg"
-                alt="PosifyPro analytics dashboard"
-                className="w-full h-[340px] object-cover"
-              />
-              {/* floating card */}
-              <div className="absolute bottom-4 left-4 right-4 bg-[#0F172A]/90 backdrop-blur-sm rounded-xl p-4 flex items-center gap-3 border border-white/10">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ background: `${E}22` }}>
-                  <TrendingUp className="w-5 h-5" style={{ color: E }} />
-                </div>
+          <div>
+            <div style={heroCardStyle}>
+              <div style={heroCardTopStyle}>
                 <div>
-                  <p className="text-white font-bold text-lg leading-none">+34.2% Profit</p>
-                  <p className="text-slate-400 text-xs mt-0.5">vs last month</p>
+                  <div style={{ fontWeight: 900 }}>Today’s snapshot</div>
+                  <div style={{ fontSize: 12, color: "#64748B", fontWeight: 700 }}>Quick overview for your store</div>
                 </div>
+
+                <div style={heroBadgeStyle}>KSh</div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ── STATS BAR ── */}
-      <section className="bg-[#0F172A] border-b border-white/5">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {STATS.map(s => (
-              <div key={s.label} className="text-center">
-                <p className="text-3xl md:text-4xl font-bold" style={{ color: E }}>{s.value}</p>
-                <p className="text-slate-400 text-sm mt-1">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── FEATURES ── */}
-      <section id="features" className="bg-slate-50 py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 text-xs font-semibold px-3 py-1 rounded-full border-0" style={{ background: `${E}18`, color: E }}>
-              Everything You Need
-            </Badge>
-            <h2 className="text-3xl md:text-5xl font-bold text-[#0F172A] mb-4 text-balance">
-              Built for Real Business Owners
-            </h2>
-            <p className="text-lg text-slate-500 max-w-xl mx-auto text-pretty">
-              Every feature was designed with speed, clarity, and profitability in mind — from the first transaction to your thousandth.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {FEATURES.map((f, i) => (
-              <div key={i} className="bg-white rounded-2xl p-8 border border-slate-100 hover:border-emerald-200 hover:shadow-lg hover:shadow-emerald-50 transition-all duration-200 group h-full flex flex-col">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 shrink-0 group-hover:scale-110 transition-transform duration-200"
-                  style={{ background: `${E}15` }}>
-                  <f.icon className="w-6 h-6" style={{ color: E }} />
+              <div style={{ padding: 16 }}>
+                <div style={metricRowStyle}>
+                  <div style={metricLabelStyle}>Sales today</div>
+                  <div style={metricValueStyle}>148,200</div>
                 </div>
-                <h3 className="text-lg font-bold text-[#0F172A] mb-3 text-balance">{f.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed flex-1 text-pretty">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+                <div style={metricRowStyle}>
+                  <div style={metricLabelStyle}>Orders</div>
+                  <div style={metricValueStyle}>63</div>
+                </div>
+                <div style={metricRowStyle}>
+                  <div style={metricLabelStyle}>Low stock alerts</div>
+                  <div style={metricValueStyle}>4</div>
+                </div>
 
-      {/* ── SCREENSHOT / CTA SPLIT ── */}
-      <section className="bg-white py-20 md:py-28 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="flex flex-col xl:flex-row items-center gap-12 xl:gap-16">
-            {/* image */}
-            <div className="w-full xl:w-1/2 shrink-0">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-slate-200 ring-1 ring-slate-100">
-                <img
-                  src="https://miaoda-site-img.s3cdn.medo.dev/images/KLing_4e521e1f-978e-4f45-9dcf-dadfa6b3ffa2.jpg"
-                  alt="Modern POS terminal in use"
-                  className="w-full h-[360px] md:h-[420px] object-cover"
-                />
-              </div>
-            </div>
-            {/* copy */}
-            <div className="w-full xl:w-1/2">
-              <Badge className="mb-5 text-xs font-semibold px-3 py-1 rounded-full border-0" style={{ background: `${E}15`, color: E }}>
-                Designed for Speed
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#0F172A] mb-5 text-balance">
-                A POS Interface Your Team Will Actually Love
-              </h2>
-              <p className="text-slate-500 text-base leading-relaxed mb-8 text-pretty">
-                Our cashier interface strips away the clutter. Product grid on the left, live cart on the right — checkout in under 3 taps. Onboarding takes minutes, not days.
-              </p>
-              <ul className="space-y-3 mb-10">
-                {['Product search & category filters', 'Cash, card & mobile payment support', 'Instant receipt generation', 'Per-cashier performance tracking'].map(item => (
-                  <li key={item} className="flex items-center gap-3 text-sm text-slate-600">
-                    <CheckCircle className="w-5 h-5 shrink-0" style={{ color: E }} />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-              <Link to="/register">
-                <Button size="lg" className="h-12 px-8 font-bold text-white gap-2" style={{ background: E, border: 'none' }}>
-                  Try It Free <ArrowRight className="w-4 h-4" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── REVIEWS ── */}
-      <section id="reviews" className="bg-slate-50 py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 text-xs font-semibold px-3 py-1 rounded-full border-0" style={{ background: `${E}18`, color: E }}>
-              Customer Reviews
-            </Badge>
-            <h2 className="text-3xl md:text-5xl font-bold text-[#0F172A] mb-4 text-balance">
-              Trusted by Business Owners Everywhere
-            </h2>
-            <p className="text-lg text-slate-500 max-w-xl mx-auto text-pretty">
-              Don't just take our word for it — here's what our customers say.
-            </p>
-            {/* aggregate rating */}
-            <div className="flex items-center justify-center gap-3 mt-6">
-              <StarRating count={5} />
-              <span className="text-[#0F172A] font-bold text-lg">4.9</span>
-              <span className="text-slate-400 text-sm">from 840+ reviews</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {REVIEWS.map((r, i) => (
-              <div key={i} className="bg-white rounded-2xl p-8 border border-slate-100 hover:shadow-lg transition-shadow duration-200 flex flex-col h-full">
-                <StarRating count={r.rating} />
-                <p className="text-slate-600 text-sm leading-relaxed mt-4 flex-1 text-pretty">"{r.text}"</p>
-                <div className="flex items-center gap-3 mt-6 pt-5 border-t border-slate-100">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 font-bold text-sm text-white"
-                    style={{ background: '#0F172A' }}>
-                    {r.avatar}
+                <div style={recommendationStyle}>
+                  <div style={{ fontWeight: 900, marginBottom: 8 }}>Recommendation</div>
+                  <div style={{ color: "#475569", fontSize: 13, lineHeight: 1.6 }}>
+                    Reorder low-stock items to avoid missed sales—posifypro keeps you on track.
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-[#0F172A]">{r.name}</p>
-                    <p className="text-xs text-slate-400">{r.role}</p>
+                  <div style={{ marginTop: 12, display: "flex", gap: 10, flexWrap: "wrap" }}>
+                    <a href="/login" style={tertiaryBtnStyle}>
+                      Create your workspace
+                    </a>
+                    <a href="#features" style={ghostBtnStyle}>
+                      See features
+                    </a>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* ── PRICING ── */}
-      <section id="pricing" className="bg-white py-20 md:py-28">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 text-xs font-semibold px-3 py-1 rounded-full border-0" style={{ background: `${E}15`, color: E }}>
-              Simple Pricing
-            </Badge>
-            <h2 className="text-3xl md:text-5xl font-bold text-[#0F172A] mb-4 text-balance">
-              One Price. Everything Included.
-            </h2>
-            <p className="text-lg text-slate-500 max-w-xl mx-auto text-pretty">
-              No monthly fees. No per-transaction cuts. No hidden charges. Pay once and own your POS system for life.
-            </p>
-          </div>
-
-          <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Free / Starter */}
-              <div className="rounded-2xl border border-slate-200 p-8 bg-slate-50 flex flex-col">
-                <div className="mb-6">
-                  <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-2">Starter Trial</p>
-                  <p className="text-5xl font-bold text-[#0F172A]">Free<span className="text-lg font-normal text-slate-400"> / 14 days</span></p>
-                  <p className="text-slate-500 text-sm mt-2">No credit card required</p>
+              <div style={heroCardBottomStyle}>
+                <div style={miniStatStyle}>
+                  <div style={miniStatLabelStyle}>Uptime</div>
+                  <div style={miniStatValueStyle}>99.99%</div>
                 </div>
-                <ul className="space-y-3 flex-1 mb-8">
-                  {['Up to 3 cashier accounts', '500 transactions/month', 'Basic dashboard', 'Email support'].map(f => (
-                    <li key={f} className="flex items-center gap-2.5 text-sm text-slate-600">
-                      <CheckCircle className="w-4 h-4 shrink-0 text-slate-400" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link to="/register">
-                  <Button variant="outline" size="lg" className="w-full h-12 font-semibold border-slate-300 text-[#0F172A] hover:bg-slate-100">
-                    Start Free Trial
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Pro / Lifetime */}
-              <div className="rounded-2xl p-8 flex flex-col relative overflow-hidden shadow-xl shadow-emerald-100"
-                style={{ background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)' }}>
-                {/* glow */}
-                <div className="absolute top-0 right-0 w-48 h-48 rounded-full blur-[80px] opacity-20" style={{ background: E }} />
-
-                <div className="relative mb-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    <p className="text-sm font-semibold uppercase tracking-wider" style={{ color: E }}>Lifetime License</p>
-                    <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white" style={{ background: E }}>BEST VALUE</span>
-                  </div>
-                  <p className="text-5xl font-bold text-white">$299<span className="text-lg font-normal text-slate-400"> one-time</span></p>
-                  <p className="text-slate-400 text-sm mt-2">Pay once, use forever</p>
+                <div style={miniStatStyle}>
+                  <div style={miniStatLabelStyle}>Latency</div>
+                  <div style={miniStatValueStyle}>~120ms</div>
                 </div>
-
-                <ul className="space-y-3 flex-1 mb-8 relative">
-                  {PRICING_FEATURES.map(f => (
-                    <li key={f} className="flex items-center gap-2.5 text-sm text-slate-200">
-                      <CheckCircle className="w-4 h-4 shrink-0" style={{ color: E }} />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                <Link to="/register" className="relative">
-                  <Button size="lg" className="w-full h-12 font-bold text-white gap-2 hover:opacity-90 transition-opacity" style={{ background: E, border: 'none' }}>
-                    Get Lifetime Access <ArrowRight className="w-4 h-4" />
-                  </Button>
-                </Link>
+                <div style={miniStatStyle}>
+                  <div style={miniStatLabelStyle}>Support</div>
+                  <div style={miniStatValueStyle}>Fast help</div>
+                </div>
               </div>
             </div>
+          </div>
+        </section>
 
-            {/* money-back */}
-            <div className="flex items-center justify-center gap-3 mt-8 text-slate-500 text-sm">
-              <ShieldCheck className="w-5 h-5 shrink-0" style={{ color: E }} />
-              <span>30-day money-back guarantee — no questions asked</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── BOTTOM CTA BAND ── */}
-      <section className="py-20" style={{ background: 'linear-gradient(135deg, #0F172A 0%, #0F2A1A 100%)' }}>
-        <div className="max-w-3xl mx-auto px-4 text-center">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6" style={{ background: `${E}20` }}>
-            <Building2 className="w-8 h-8" style={{ color: E }} />
-          </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 text-balance">
-            Ready to Transform Your Business?
-          </h2>
-          <p className="text-lg text-slate-300 mb-8 text-pretty">
-            Join 2,400+ businesses already running on PosifyPro. Set up your store in under 10 minutes.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/register">
-              <Button size="lg" className="h-13 px-10 font-bold text-white gap-2 shadow-lg hover:opacity-90 transition-opacity" style={{ background: E, border: 'none' }}>
-                Get Started Today <ArrowRight className="w-5 h-5" />
-              </Button>
-            </Link>
-            <Link to="/login">
-              <Button size="lg" variant="ghost" className="h-13 px-10 font-semibold border border-white/20 text-white hover:bg-white/10">
-                Sign In
-              </Button>
-            </Link>
-          </div>
-          <div className="mt-6 flex items-center justify-center gap-2 text-slate-400 text-sm">
-            <Clock className="w-4 h-4 shrink-0" />
-            <span>Setup takes under 10 minutes — no technical knowledge required</span>
-          </div>
-        </div>
-      </section>
-
-      {/* ── FOOTER ── */}
-      <footer className="bg-[#0F172A] border-t border-white/5 py-12">
-        <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-            {/* brand */}
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: E }}>
-                  <CreditCard className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-white font-bold text-xl tracking-tight">posify<span style={{ color: E }}>pro</span></span>
-              </div>
-              <p className="text-slate-500 text-sm max-w-xs text-pretty">
-                The professional point-of-sale platform for modern retail and hospitality businesses.
-              </p>
+        {/* Testimonials */}
+        <section style={{ padding: "6px 20px 28px" }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+            <div style={{ color: "#64748B", fontSize: 13, fontWeight: 800, marginBottom: 12 }}>
+              Trusted by Kenyan businesses
             </div>
 
-            {/* links */}
-            <div className="flex flex-wrap gap-x-8 gap-y-3">
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: 14,
+              }}
+            >
               {[
-                { label: 'Features', action: () => scrollTo('features') },
-                { label: 'Pricing', action: () => scrollTo('pricing') },
-                { label: 'Reviews', action: () => scrollTo('reviews') },
-              ].map(l => (
-                <button key={l.label} onClick={l.action}
-                  className="text-slate-400 hover:text-white text-sm transition-colors duration-150">
-                  {l.label}
-                </button>
+                {
+                  name: "Wanjiku Traders (Nairobi)",
+                  role: "Retail shop owner",
+                  quote:
+                    "posifypro made it easy to track stock and see daily sales. I stopped guessing—now reports are clear.",
+                },
+                {
+                  name: "Kiprotich Hardware (Eldoret)",
+                  role: "Store manager",
+                  quote:
+                    "Checkout is faster, and inventory updates automatically. We reduced losses from miscounting.",
+                },
+                {
+                  name: "Otieno Pharmacy (Kisumu)",
+                  role: "Operations lead",
+                  quote:
+                    "The system keeps our transactions organized. It’s simple enough for staff and reliable for the business.",
+                },
+                {
+                  name: "Mwende Salon (Mombasa)",
+                  role: "Salon owner",
+                  quote:
+                    "We track bookings and daily sales in one place. The one-time payment was a great decision for us.",
+                },
+                {
+                  name: "Abdul’s Fast Foods (Nakuru)",
+                  role: "Restaurant manager",
+                  quote:
+                    "POS is smooth, and the reports help us plan purchasing better. Our team adopted it quickly.",
+                },
+                {
+                  name: "Benson Auto Parts (Thika)",
+                  role: "Spare parts shop",
+                  quote:
+                    "Inventory alerts are a lifesaver. We reorder before customers start asking for items.",
+                },
+              ].map((t) => (
+                <div key={t.name} style={testimonialCardStyle}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+                    <div style={avatarStyle}>{t.name.split(" ")[0].slice(0, 2).toUpperCase()}</div>
+                    <div>
+                      <div style={{ fontWeight: 950, color: "#0F172A", fontSize: 14 }}>{t.name}</div>
+                      <div style={{ color: "#64748B", fontSize: 12, fontWeight: 800 }}>{t.role}</div>
+                    </div>
+                  </div>
+                  <div style={{ color: "#334155", lineHeight: 1.7, fontSize: 14 }}>{t.quote}</div>
+                </div>
               ))}
-              <Link to="/login" className="text-slate-400 hover:text-white text-sm transition-colors duration-150">Sign In</Link>
-              <Link to="/register" className="text-sm font-semibold transition-colors duration-150" style={{ color: E }}>Get Started</Link>
             </div>
           </div>
+        </section>
 
-          <div className="mt-10 pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-3 text-slate-500 text-xs">
-            <p>© 2026 PosifyPro. All rights reserved.</p>
-            <div className="flex gap-6">
-              <span className="hover:text-slate-300 cursor-pointer transition-colors">Privacy Policy</span>
-              <span className="hover:text-slate-300 cursor-pointer transition-colors">Terms of Service</span>
-              <span className="hover:text-slate-300 cursor-pointer transition-colors">Support</span>
+        {/* Features */}
+        <section id="features" style={{ padding: "10px 20px 10px" }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+            <h2 style={h2Style}>Everything you need to run smoothly.</h2>
+            <p style={subStyle}>
+              Sales, inventory, and reporting designed for day-to-day operations—so you spend less time on paperwork.
+            </p>
+
+            <div style={grid3Style}>
+              {[
+                { title: "Fast checkout", desc: "Issue receipts quickly and keep transactions organized across your store.", icon: "⚡" },
+                { title: "Inventory tracking", desc: "Know stock levels in real time and spot low stock when it matters.", icon: "📦" },
+                { title: "Clear reports", desc: "Track daily and monthly performance to make confident business decisions.", icon: "📈" },
+              ].map((f) => (
+                <div key={f.title} style={cardStyle}>
+                  <div style={iconStyle}>{f.icon}</div>
+                  <div style={{ fontWeight: 950, marginBottom: 6 }}>{f.title}</div>
+                  <div style={{ color: "#475569", lineHeight: 1.6, fontSize: 14 }}>{f.desc}</div>
+                </div>
+              ))}
             </div>
+          </div>
+        </section>
+
+        {/* How it works */}
+        <section id="how-it-works" style={{ padding: "26px 20px 10px" }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+            <h2 style={h2Style}>Simple steps. Real business impact.</h2>
+            <p style={subStyle}>Start with a free trial, then pay a one-time license fee to keep using posifypro.</p>
+
+            <div style={grid3Style}>
+              {[
+                { step: "01", title: "Start the trial", desc: "Create your workspace and try sales, inventory, and reports." },
+                { step: "02", title: "Use the POS", desc: "Test the flow in your shop setup—no monthly subscription during trial." },
+                { step: "03", title: "Pay once, keep going", desc: "After trial, choose a one-time license plan." },
+              ].map((s) => (
+                <div key={s.step} style={cardStyle}>
+                  <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12 }}>
+                    <div style={{ fontWeight: 1000, fontSize: 14, color: "#1D4ED8" }}>{s.step}</div>
+                    <div style={dotStyle} />
+                  </div>
+                  <div style={{ fontWeight: 950, marginTop: 8, marginBottom: 6 }}>{s.title}</div>
+                  <div style={{ color: "#475569", lineHeight: 1.6, fontSize: 14 }}>{s.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing */}
+        <section id="pricing" style={{ padding: "26px 20px 64px" }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+            <h2 style={h2Style}>One-time pricing that fits your budget.</h2>
+            <p style={subStyle}>Pay once and run posifypro with confidence—made for Kenyan businesses.</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14 }}>
+              {[
+                {
+                  name: "Starter",
+                  price: "KSh 0",
+                  note: "trial",
+                  badge: "Try it free",
+                  bullets: ["Basic POS checkout", "Inventory tracking", "Standard reports"],
+                  highlight: false,
+                },
+                {
+                  name: "Pro",
+                  price: "KSh 15,000",
+                  note: "one-time license",
+                  badge: "Best for growing shops",
+                  bullets: ["Everything in Starter", "Advanced reporting", "Low-stock alerts"],
+                  highlight: true,
+                },
+                {
+                  name: "Business",
+                  price: "KSh 35,000",
+                  note: "one-time license",
+                  badge: "For multiple staff",
+                  bullets: ["Everything in Pro", "Role-based access", "Priority onboarding"],
+                  highlight: false,
+                },
+              ].map((p) => (
+                <div
+                  key={p.name}
+                  style={{
+                    ...cardStyle,
+                    borderColor: p.highlight ? "rgba(29, 78, 216, 0.30)" : cardBorder,
+                    boxShadow: p.highlight ? "0 30px 80px rgba(29, 78, 216, 0.12)" : undefined,
+                    transform: p.highlight ? "translateY(-4px)" : undefined,
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+                    <div style={{ fontWeight: 1000 }}>{p.name}</div>
+                    <div
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 900,
+                        padding: "6px 10px",
+                        borderRadius: 999,
+                        border: `1px solid ${
+                          p.highlight ? "rgba(29, 78, 216, 0.30)" : "rgba(15, 23, 42, 0.10)"
+                        }`,
+                        background: p.highlight ? "rgba(29, 78, 216, 0.10)" : "#FFFFFF",
+                        color: p.highlight ? "#1D4ED8" : "#334155",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {p.badge}
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: 12, display: "flex", alignItems: "baseline", gap: 10 }}>
+                    <div style={{ fontSize: 36, fontWeight: 1000, letterSpacing: "-0.03em" }}>{p.price}</div>
+                    <div style={{ color: "#64748B", fontWeight: 800, fontSize: 13 }}>{p.note}</div>
+                  </div>
+
+                  <ul style={{ margin: "14px 0 0", paddingLeft: 18, color: "#475569", lineHeight: 1.7, fontSize: 14 }}>
+                    {p.bullets.map((x) => (
+                      <li key={x}>{x}</li>
+                    ))}
+                  </ul>
+
+                  <div style={{ marginTop: 16 }}>
+                    <a href="/login" style={p.highlight ? primaryBtnStyle : secondaryBtnStyle}>
+                      Start free trial
+                    </a>
+                  </div>
+
+                  <div style={{ marginTop: 10, color: "#64748B", fontSize: 12, fontWeight: 750 }}>
+                    {p.name === "Starter" ? "Test posifypro and upgrade when you're ready." : "Pay once—no monthly subscription requirement."}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section style={{ padding: "0 20px 70px" }}>
+          <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+            <h2 style={h2Style}>Frequently asked questions</h2>
+            <p style={subStyle}>Quick answers for common questions.</p>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+              {[
+                {
+                  q: "Is posifypro a subscription?",
+                  a: "After your free trial, the plans are one-time license payments (no recurring subscription requirement).",
+                },
+                {
+                  q: "What happens after the trial?",
+                  a: "You can choose a plan and pay a one-time license fee to keep using the system.",
+                },
+                {
+                  q: "Do I need a license to use the dashboard?",
+                  a: "During the trial you can use the features. After the trial, activation is handled via your chosen one-time plan.",
+                },
+                {
+                  q: "Can I cancel?",
+                  a: "Since pricing is one-time, there are no ongoing monthly charges to cancel. You can decide to stay on the platform after payment.",
+                },
+              ].map((item) => (
+                <details
+                  key={item.q}
+                  style={{
+                    borderRadius: 16,
+                    border: "1px solid rgba(15, 23, 42, 0.10)",
+                    background: "#FFFFFF",
+                    padding: 14,
+                  }}
+                >
+                  <summary style={{ cursor: "pointer", fontWeight: 950, color: "#0F172A" }}>{item.q}</summary>
+                  <div style={{ marginTop: 8, color: "#475569", lineHeight: 1.6, fontSize: 14, fontWeight: 650 }}>
+                    {item.a}
+                  </div>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer style={{ borderTop: "1px solid rgba(15, 23, 42, 0.08)", background: "#FFFFFF" }}>
+        <div
+          style={{
+            maxWidth: 1120,
+            margin: "0 auto",
+            padding: "22px 20px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 14,
+            flexWrap: "wrap",
+          }}
+        >
+          <div style={{ color: "#64748B", fontSize: 13, fontWeight: 750 }}>
+            © {new Date().getFullYear()} posifypro. All rights reserved.
+          </div>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <a href="#features" style={linkStyle}>
+              Features
+            </a>
+            <a href="#pricing" style={linkStyle}>
+              Pricing
+            </a>
+            <a href="/login" style={ghostBtnStyle}>
+              Start free trial
+            </a>
           </div>
         </div>
       </footer>
     </div>
   );
 }
+
+const cardBorder = "rgba(15, 23, 42, 0.10)";
+
+const linkStyle: React.CSSProperties = {
+  color: "#334155",
+  textDecoration: "none",
+  fontWeight: 800,
+  fontSize: 13,
+};
+
+const heroCardStyle: React.CSSProperties = {
+  borderRadius: 20,
+  background: "#FFFFFF",
+  border: "1px solid rgba(15, 23, 42, 0.10)",
+  boxShadow: "0 22px 55px rgba(15, 23, 42, 0.10)",
+  overflow: "hidden",
+};
+
+const heroCardTopStyle: React.CSSProperties = {
+  padding: 16,
+  borderBottom: "1px solid rgba(15, 23, 42, 0.08)",
+  background: "linear-gradient(180deg, rgba(37, 99, 235, 0.08), rgba(37, 99, 235, 0))",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 12,
+};
+
+const heroBadgeStyle: React.CSSProperties = {
+  width: 36,
+  height: 36,
+  borderRadius: 12,
+  background: "rgba(37, 99, 235, 0.12)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontWeight: 1000,
+  color: "#1D4ED8",
+};
+
+const heroCardBottomStyle: React.CSSProperties = {
+  padding: 14,
+  borderTop: "1px solid rgba(15, 23, 42, 0.08)",
+  background: "#FAFBFF",
+  display: "flex",
+  gap: 10,
+  justifyContent: "space-between",
+  flexWrap: "wrap",
+};
+
+const metricRowStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "baseline",
+  justifyContent: "space-between",
+  gap: 12,
+  padding: "10px 0",
+  borderBottom: "1px dashed rgba(15, 23, 42, 0.10)",
+};
+
+const metricLabelStyle: React.CSSProperties = {
+  fontSize: 13,
+  color: "#64748B",
+  fontWeight: 850,
+};
+
+const metricValueStyle: React.CSSProperties = {
+  fontWeight: 1000,
+  letterSpacing: "-0.03em",
+  fontSize: 20,
+};
+
+const recommendationStyle: React.CSSProperties = {
+  marginTop: 14,
+  borderRadius: 16,
+  background: "rgba(37, 99, 235, 0.04)",
+  border: "1px solid rgba(37, 99, 235, 0.12)",
+  padding: 14,
+};
+
+const miniStatStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 4,
+  minWidth: 90,
+};
+
+const miniStatLabelStyle: React.CSSProperties = {
+  fontSize: 12,
+  color: "#64748B",
+  fontWeight: 850,
+};
+
+const miniStatValueStyle: React.CSSProperties = {
+  fontWeight: 1000,
+  letterSpacing: "-0.03em",
+};
+
+const testimonialCardStyle: React.CSSProperties = {
+  borderRadius: 18,
+  border: "1px solid rgba(15, 23, 42, 0.10)",
+  background: "#FFFFFF",
+  padding: 16,
+  boxShadow: "0 18px 40px rgba(15, 23, 42, 0.06)",
+};
+
+const avatarStyle: React.CSSProperties = {
+  width: 40,
+  height: 40,
+  borderRadius: 14,
+  background: "rgba(37, 99, 235, 0.10)",
+  border: "1px solid rgba(37, 99, 235, 0.18)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontWeight: 1000,
+  color: "#1D4ED8",
+};
+
+const cardStyle: React.CSSProperties = {
+  borderRadius: 18,
+  border: cardBorder,
+  background: "#FFFFFF",
+  padding: 16,
+};
+
+const iconStyle: React.CSSProperties = {
+  width: 44,
+  height: 44,
+  borderRadius: 14,
+  background: "rgba(37, 99, 235, 0.10)",
+  border: "1px solid rgba(37, 99, 235, 0.18)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: 20,
+  marginBottom: 10,
+};
+
+const grid3Style: React.CSSProperties = {
+  marginTop: 18,
+  display: "grid",
+  gridTemplateColumns: "repeat(3, 1fr)",
+  gap: 14,
+};
+
+const primaryBtnStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 10,
+  padding: "12px 14px",
+  borderRadius: 12,
+  background: "linear-gradient(135deg, #2563EB, #60A5FA)",
+  color: "#FFFFFF",
+  textDecoration: "none",
+  fontWeight: 950,
+  boxShadow: "0 18px 40px rgba(37, 99, 235, 0.20)",
+  border: "1px solid rgba(37, 99, 235, 0.35)",
+};
+
+const secondaryBtnStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 10,
+  padding: "12px 14px",
+  borderRadius: 12,
+  background: "#FFFFFF",
+  color: "#1D4ED8",
+  textDecoration: "none",
+  fontWeight: 950,
+  border: "1px solid rgba(29, 78, 216, 0.30)",
+};
+
+const tertiaryBtnStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "10px 12px",
+  borderRadius: 12,
+  background: "#FFFFFF",
+  color: "#1D4ED8",
+  textDecoration: "none",
+  fontWeight: 950,
+  border: "1px solid rgba(29, 78, 216, 0.22)",
+};
+
+const ghostBtnStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "10px 12px",
+  borderRadius: 12,
+  background: "transparent",
+  color: "#334155",
+  textDecoration: "none",
+  fontWeight: 950,
+  border: "1px solid rgba(15, 23, 42, 0.10)",
+};
+
+const pillStyle: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 10,
+  padding: "10px 12px",
+  borderRadius: 999,
+  border: "1px solid rgba(15, 23, 42, 0.10)",
+  background: "#FFFFFF",
+  color: "#334155",
+  fontWeight: 900,
+  fontSize: 13,
+};
+
+const checkStyle: React.CSSProperties = {
+  width: 18,
+  height: 18,
+  borderRadius: 999,
+  background: "rgba(29, 78, 216, 0.12)",
+  border: "1px solid rgba(29, 78, 216, 0.22)",
+};
+
+const dotStyle: React.CSSProperties = {
+  width: 10,
+  height: 10,
+  borderRadius: 999,
+  background: "rgba(29, 78, 216, 0.18)",
+  border: "1px solid rgba(29, 78, 216, 0.25)",
+};
+
+const h2Style: React.CSSProperties = {
+  margin: "0 0 8px",
+  fontSize: 28,
+  lineHeight: 1.15,
+  letterSpacing: "-0.03em",
+};
+
+const subStyle: React.CSSProperties = {
+  margin: 0,
+  color: "#475569",
+  lineHeight: 1.65,
+  maxWidth: 760,
+};
