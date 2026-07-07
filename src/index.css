@@ -77,6 +77,14 @@
 
     --education-blue: 221 83% 53%;
     --education-green: 142 71% 45%;
+
+    /* Back-compat aliases: the original page set uses inline
+       style={{ background: 'var(--card-bg)', ... }} rather than the
+       bg-card/border-border Tailwind utility classes the newer pages use.
+       Both systems now read consistent values. */
+    --card-bg: #ffffff;
+    --card-border: #E2E8F0;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
   }
 
   /* Optional dark mode — only activates when user explicitly sets dark class */
@@ -121,6 +129,13 @@
     --shadow-hover: 0 8px 32px rgba(37,99,235,0.25);
     --education-blue: 221 83% 53%;
     --education-green: 142 71% 45%;
+
+    /* Back-compat aliases — see :root above. Filled in now even though dark
+       mode isn't currently reachable, so it renders correctly if/when a
+       theme toggle is restored later. */
+    --card-bg: #1A2234;
+    --card-border: #2D3B52;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.4);
   }
 }
 
