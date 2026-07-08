@@ -116,6 +116,12 @@ export interface NavItem {
   badge?: string;
 }
 
+export interface NavGroup {
+  /** null = ungrouped item rendered directly under the top-level nav (e.g. Dashboard) */
+  heading: string | null;
+  items: NavItem[];
+}
+
 // ─── Registration payload ─────────────────────────────────────────────────────
 export interface RegisterPayload {
   username: string;
