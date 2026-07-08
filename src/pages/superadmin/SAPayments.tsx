@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { useCurrency } from '@/hooks/useCurrency';
 import { DollarSign } from 'lucide-react';
 interface Inv { id: string; invoice_number: string; total: number; amount_paid: number; status: string; created_at: string; }
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
 export default function SAPayments() {
   const { format: fmt } = useCurrency();
   const [items, setItems] = useState<Inv[]>([]); const [loading, setLoading] = useState(true);
@@ -22,23 +22,23 @@ export default function SAPayments() {
   }, []);
   return (
     <div className="p-4 md:p-6 space-y-4">
-      <div className="flex items-center gap-2 mb-2"><DollarSign className="w-5 h-5 text-blue-600"/><h1 className="text-xl font-bold text-slate-800">Payments Overview</h1></div>
+      <div className="flex items-center gap-2 mb-2"><DollarSign className="w-5 h-5 text-primary"/><h1 className="text-xl font-bold text-foreground">Payments Overview</h1></div>
       <div className="grid grid-cols-2 gap-3">
-        <Card style={CARD} className="rounded-2xl"><CardContent className="pt-4 pb-3"><p className="text-xs text-slate-400">Total Invoiced</p><p className="text-xl font-bold text-blue-700">{fmt(totals.total)}</p></CardContent></Card>
-        <Card style={CARD} className="rounded-2xl"><CardContent className="pt-4 pb-3"><p className="text-xs text-slate-400">Total Collected</p><p className="text-xl font-bold text-green-700">{fmt(totals.paid)}</p></CardContent></Card>
+        <Card style={CARD} className="rounded-2xl"><CardContent className="pt-4 pb-3"><p className="text-xs text-muted-foreground">Total Invoiced</p><p className="text-xl font-bold text-primary">{fmt(totals.total)}</p></CardContent></Card>
+        <Card style={CARD} className="rounded-2xl"><CardContent className="pt-4 pb-3"><p className="text-xs text-muted-foreground">Total Collected</p><p className="text-xl font-bold text-green-700">{fmt(totals.paid)}</p></CardContent></Card>
       </div>
       <Card style={CARD}>
         <CardContent className="pt-4 overflow-x-auto">
           {loading ? <div className="space-y-2">{Array.from({length:5}).map((_,i)=><Skeleton key={i} className="h-10 w-full"/>)}</div>
           : <table className="w-full text-sm whitespace-nowrap">
-              <thead><tr className="border-b border-slate-100">{['Invoice','Total','Paid','Status','Date'].map(h=><th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>)}</tr></thead>
+              <thead><tr className="border-b border-border">{['Invoice','Total','Paid','Status','Date'].map(h=><th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>)}</tr></thead>
               <tbody>{items.map(i=>(
-                <tr key={i.id} className="border-b border-slate-50 hover:bg-slate-50">
-                  <td className="py-2 px-3 font-mono text-blue-700">{i.invoice_number}</td>
+                <tr key={i.id} className="border-b border-border hover:bg-card">
+                  <td className="py-2 px-3 font-mono text-primary">{i.invoice_number}</td>
                   <td className="py-2 px-3 font-semibold">{fmt(i.total)}</td>
                   <td className="py-2 px-3 text-green-700">{fmt(i.amount_paid)}</td>
-                  <td className="py-2 px-3"><span className="px-2 py-0.5 rounded-full text-xs font-medium capitalize bg-slate-100 text-slate-600">{i.status}</span></td>
-                  <td className="py-2 px-3 text-slate-400 text-xs">{new Date(i.created_at).toLocaleDateString()}</td>
+                  <td className="py-2 px-3"><span className="px-2 py-0.5 rounded-full text-xs font-medium capitalize bg-secondary text-muted-foreground">{i.status}</span></td>
+                  <td className="py-2 px-3 text-muted-foreground text-xs">{new Date(i.created_at).toLocaleDateString()}</td>
                 </tr>
               ))}</tbody>
             </table>}
