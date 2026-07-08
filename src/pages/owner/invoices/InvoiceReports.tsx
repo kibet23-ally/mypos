@@ -12,9 +12,9 @@ import { fmt } from '@/types/invoice';
 import { format, subMonths, isAfter } from 'date-fns';
 import { TrendingUp, FileText, AlertCircle, CheckCircle2 } from 'lucide-react';
 
-const CARD_STYLE = { background: '#ffffff', borderColor: '#E2E8F0' };
+const CARD_STYLE = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
 const COLORS = ['#2563EB', '#16A34A', '#D97706', '#DC2626', '#7C3AED'];
-const TT_STYLE = { background: '#ffffff', border: '1px solid #E2E8F0', borderRadius: '8px' };
+const TT_STYLE = { background: 'hsl(var(--card))', border: '1px solid #E2E8F0', borderRadius: '8px' };
 
 interface Props { tenantId: string; }
 
@@ -30,7 +30,7 @@ export default function InvoiceReports({ tenantId }: Props) {
 
   if (loading) return (
     <div className="space-y-4">
-      {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-32 w-full bg-slate-100 rounded-xl" />)}
+      {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-32 w-full bg-secondary rounded-xl" />)}
     </div>
   );
 
@@ -62,11 +62,11 @@ export default function InvoiceReports({ tenantId }: Props) {
       {/* Period filter */}
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h3 className="text-base font-bold text-slate-900">Invoice Reports</h3>
-          <p className="text-sm text-slate-500">Revenue and collection analytics</p>
+          <h3 className="text-base font-bold text-foreground">Invoice Reports</h3>
+          <p className="text-sm text-muted-foreground">Revenue and collection analytics</p>
         </div>
         <Select value={period} onValueChange={setPeriod}>
-          <SelectTrigger className="h-9 w-36 bg-slate-50 border-slate-200 rounded-xl text-sm">
+          <SelectTrigger className="h-9 w-36 bg-card border-border rounded-xl text-sm">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -80,7 +80,7 @@ export default function InvoiceReports({ tenantId }: Props) {
       {/* KPI cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: 'Total Invoiced', value: fmt(summary.totalInvoiced), icon: FileText, color: '#2563EB', sub: `${summary.totalCount} invoices` },
+          { label: 'Total Invoiced', value: fmt(summary.totalInvoiced), icon: FileText, color: 'hsl(var(--primary))', sub: `${summary.totalCount} invoices` },
           { label: 'Collected', value: fmt(summary.totalPaid), icon: CheckCircle2, color: '#16A34A', sub: `${summary.paidCount} paid` },
           { label: 'Outstanding', value: fmt(summary.totalOutstanding), icon: TrendingUp, color: '#D97706', sub: 'unpaid balance' },
           { label: 'Overdue', value: fmt(summary.overdueAmount), icon: AlertCircle, color: '#DC2626', sub: `${summary.overdueCount} invoices` },
@@ -91,9 +91,9 @@ export default function InvoiceReports({ tenantId }: Props) {
                 style={{ background: `${k.color}15`, border: `1px solid ${k.color}25` }}>
                 <k.icon className="w-3.5 h-3.5" style={{ color: k.color }} />
               </div>
-              <p className="text-lg font-bold text-slate-900">{k.value}</p>
-              <p className="text-xs text-slate-400 mt-0.5">{k.label}</p>
-              <p className="text-xs text-slate-500">{k.sub}</p>
+              <p className="text-lg font-bold text-foreground">{k.value}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{k.label}</p>
+              <p className="text-xs text-muted-foreground">{k.sub}</p>
             </CardContent>
           </Card>
         ))}
@@ -102,7 +102,7 @@ export default function InvoiceReports({ tenantId }: Props) {
       {/* Monthly collections chart */}
       <Card className="border" style={CARD_STYLE}>
         <CardHeader className="pb-2 px-5 pt-5">
-          <CardTitle className="text-sm font-semibold text-slate-900">Monthly Collections</CardTitle>
+          <CardTitle className="text-sm font-semibold text-foreground">Monthly Collections</CardTitle>
         </CardHeader>
         <CardContent className="px-5 pb-5">
           <div className="w-full min-w-0 overflow-hidden">
@@ -110,11 +110,11 @@ export default function InvoiceReports({ tenantId }: Props) {
               <BarChart data={monthlyData} barGap={4}>
                 <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false} />
                 <YAxis tick={{ fontSize: 11, fill: '#64748B' }} axisLine={false} tickLine={false}
-                  tickFormatter={v => `${(v / 1000).toFixed(0)}k`} />
+                  tickFormatter={v => fmt(v)} />
                 <Tooltip contentStyle={TT_STYLE}
                   formatter={(v: number, name: string) => [fmt(v), name === 'invoiced' ? 'Invoiced' : 'Collected']} />
                 <Legend layout="horizontal" wrapperStyle={{ paddingTop: 8 }}
-                  formatter={v => <span style={{ color: '#94A3B8', fontSize: 11 }}>{v === 'invoiced' ? 'Invoiced' : 'Collected'}</span>} />
+                  formatter={v => <span style={{ color: 'hsl(var(--muted-foreground))', fontSize: 11 }}>{v === 'invoiced' ? 'Invoiced' : 'Collected'}</span>} />
                 <Bar dataKey="invoiced" fill="#BFDBFE" radius={[4, 4, 0, 0]} name="invoiced" />
                 <Bar dataKey="collected" fill="#2563EB" radius={[4, 4, 0, 0]} name="collected" />
               </BarChart>
@@ -127,7 +127,7 @@ export default function InvoiceReports({ tenantId }: Props) {
         {/* Status distribution pie */}
         <Card className="border" style={CARD_STYLE}>
           <CardHeader className="pb-2 px-5 pt-5">
-            <CardTitle className="text-sm font-semibold text-slate-900">Invoice Status Distribution</CardTitle>
+            <CardTitle className="text-sm font-semibold text-foreground">Invoice Status Distribution</CardTitle>
           </CardHeader>
           <CardContent className="px-5 pb-5">
             <div className="w-full min-w-0 overflow-hidden">
@@ -146,7 +146,7 @@ export default function InvoiceReports({ tenantId }: Props) {
         {/* Aging report */}
         <Card className="border" style={CARD_STYLE}>
           <CardHeader className="pb-2 px-5 pt-5">
-            <CardTitle className="text-sm font-semibold text-slate-900">Accounts Receivable Aging</CardTitle>
+            <CardTitle className="text-sm font-semibold text-foreground">Accounts Receivable Aging</CardTitle>
           </CardHeader>
           <CardContent className="px-5 pb-5 space-y-3">
             {[
@@ -154,23 +154,23 @@ export default function InvoiceReports({ tenantId }: Props) {
               { label: '31–60 Days', ...aging.between3160, color: '#EA580C' },
               { label: '60+ Days', ...aging.over60, color: '#DC2626' },
             ].map(a => (
-              <div key={a.label} className="flex items-center justify-between p-3 rounded-xl border border-slate-200 bg-slate-50">
+              <div key={a.label} className="flex items-center justify-between p-3 rounded-xl border border-border bg-card">
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">{a.label}</p>
-                  <p className="text-xs text-slate-400">{a.count} invoice{a.count !== 1 ? 's' : ''}</p>
+                  <p className="text-sm font-semibold text-foreground">{a.label}</p>
+                  <p className="text-xs text-muted-foreground">{a.count} invoice{a.count !== 1 ? 's' : ''}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-bold" style={{ color: a.color }}>{fmt(a.amount)}</p>
                   {summary.totalOutstanding > 0 && (
-                    <p className="text-xs text-slate-400">
+                    <p className="text-xs text-muted-foreground">
                       {((a.amount / summary.totalOutstanding) * 100).toFixed(0)}% of outstanding
                     </p>
                   )}
                 </div>
               </div>
             ))}
-            <div className="pt-2 border-t border-slate-200 flex justify-between text-sm">
-              <span className="font-bold text-slate-900">Total Outstanding</span>
+            <div className="pt-2 border-t border-border flex justify-between text-sm">
+              <span className="font-bold text-foreground">Total Outstanding</span>
               <span className="font-bold text-red-600">{fmt(summary.totalOutstanding)}</span>
             </div>
           </CardContent>
