@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/db/supabase';
-import { formatCurrency, formatCurrencyCompact } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 import { toast } from 'sonner';
 import {
   getFinancialSummary,
@@ -167,22 +167,22 @@ export default function OWOverview() {
   useEffect(() => { load(); }, [load]);
 
   const kpis = stats ? [
-    { label: "Today's Revenue",   value: formatCurrencyCompact(stats.todaySummary.revenue, cc),           sub: `${stats.todaySummary.transactionCount} orders`,     icon: DollarSign,  color: 'text-blue-600' },
-    { label: 'Monthly Revenue',   value: formatCurrencyCompact(stats.monthlySales, cc),                    sub: 'This month',                                         icon: TrendingUp,  color: 'text-emerald-600' },
-    { label: 'Annual Revenue',    value: formatCurrencyCompact(stats.annualSales, cc),                     sub: 'Year to date',                                       icon: BarChart3,   color: 'text-violet-600' },
-    { label: 'Gross Profit',      value: formatCurrencyCompact(stats.todaySummary.grossProfit, cc),        sub: `${stats.todaySummary.marginPct.toFixed(1)}% margin`, icon: TrendingUp,  color: 'text-green-600' },
-    { label: 'Today COGS',        value: formatCurrencyCompact(stats.todaySummary.cogs, cc),               sub: 'Cost of goods sold',                                 icon: DollarSign,  color: 'text-sky-600' },
+    { label: "Today's Revenue",   value: formatCurrency(stats.todaySummary.revenue, cc),           sub: `${stats.todaySummary.transactionCount} orders`,     icon: DollarSign,  color: 'text-primary' },
+    { label: 'Monthly Revenue',   value: formatCurrency(stats.monthlySales, cc),                    sub: 'This month',                                         icon: TrendingUp,  color: 'text-emerald-600' },
+    { label: 'Annual Revenue',    value: formatCurrency(stats.annualSales, cc),                     sub: 'Year to date',                                       icon: BarChart3,   color: 'text-violet-600' },
+    { label: 'Gross Profit',      value: formatCurrency(stats.todaySummary.grossProfit, cc),        sub: `${stats.todaySummary.marginPct.toFixed(1)}% margin`, icon: TrendingUp,  color: 'text-green-600' },
+    { label: 'Today COGS',        value: formatCurrency(stats.todaySummary.cogs, cc),               sub: 'Cost of goods sold',                                 icon: DollarSign,  color: 'text-sky-600' },
     { label: 'Total Orders',      value: stats.todaySummary.transactionCount.toString(),                   sub: 'Today completed',                                    icon: ShoppingBag, color: 'text-indigo-600' },
-    { label: 'Avg Order Value',   value: formatCurrencyCompact(stats.todaySummary.avgOrderValue, cc),      sub: 'Per transaction',                                    icon: TrendingUp,  color: 'text-pink-600' },
+    { label: 'Avg Order Value',   value: formatCurrency(stats.todaySummary.avgOrderValue, cc),      sub: 'Per transaction',                                    icon: TrendingUp,  color: 'text-pink-600' },
     { label: 'Total Customers',   value: stats.totalCustomers.toString(),                                  sub: `+${stats.newCustomers} this month`,                  icon: Users,       color: 'text-amber-600' },
-    { label: 'Inventory Value',   value: formatCurrencyCompact(stats.inventory.totalValue, cc),            sub: `${stats.inventory.totalSkuCount} SKUs`,              icon: Package,     color: 'text-teal-600' },
+    { label: 'Inventory Value',   value: formatCurrency(stats.inventory.totalValue, cc),            sub: `${stats.inventory.totalSkuCount} SKUs`,              icon: Package,     color: 'text-teal-600' },
     { label: 'Low Stock',         value: stats.inventory.lowStockCount.toString(),                        sub: 'Need reorder',                                       icon: AlertTriangle, color: 'text-orange-500' },
     { label: 'Out of Stock',      value: stats.inventory.outOfStock.toString(),                           sub: 'Zero quantity',                                      icon: TrendingDown, color: 'text-red-500' },
     { label: 'Active Staff',      value: stats.activeStaff.toString(),                                    sub: 'Cashiers',                                           icon: UserPlus,    color: 'text-cyan-600' },
     { label: 'Top Product',       value: stats.topProductName.substring(0, 16),                           sub: 'By revenue this month',                              icon: Star,        color: 'text-yellow-600' },
     { label: 'Top Category',      value: stats.topCategoryName.substring(0, 16),                         sub: 'By revenue',                                         icon: Boxes,       color: 'text-lime-600' },
     { label: 'New Customers',     value: stats.newCustomers.toString(),                                   sub: 'This month',                                         icon: UserPlus,    color: 'text-rose-600' },
-    { label: 'Profit Margin',     value: `${stats.todaySummary.marginPct.toFixed(1)}%`,                  sub: 'Gross / Revenue today',                              icon: TrendingUp,  color: 'text-blue-500' },
+    { label: 'Profit Margin',     value: `${stats.todaySummary.marginPct.toFixed(1)}%`,                  sub: 'Gross / Revenue today',                              icon: TrendingUp,  color: 'text-primary' },
   ] : [];
 
   return (
@@ -234,7 +234,7 @@ export default function OWOverview() {
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="day" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrencyCompact(v, cc)} />
+                    <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrency(v, cc)} />
                     <Tooltip formatter={(v: number) => [formatCurrency(v, cc), 'Sales']} />
                     <Area type="monotone" dataKey="sales" stroke="hsl(var(--chart-1))" strokeWidth={2} fill="url(#dGrad)" name="Sales" />
                   </AreaChart>
@@ -254,7 +254,7 @@ export default function OWOverview() {
                 <ResponsiveContainer width="100%" height={210}>
                   <ComposedChart data={monthlyData} barSize={14}>
                     <XAxis dataKey="month" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrencyCompact(v, cc)} />
+                    <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrency(v, cc)} />
                     <Tooltip formatter={(v: number) => [formatCurrency(v, cc)]} />
                     <Legend layout="horizontal" wrapperStyle={{ paddingTop: 8 }} />
                     <Bar dataKey="revenue" fill="hsl(var(--chart-1))" radius={[3, 3, 0, 0]} name="Revenue" />
@@ -331,7 +331,7 @@ export default function OWOverview() {
               <div className="w-full min-w-0 overflow-hidden">
                 <ResponsiveContainer width="100%" height={210}>
                   <BarChart data={topProducts} layout="vertical" barSize={16}>
-                    <XAxis type="number" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrencyCompact(v, cc)} />
+                    <XAxis type="number" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrency(v, cc)} />
                     <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} width={90} />
                     <Tooltip formatter={(v: number) => [formatCurrency(v, cc), 'Revenue']} />
                     <Bar dataKey="revenue" fill="hsl(var(--chart-1))" radius={[0, 4, 4, 0]} name="Revenue" />
