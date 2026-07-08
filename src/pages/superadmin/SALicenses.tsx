@@ -24,8 +24,8 @@ interface Tenant {
 interface Plan { id: string; name: string; price: number; interval: string; }
 
 const PAGE = 15;
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 
 function daysLeft(exp?: string) { if (!exp) return null; return Math.ceil((new Date(exp).getTime() - Date.now()) / 86400000); }
 
@@ -111,15 +111,15 @@ export default function SALicenses() {
   return (
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center gap-2 mb-2">
-        <Key className="w-5 h-5 text-blue-600" />
-        <h1 className="text-xl font-bold text-slate-800">SaaS Licensing Management</h1>
+        <Key className="w-5 h-5 text-primary" />
+        <h1 className="text-xl font-bold text-foreground">SaaS Licensing Management</h1>
         <Badge variant="secondary">{total}</Badge>
       </div>
 
       <Card style={CARD}>
         <CardHeader className="pb-2">
           <div className="relative max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input className={`${inp} pl-9`} placeholder="Search business…" value={search} onChange={e => { setSearch(e.target.value); setPage(0); }} />
           </div>
         </CardHeader>
@@ -127,27 +127,27 @@ export default function SALicenses() {
           {loading ? (
             <div className="space-y-2">{Array.from({length:6}).map((_,i)=><Skeleton key={i} className="h-12 w-full"/>)}</div>
           ) : tenants.length === 0 ? (
-            <div className="text-center py-10 text-slate-400"><Shield className="w-8 h-8 mx-auto mb-2 opacity-40"/><p>No tenants found.</p></div>
+            <div className="text-center py-10 text-muted-foreground"><Shield className="w-8 h-8 mx-auto mb-2 opacity-40"/><p>No tenants found.</p></div>
           ) : (
             <table className="w-full text-sm whitespace-nowrap">
-              <thead><tr className="border-b border-slate-100">
+              <thead><tr className="border-b border-border">
                 {['Business','Plan','Expires','Status','Actions'].map(h=>
-                  <th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>
+                  <th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>
                 )}
               </tr></thead>
               <tbody>{tenants.map(t => (
-                <tr key={t.id} className={`border-b border-slate-50 hover:bg-slate-50 ${t.suspended ? 'bg-red-50' : ''}`}>
+                <tr key={t.id} className={`border-b border-border hover:bg-card ${t.suspended ? 'bg-red-50' : ''}`}>
                   <td className="py-2 px-3">
-                    <p className="font-medium text-slate-800">{t.business_name}</p>
-                    {t.email && <p className="text-xs text-slate-400">{t.email}</p>}
+                    <p className="font-medium text-foreground">{t.business_name}</p>
+                    {t.email && <p className="text-xs text-muted-foreground">{t.email}</p>}
                   </td>
                   <td className="py-2 px-3 capitalize">
-                    <span className="font-medium text-blue-700">{t.plan || 'trial'}</span>
+                    <span className="font-medium text-primary">{t.plan || 'trial'}</span>
                   </td>
-                  <td className="py-2 px-3 text-slate-500">
+                  <td className="py-2 px-3 text-muted-foreground">
                     {t.plan_expires_at ? new Date(t.plan_expires_at).toLocaleDateString() : '—'}
                     {daysLeft(t.plan_expires_at) !== null && !t.suspended && (
-                      <span className={`ml-1 text-xs ${daysLeft(t.plan_expires_at)! < 0 ? 'text-red-500' : daysLeft(t.plan_expires_at)! <= 7 ? 'text-orange-500' : 'text-slate-400'}`}>
+                      <span className={`ml-1 text-xs ${daysLeft(t.plan_expires_at)! < 0 ? 'text-red-500' : daysLeft(t.plan_expires_at)! <= 7 ? 'text-orange-500' : 'text-muted-foreground'}`}>
                         ({daysLeft(t.plan_expires_at)!}d)
                       </span>
                     )}
@@ -156,7 +156,7 @@ export default function SALicenses() {
                   <td className="py-2 px-3">
                     <div className="flex items-center gap-1">
                       <button onClick={() => { setSelected(t); setRenewForm({ plan: t.plan, days: '365' }); setRenewOpen(true); }}
-                        className="p-1 hover:bg-blue-50 rounded text-blue-600" title="Renew/Change Plan"><RefreshCw className="w-4 h-4"/></button>
+                        className="p-1 hover:bg-accent rounded text-primary" title="Renew/Change Plan"><RefreshCw className="w-4 h-4"/></button>
                       {!t.plan_expires_at && (
                         <button onClick={() => activateTrial(t)} className="p-1 hover:bg-green-50 rounded text-green-600" title="Activate 14-day Trial"><Zap className="w-4 h-4"/></button>
                       )}
@@ -171,7 +171,7 @@ export default function SALicenses() {
             </table>
           )}
           {total > PAGE && (
-            <div className="flex items-center justify-between mt-4 text-sm text-slate-500">
+            <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
               <span>Showing {page*PAGE+1}–{Math.min((page+1)*PAGE,total)} of {total}</span>
               <div className="flex gap-1">
                 <Button variant="outline" size="sm" disabled={page===0} onClick={()=>setPage(p=>p-1)}><ChevronLeft className="w-4 h-4"/></Button>
@@ -187,8 +187,8 @@ export default function SALicenses() {
         <DialogContent className="max-w-[calc(100%-2rem)] md:max-w-md">
           <DialogHeader><DialogTitle className="flex items-center gap-2 text-red-600"><Ban className="w-4 h-4"/>Suspend {selected?.business_name}</DialogTitle></DialogHeader>
           <div className="space-y-3 py-2">
-            <p className="text-sm text-slate-500">Suspending will immediately restrict access for all users of this tenant.</p>
-            <div><Label>Reason (optional)</Label><Textarea className="bg-slate-50 border-slate-200 rounded-xl mt-1" rows={3} value={suspReason} onChange={e=>setSuspReason(e.target.value)} placeholder="e.g. Non-payment, policy violation…"/></div>
+            <p className="text-sm text-muted-foreground">Suspending will immediately restrict access for all users of this tenant.</p>
+            <div><Label>Reason (optional)</Label><Textarea className="bg-card border-border rounded-xl mt-1" rows={3} value={suspReason} onChange={e=>setSuspReason(e.target.value)} placeholder="e.g. Non-payment, policy violation…"/></div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={()=>setSuspendOpen(false)}>Cancel</Button>
               <Button className="bg-red-600 hover:bg-red-700 text-white" onClick={suspend} disabled={saving}>{saving?'Suspending…':'Suspend Account'}</Button>
@@ -212,17 +212,17 @@ export default function SALicenses() {
               <div className="flex gap-2 flex-wrap mt-1">
                 {[14,30,90,180,365].map(d=>(
                   <button key={d} onClick={()=>setRenewForm(f=>({...f,days:String(d)}))}
-                    className={`px-3 py-1.5 rounded-xl border text-sm font-medium transition-colors ${renewForm.days===String(d)?'bg-blue-600 text-white border-blue-600':'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}>
+                    className={`px-3 py-1.5 rounded-xl border text-sm font-medium transition-colors ${renewForm.days===String(d)?'bg-primary text-white border-primary':'bg-white text-muted-foreground border-border hover:bg-card'}`}>
                     {d} days
                   </button>
                 ))}
               </div>
               <Input type="number" min="1" className={`${inp} mt-2`} value={renewForm.days} onChange={e=>setRenewForm(f=>({...f,days:e.target.value}))} placeholder="Custom days"/>
             </div>
-            <p className="text-xs text-slate-400">New expiry: <b>{new Date(Date.now()+parseInt(renewForm.days||'0')*86400000).toLocaleDateString()}</b></p>
+            <p className="text-xs text-muted-foreground">New expiry: <b>{new Date(Date.now()+parseInt(renewForm.days||'0')*86400000).toLocaleDateString()}</b></p>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={()=>setRenewOpen(false)}>Cancel</Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={renew} disabled={saving}>{saving?'Saving…':'Renew License'}</Button>
+              <Button className="bg-primary hover:opacity-90 text-white" onClick={renew} disabled={saving}>{saving?'Saving…':'Renew License'}</Button>
             </div>
           </div>
         </DialogContent>
