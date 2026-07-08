@@ -26,8 +26,8 @@ interface Expense {
 interface ExpCategory { id: string; name: string; color: string; }
 
 const PAGE = 15;
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 const STATUS_COLORS: Record<string,string> = {
   pending: 'bg-yellow-100 text-yellow-700',
   approved: 'bg-green-100 text-green-700',
@@ -138,13 +138,13 @@ export default function OWExpenses() {
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
-          <Wallet className="w-5 h-5 text-blue-600" />
-          <h1 className="text-xl font-bold text-slate-800">Expenses</h1>
+          <Wallet className="w-5 h-5 text-primary" />
+          <h1 className="text-xl font-bold text-foreground">Expenses</h1>
           <Badge variant="secondary">{total}</Badge>
         </div>
         <div className="flex gap-2">
-          <Button onClick={exportCSV} variant="outline" className="gap-1 h-9 text-slate-600"><Download className="w-4 h-4" />Export</Button>
-          {canEdit && <Button onClick={openCreate} className="bg-blue-600 hover:bg-blue-700 text-white h-9 gap-1"><Plus className="w-4 h-4" />Add Expense</Button>}
+          <Button onClick={exportCSV} variant="outline" className="gap-1 h-9 text-muted-foreground"><Download className="w-4 h-4" />Export</Button>
+          {canEdit && <Button onClick={openCreate} className="bg-primary hover:opacity-90 text-white h-9 gap-1"><Plus className="w-4 h-4" />Add Expense</Button>}
         </div>
       </div>
 
@@ -152,14 +152,14 @@ export default function OWExpenses() {
       <div className="grid grid-cols-2 gap-3">
         <Card style={CARD} className="rounded-2xl">
           <CardContent className="pt-4 pb-3">
-            <p className="text-xs text-slate-500 font-medium">Total Approved Expenses {filterMonth ? `(${filterMonth})` : ''}</p>
+            <p className="text-xs text-muted-foreground font-medium">Total Approved Expenses {filterMonth ? `(${filterMonth})` : ''}</p>
             <p className="text-xl font-bold text-red-600 mt-0.5">{fmt(totalAmt)}</p>
           </CardContent>
         </Card>
         <Card style={CARD} className="rounded-2xl">
           <CardContent className="pt-4 pb-3">
-            <p className="text-xs text-slate-500 font-medium">This Page</p>
-            <p className="text-xl font-bold text-slate-700 mt-0.5">{fmt(expenses.filter(e=>e.status==='approved').reduce((s,e)=>s+(e.total_amount||0),0))}</p>
+            <p className="text-xs text-muted-foreground font-medium">This Page</p>
+            <p className="text-xl font-bold text-foreground mt-0.5">{fmt(expenses.filter(e=>e.status==='approved').reduce((s,e)=>s+(e.total_amount||0),0))}</p>
           </CardContent>
         </Card>
       </div>
@@ -168,7 +168,7 @@ export default function OWExpenses() {
         <CardHeader className="pb-2">
           <div className="flex flex-col md:flex-row gap-2">
             <div className="relative flex-1 max-w-xs">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input className={`${inp} pl-9`} placeholder="Search…" value={search} onChange={e => { setSearch(e.target.value); setPage(0); }} />
             </div>
             <select className={`${inp} w-full md:w-48`} value={filterCat} onChange={e => { setFilterCat(e.target.value); setPage(0); }}>
@@ -182,30 +182,30 @@ export default function OWExpenses() {
           {loading ? (
             <div className="space-y-2">{Array.from({length:5}).map((_,i)=><Skeleton key={i} className="h-12 w-full"/>)}</div>
           ) : expenses.length === 0 ? (
-            <div className="text-center py-12 text-slate-400"><Wallet className="w-10 h-10 mx-auto mb-2 opacity-40"/><p>No expenses recorded yet.</p></div>
+            <div className="text-center py-12 text-muted-foreground"><Wallet className="w-10 h-10 mx-auto mb-2 opacity-40"/><p>No expenses recorded yet.</p></div>
           ) : (
             <table className="w-full text-sm whitespace-nowrap">
-              <thead><tr className="border-b border-slate-100">
+              <thead><tr className="border-b border-border">
                 {['Date','Category','Title','Amount','Payment','Recurring','Status','Actions'].map(h=>
-                  <th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>
+                  <th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>
                 )}
               </tr></thead>
               <tbody>{expenses.map(e => (
-                <tr key={e.id} className="border-b border-slate-50 hover:bg-slate-50">
-                  <td className="py-2 px-3 text-slate-500">{e.expense_date}</td>
+                <tr key={e.id} className="border-b border-border hover:bg-card">
+                  <td className="py-2 px-3 text-muted-foreground">{e.expense_date}</td>
                   <td className="py-2 px-3">
-                    <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">{e.category_name||'—'}</span>
+                    <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-secondary text-muted-foreground">{e.category_name||'—'}</span>
                   </td>
-                  <td className="py-2 px-3 font-medium text-slate-800">{e.title}</td>
+                  <td className="py-2 px-3 font-medium text-foreground">{e.title}</td>
                   <td className="py-2 px-3 font-semibold text-red-600">{fmt(e.total_amount)}</td>
-                  <td className="py-2 px-3 text-slate-500 capitalize">{e.payment_method}</td>
-                  <td className="py-2 px-3 text-slate-500">{e.is_recurring ? <span className="px-2 py-0.5 rounded-full text-xs bg-purple-100 text-purple-700 capitalize">{e.recur_frequency}</span> : '—'}</td>
+                  <td className="py-2 px-3 text-muted-foreground capitalize">{e.payment_method}</td>
+                  <td className="py-2 px-3 text-muted-foreground">{e.is_recurring ? <span className="px-2 py-0.5 rounded-full text-xs bg-purple-100 text-purple-700 capitalize">{e.recur_frequency}</span> : '—'}</td>
                   <td className="py-2 px-3">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${STATUS_COLORS[e.status]??'bg-slate-100 text-slate-600'}`}>{e.status}</span>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium capitalize ${STATUS_COLORS[e.status]??'bg-secondary text-muted-foreground'}`}>{e.status}</span>
                   </td>
                   <td className="py-2 px-3">
                     <div className="flex items-center gap-1">
-                      {canEdit && <button onClick={()=>openEdit(e)} className="p-1 hover:bg-slate-100 rounded text-slate-500" title="Edit"><Edit2 className="w-4 h-4"/></button>}
+                      {canEdit && <button onClick={()=>openEdit(e)} className="p-1 hover:bg-secondary rounded text-muted-foreground" title="Edit"><Edit2 className="w-4 h-4"/></button>}
                       {appUser?.role==='owner' && <button onClick={()=>del(e.id)} className="p-1 hover:bg-red-50 rounded text-red-500" title="Delete"><Trash2 className="w-4 h-4"/></button>}
                     </div>
                   </td>
@@ -214,7 +214,7 @@ export default function OWExpenses() {
             </table>
           )}
           {total > PAGE && (
-            <div className="flex items-center justify-between mt-4 text-sm text-slate-500">
+            <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
               <span>Showing {page*PAGE+1}–{Math.min((page+1)*PAGE,total)} of {total}</span>
               <div className="flex gap-1">
                 <Button variant="outline" size="sm" disabled={page===0} onClick={()=>setPage(p=>p-1)}><ChevronLeft className="w-4 h-4"/></Button>
@@ -261,10 +261,10 @@ export default function OWExpenses() {
                 </select>
               )}
             </div>
-            <div><Label>Notes</Label><Textarea className="bg-slate-50 border-slate-200 rounded-xl" rows={2} value={form.notes} onChange={e=>setForm(f=>({...f,notes:e.target.value}))}/></div>
+            <div><Label>Notes</Label><Textarea className="bg-card border-border rounded-xl" rows={2} value={form.notes} onChange={e=>setForm(f=>({...f,notes:e.target.value}))}/></div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={()=>setOpen(false)}>Cancel</Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={save} disabled={saving}>{saving?'Saving…':editing?'Update':'Save'}</Button>
+              <Button className="bg-primary hover:opacity-90 text-white" onClick={save} disabled={saving}>{saving?'Saving…':editing?'Update':'Save'}</Button>
             </div>
           </div>
         </DialogContent>
