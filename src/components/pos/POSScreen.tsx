@@ -442,7 +442,7 @@ export default function POSScreen() {
                 return (
                   <button key={p.id} type="button" onClick={() => addToCart(p)}
                     className={`relative p-3 rounded border text-left transition-colors duration-100 h-20 flex flex-col justify-between pos-btn-active ${
-                      inCart ? 'border-[hsl(var(--chart-1))] bg-blue-50 dark:bg-blue-950/30' : 'border-border bg-card hover:border-primary hover:bg-secondary'
+                      inCart ? 'border-[hsl(var(--chart-1))] bg-accent dark:bg-primary/30' : 'border-border bg-card hover:border-primary hover:bg-secondary'
                     }`}>
                     <span className="text-xs font-medium text-foreground leading-tight line-clamp-2 text-balance">{p.name}</span>
                     <span className="text-sm font-bold text-foreground">{formatCurrency(p.price, cc)}</span>
@@ -653,7 +653,7 @@ export default function POSScreen() {
                   <button key={id} type="button"
                     onClick={() => setPayMethod(id)}
                     className={`flex flex-col items-center gap-1 p-3 rounded border transition-colors ${
-                      payMethod === id ? 'border-[hsl(var(--chart-1))] bg-blue-50 dark:bg-blue-950/30' : 'border-border hover:border-primary'
+                      payMethod === id ? 'border-[hsl(var(--chart-1))] bg-accent dark:bg-primary/30' : 'border-border hover:border-primary'
                     }`}>
                     <Icon className="w-5 h-5 text-foreground" />
                     <span className="text-xs font-medium text-foreground">{label}</span>
