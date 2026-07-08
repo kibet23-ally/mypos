@@ -8,8 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Search, Store } from 'lucide-react';
 interface Tenant { id: string; business_name: string; plan: string; plan_expires_at?: string; email?: string; phone?: string; created_at: string; }
 const PAGE = 20;
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 export default function SAActiveBusinesses() {
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,25 +29,25 @@ export default function SAActiveBusinesses() {
   useEffect(() => { load(); }, [load]);
   return (
     <div className="p-4 md:p-6 space-y-4">
-      <div className="flex items-center gap-2 mb-2"><Store className="w-5 h-5 text-green-600"/><h1 className="text-xl font-bold text-slate-800">Active Businesses</h1><Badge className="bg-green-100 text-green-700 border-green-200">{total}</Badge></div>
+      <div className="flex items-center gap-2 mb-2"><Store className="w-5 h-5 text-green-600"/><h1 className="text-xl font-bold text-foreground">Active Businesses</h1><Badge className="bg-green-100 text-green-700 border-green-200">{total}</Badge></div>
       <Card style={CARD}>
-        <CardHeader className="pb-2"><div className="relative max-w-xs"><Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"/><Input className={`${inp} pl-9`} placeholder="Search…" value={search} onChange={e=>{setSearch(e.target.value);setPage(0);}}/></div></CardHeader>
+        <CardHeader className="pb-2"><div className="relative max-w-xs"><Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"/><Input className={`${inp} pl-9`} placeholder="Search…" value={search} onChange={e=>{setSearch(e.target.value);setPage(0);}}/></div></CardHeader>
         <CardContent className="overflow-x-auto">
           {loading ? <div className="space-y-2">{Array.from({length:5}).map((_,i)=><Skeleton key={i} className="h-11 w-full"/>)}</div>
-          : tenants.length===0 ? <p className="text-center py-8 text-slate-400">No active businesses.</p>
+          : tenants.length===0 ? <p className="text-center py-8 text-muted-foreground">No active businesses.</p>
           : <table className="w-full text-sm whitespace-nowrap">
-              <thead><tr className="border-b border-slate-100">{['Business','Email','Plan','Expires','Joined'].map(h=><th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>)}</tr></thead>
+              <thead><tr className="border-b border-border">{['Business','Email','Plan','Expires','Joined'].map(h=><th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>)}</tr></thead>
               <tbody>{tenants.map(t=>(
-                <tr key={t.id} className="border-b border-slate-50 hover:bg-slate-50">
-                  <td className="py-2 px-3 font-medium text-slate-800">{t.business_name}</td>
-                  <td className="py-2 px-3 text-xs text-slate-400">{t.email||'—'}</td>
-                  <td className="py-2 px-3 capitalize font-medium text-blue-700">{t.plan||'trial'}</td>
-                  <td className="py-2 px-3 text-slate-500">{t.plan_expires_at?new Date(t.plan_expires_at).toLocaleDateString():'—'}</td>
-                  <td className="py-2 px-3 text-slate-500">{new Date(t.created_at).toLocaleDateString()}</td>
+                <tr key={t.id} className="border-b border-border hover:bg-card">
+                  <td className="py-2 px-3 font-medium text-foreground">{t.business_name}</td>
+                  <td className="py-2 px-3 text-xs text-muted-foreground">{t.email||'—'}</td>
+                  <td className="py-2 px-3 capitalize font-medium text-primary">{t.plan||'trial'}</td>
+                  <td className="py-2 px-3 text-muted-foreground">{t.plan_expires_at?new Date(t.plan_expires_at).toLocaleDateString():'—'}</td>
+                  <td className="py-2 px-3 text-muted-foreground">{new Date(t.created_at).toLocaleDateString()}</td>
                 </tr>
               ))}</tbody>
             </table>}
-          {total > PAGE && <div className="flex items-center justify-between mt-4 text-sm text-slate-500"><span>{page*PAGE+1}–{Math.min((page+1)*PAGE,total)} of {total}</span><div className="flex gap-1"><Button variant="outline" size="sm" disabled={page===0} onClick={()=>setPage(p=>p-1)}>‹</Button><Button variant="outline" size="sm" disabled={(page+1)*PAGE>=total} onClick={()=>setPage(p=>p+1)}>›</Button></div></div>}
+          {total > PAGE && <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground"><span>{page*PAGE+1}–{Math.min((page+1)*PAGE,total)} of {total}</span><div className="flex gap-1"><Button variant="outline" size="sm" disabled={page===0} onClick={()=>setPage(p=>p-1)}>‹</Button><Button variant="outline" size="sm" disabled={(page+1)*PAGE>=total} onClick={()=>setPage(p=>p+1)}>›</Button></div></div>}
         </CardContent>
       </Card>
     </div>
