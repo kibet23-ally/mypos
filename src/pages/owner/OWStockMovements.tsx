@@ -24,17 +24,17 @@ interface StockMovement {
 interface Product { id: string; name: string; sku?: string; stock: number; }
 
 const PAGE = 20;
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 
 const TYPE_CONFIG: Record<string, { label: string; color: string; icon: React.FC<{ className?: string }> }> = {
   sale:        { label: 'Sale',       color: 'text-red-600',    icon: TrendingDown },
   purchase:    { label: 'Purchase',   color: 'text-green-600',  icon: TrendingUp   },
-  return:      { label: 'Return',     color: 'text-blue-600',   icon: ArrowUp      },
+  return:      { label: 'Return',     color: 'text-primary',   icon: ArrowUp      },
   adjustment:  { label: 'Adjustment', color: 'text-orange-500', icon: ArrowLeftRight },
   opening:     { label: 'Opening',    color: 'text-purple-600', icon: Package      },
   damage:      { label: 'Damage',     color: 'text-red-700',    icon: TrendingDown },
-  transfer:    { label: 'Transfer',   color: 'text-slate-500',  icon: ArrowLeftRight },
+  transfer:    { label: 'Transfer',   color: 'text-muted-foreground',  icon: ArrowLeftRight },
 };
 
 export default function OWStockMovements() {
@@ -118,18 +118,18 @@ export default function OWStockMovements() {
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
-          <ArrowLeftRight className="w-5 h-5 text-blue-600" />
-          <h1 className="text-xl font-bold text-slate-800">Stock Movements</h1>
+          <ArrowLeftRight className="w-5 h-5 text-primary" />
+          <h1 className="text-xl font-bold text-foreground">Stock Movements</h1>
           <Badge variant="secondary">{total}</Badge>
         </div>
-        {canManage && <Button onClick={() => { setForm({product_id:'',movement_type:'adjustment',quantity:'',notes:'',unit_cost:''}); setOpen(true); }} className="bg-blue-600 hover:bg-blue-700 text-white h-9 gap-1"><Plus className="w-4 h-4" />Add Adjustment</Button>}
+        {canManage && <Button onClick={() => { setForm({product_id:'',movement_type:'adjustment',quantity:'',notes:'',unit_cost:''}); setOpen(true); }} className="bg-primary hover:opacity-90 text-white h-9 gap-1"><Plus className="w-4 h-4" />Add Adjustment</Button>}
       </div>
 
       <Card style={CARD}>
         <CardHeader className="pb-2">
           <div className="flex flex-col md:flex-row gap-2">
             <div className="relative flex-1 max-w-xs">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input className={`${inp} pl-9`} placeholder="Search product…" value={search} onChange={e => { setSearch(e.target.value); setPage(0); }} />
             </div>
             <select className={`${inp} w-full md:w-44`} value={filterType} onChange={e => { setFilterType(e.target.value); setPage(0); }}>
@@ -142,21 +142,21 @@ export default function OWStockMovements() {
           {loading ? (
             <div className="space-y-2">{Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>
           ) : movements.length === 0 ? (
-            <div className="text-center py-12 text-slate-400"><ArrowLeftRight className="w-10 h-10 mx-auto mb-2 opacity-40" /><p>No movements recorded yet.</p></div>
+            <div className="text-center py-12 text-muted-foreground"><ArrowLeftRight className="w-10 h-10 mx-auto mb-2 opacity-40" /><p>No movements recorded yet.</p></div>
           ) : (
             <table className="w-full text-sm whitespace-nowrap">
-              <thead><tr className="border-b border-slate-100">
+              <thead><tr className="border-b border-border">
                 {['Product','SKU','Type','Qty','Balance After','Unit Cost','Notes','Date'].map(h =>
-                  <th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>
+                  <th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>
                 )}
               </tr></thead>
               <tbody>{movements.map(m => {
-                const cfg = TYPE_CONFIG[m.movement_type] ?? { label: m.movement_type, color: 'text-slate-600', icon: ArrowLeftRight };
+                const cfg = TYPE_CONFIG[m.movement_type] ?? { label: m.movement_type, color: 'text-muted-foreground', icon: ArrowLeftRight };
                 const Icon = cfg.icon;
                 return (
-                  <tr key={m.id} className="border-b border-slate-50 hover:bg-slate-50">
-                    <td className="py-2 px-3 font-medium text-slate-800">{m.products?.name || '—'}</td>
-                    <td className="py-2 px-3 text-slate-400 font-mono text-xs">{m.products?.sku || '—'}</td>
+                  <tr key={m.id} className="border-b border-border hover:bg-card">
+                    <td className="py-2 px-3 font-medium text-foreground">{m.products?.name || '—'}</td>
+                    <td className="py-2 px-3 text-muted-foreground font-mono text-xs">{m.products?.sku || '—'}</td>
                     <td className="py-2 px-3">
                       <span className={`flex items-center gap-1 font-medium ${cfg.color}`}>
                         <Icon className="w-3.5 h-3.5" />{cfg.label}
@@ -165,17 +165,17 @@ export default function OWStockMovements() {
                     <td className={`py-2 px-3 font-bold ${m.quantity > 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {m.quantity > 0 ? '+' : ''}{m.quantity}
                     </td>
-                    <td className="py-2 px-3 font-semibold text-slate-700">{m.balance_after}</td>
-                    <td className="py-2 px-3 text-slate-500">{m.unit_cost != null ? fmt(m.unit_cost) : '—'}</td>
-                    <td className="py-2 px-3 text-slate-400 max-w-[140px] truncate">{m.notes || '—'}</td>
-                    <td className="py-2 px-3 text-slate-400">{new Date(m.created_at).toLocaleString()}</td>
+                    <td className="py-2 px-3 font-semibold text-foreground">{m.balance_after}</td>
+                    <td className="py-2 px-3 text-muted-foreground">{m.unit_cost != null ? fmt(m.unit_cost) : '—'}</td>
+                    <td className="py-2 px-3 text-muted-foreground max-w-[140px] truncate">{m.notes || '—'}</td>
+                    <td className="py-2 px-3 text-muted-foreground">{new Date(m.created_at).toLocaleString()}</td>
                   </tr>
                 );
               })}</tbody>
             </table>
           )}
           {total > PAGE && (
-            <div className="flex items-center justify-between mt-4 text-sm text-slate-500">
+            <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
               <span>Showing {page * PAGE + 1}–{Math.min((page + 1) * PAGE, total)} of {total}</span>
               <div className="flex gap-1">
                 <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(p => p - 1)}><ChevronLeft className="w-4 h-4" /></Button>
@@ -220,7 +220,7 @@ export default function OWStockMovements() {
             </div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={save} disabled={saving}>{saving ? 'Saving…' : 'Save Movement'}</Button>
+              <Button className="bg-primary hover:opacity-90 text-white" onClick={save} disabled={saving}>{saving ? 'Saving…' : 'Save Movement'}</Button>
             </div>
           </div>
         </DialogContent>
