@@ -19,7 +19,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { supabase } from '@/db/supabase';
 import { useAuth } from '@/contexts/AuthContext';
-import { formatCurrency, formatCurrencyCompact } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 
 interface InventoryRow {
   id: string;
@@ -210,7 +210,7 @@ export default function OWInventory() {
       {/* KPI row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {loading ? Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 bg-muted rounded-lg" />) : [
-          { label: 'Total Stock Value', value: formatCurrencyCompact(totalValue, cc), icon: DollarSign, color: 'text-blue-600' },
+          { label: 'Total Stock Value', value: formatCurrency(totalValue, cc), icon: DollarSign, color: 'text-primary' },
           { label: 'In Stock',          value: inStockCount.toString(),              icon: Package,    color: 'text-green-600' },
           { label: 'Low Stock',         value: lowCount.toString(),                  icon: AlertTriangle, color: 'text-amber-600' },
           { label: 'Out of Stock',      value: outCount.toString(),                  icon: TrendingDown,  color: 'text-red-500' },
