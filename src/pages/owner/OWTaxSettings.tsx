@@ -11,8 +11,8 @@ import { toast } from 'sonner';
 import { BadgeDollarSign, Plus, Edit2, Trash2, CheckCircle } from 'lucide-react';
 
 interface TaxRate { id: string; name: string; rate: number; is_default: boolean; applies_to: string; is_active: boolean; }
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 const EMPTY = { name: '', rate: '', applies_to: 'all', is_default: false, is_active: true };
 const APPLIES_TO = ['all','products','services'];
 
@@ -86,42 +86,42 @@ export default function OWTaxSettings() {
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
-          <BadgeDollarSign className="w-5 h-5 text-blue-600" />
-          <h1 className="text-xl font-bold text-slate-800">Tax Settings</h1>
+          <BadgeDollarSign className="w-5 h-5 text-primary" />
+          <h1 className="text-xl font-bold text-foreground">Tax Settings</h1>
         </div>
-        {appUser?.role === 'owner' && <Button onClick={openCreate} className="bg-blue-600 hover:bg-blue-700 text-white h-9 gap-1"><Plus className="w-4 h-4" />Add Tax Rate</Button>}
+        {appUser?.role === 'owner' && <Button onClick={openCreate} className="bg-primary hover:opacity-90 text-white h-9 gap-1"><Plus className="w-4 h-4" />Add Tax Rate</Button>}
       </div>
 
       {/* Current default */}
-      <Card style={CARD} className="border-blue-200 bg-blue-50 rounded-2xl">
+      <Card style={CARD} className="border-primary bg-accent rounded-2xl">
         <CardContent className="pt-4 pb-3">
-          <p className="text-xs text-blue-500 font-medium uppercase tracking-wide">Active Default Tax Rate</p>
-          <p className="text-2xl font-bold text-blue-700 mt-0.5">{appUser?.tenant?.tax_rate ?? 0}%</p>
-          <p className="text-xs text-blue-400 mt-1">Applied automatically to all transactions. Change by setting a different rate as default.</p>
+          <p className="text-xs text-primary font-medium uppercase tracking-wide">Active Default Tax Rate</p>
+          <p className="text-2xl font-bold text-primary mt-0.5">{appUser?.tenant?.tax_rate ?? 0}%</p>
+          <p className="text-xs text-primary mt-1">Applied automatically to all transactions. Change by setting a different rate as default.</p>
         </CardContent>
       </Card>
 
       <Card style={CARD}>
-        <CardHeader className="pb-2"><CardTitle className="text-base text-slate-700">Tax Rates</CardTitle></CardHeader>
+        <CardHeader className="pb-2"><CardTitle className="text-base text-foreground">Tax Rates</CardTitle></CardHeader>
         <CardContent className="overflow-x-auto">
-          {loading ? <div className="py-8 text-center text-slate-400">Loading…</div> : rates.length === 0 ? (
-            <div className="text-center py-10 text-slate-400"><BadgeDollarSign className="w-8 h-8 mx-auto mb-2 opacity-40"/><p>No tax rates configured.</p></div>
+          {loading ? <div className="py-8 text-center text-muted-foreground">Loading…</div> : rates.length === 0 ? (
+            <div className="text-center py-10 text-muted-foreground"><BadgeDollarSign className="w-8 h-8 mx-auto mb-2 opacity-40"/><p>No tax rates configured.</p></div>
           ) : (
             <table className="w-full text-sm whitespace-nowrap">
-              <thead><tr className="border-b border-slate-100">
+              <thead><tr className="border-b border-border">
                 {['Name','Rate','Applies To','Default','Status','Actions'].map(h=>
-                  <th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>
+                  <th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>
                 )}
               </tr></thead>
               <tbody>{rates.map(r => (
-                <tr key={r.id} className="border-b border-slate-50 hover:bg-slate-50">
-                  <td className="py-2 px-3 font-medium text-slate-800">{r.name}</td>
-                  <td className="py-2 px-3 font-bold text-blue-700">{r.rate}%</td>
-                  <td className="py-2 px-3 capitalize text-slate-500">{r.applies_to}</td>
+                <tr key={r.id} className="border-b border-border hover:bg-card">
+                  <td className="py-2 px-3 font-medium text-foreground">{r.name}</td>
+                  <td className="py-2 px-3 font-bold text-primary">{r.rate}%</td>
+                  <td className="py-2 px-3 capitalize text-muted-foreground">{r.applies_to}</td>
                   <td className="py-2 px-3">
                     {r.is_default
                       ? <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700 flex items-center gap-1 w-fit"><CheckCircle className="w-3 h-3" />Default</span>
-                      : appUser?.role === 'owner' && <button onClick={() => setDefault(r)} className="text-xs text-blue-600 hover:underline">Set as Default</button>
+                      : appUser?.role === 'owner' && <button onClick={() => setDefault(r)} className="text-xs text-primary hover:underline">Set as Default</button>
                     }
                   </td>
                   <td className="py-2 px-3">
@@ -130,7 +130,7 @@ export default function OWTaxSettings() {
                   <td className="py-2 px-3">
                     {appUser?.role === 'owner' && (
                       <div className="flex items-center gap-1">
-                        <button onClick={() => openEdit(r)} className="p-1 hover:bg-slate-100 rounded text-slate-500"><Edit2 className="w-4 h-4"/></button>
+                        <button onClick={() => openEdit(r)} className="p-1 hover:bg-secondary rounded text-muted-foreground"><Edit2 className="w-4 h-4"/></button>
                         {!r.is_default && <button onClick={() => del(r.id)} className="p-1 hover:bg-red-50 rounded text-red-500"><Trash2 className="w-4 h-4"/></button>}
                       </div>
                     )}
@@ -144,17 +144,17 @@ export default function OWTaxSettings() {
 
       {/* Inclusive/Exclusive info */}
       <Card style={CARD}>
-        <CardHeader className="pb-2"><CardTitle className="text-base text-slate-700">Tax Mode</CardTitle></CardHeader>
+        <CardHeader className="pb-2"><CardTitle className="text-base text-foreground">Tax Mode</CardTitle></CardHeader>
         <CardContent>
-          <p className="text-sm text-slate-600 mb-3">Configure whether prices include or exclude tax in the <span className="font-medium text-blue-600">Receipt Settings</span> page (Tax Inclusive toggle).</p>
+          <p className="text-sm text-muted-foreground mb-3">Configure whether prices include or exclude tax in the <span className="font-medium text-primary">Receipt Settings</span> page (Tax Inclusive toggle).</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
-              <p className="font-medium text-slate-700 text-sm">Tax Exclusive (default)</p>
-              <p className="text-xs text-slate-500 mt-1">Price = base price. Tax added on top at checkout. E.g. item KES 100 + 16% VAT = KES 116</p>
+            <div className="bg-card rounded-xl p-3 border border-border">
+              <p className="font-medium text-foreground text-sm">Tax Exclusive (default)</p>
+              <p className="text-xs text-muted-foreground mt-1">Price = base price. Tax added on top at checkout. E.g. item KES 100 + 16% VAT = KES 116</p>
             </div>
-            <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
-              <p className="font-medium text-slate-700 text-sm">Tax Inclusive</p>
-              <p className="text-xs text-slate-500 mt-1">Price already includes tax. E.g. item KES 116 includes 16% VAT (base KES 100)</p>
+            <div className="bg-card rounded-xl p-3 border border-border">
+              <p className="font-medium text-foreground text-sm">Tax Inclusive</p>
+              <p className="text-xs text-muted-foreground mt-1">Price already includes tax. E.g. item KES 116 includes 16% VAT (base KES 100)</p>
             </div>
           </div>
         </CardContent>
@@ -182,7 +182,7 @@ export default function OWTaxSettings() {
             </div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={()=>setOpen(false)}>Cancel</Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={save} disabled={saving}>{saving?'Saving…':editing?'Update':'Add'}</Button>
+              <Button className="bg-primary hover:opacity-90 text-white" onClick={save} disabled={saving}>{saving?'Saving…':editing?'Update':'Add'}</Button>
             </div>
           </div>
         </DialogContent>
