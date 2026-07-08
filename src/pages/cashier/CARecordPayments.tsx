@@ -14,8 +14,8 @@ import { CreditCard, Search, Plus, CheckCircle, ChevronLeft, ChevronRight } from
 
 interface Invoice { id: string; invoice_number: string; customer_name?: string; total: number; amount_paid: number; balance_due: number; status: string; }
 const PAGE = 15;
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 const PAY_METHODS = ['cash','mpesa','card','bank_transfer'];
 
 export default function CARecordPayments() {
@@ -84,35 +84,35 @@ export default function CARecordPayments() {
   return (
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center gap-2 mb-2">
-        <CreditCard className="w-5 h-5 text-blue-600" />
-        <h1 className="text-xl font-bold text-slate-800">Record Payments</h1>
+        <CreditCard className="w-5 h-5 text-primary" />
+        <h1 className="text-xl font-bold text-foreground">Record Payments</h1>
         <Badge variant="secondary">{total} outstanding</Badge>
       </div>
       <Card style={CARD}>
         <CardHeader className="pb-2">
           <div className="relative max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"/>
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"/>
             <Input className={`${inp} pl-9`} placeholder="Search invoice or customer…" value={search} onChange={e=>{setSearch(e.target.value);setPage(0);}}/>
           </div>
         </CardHeader>
         <CardContent className="overflow-x-auto">
           {loading ? <div className="space-y-2">{Array.from({length:5}).map((_,i)=><Skeleton key={i} className="h-11 w-full"/>)}</div>
-          : invoices.length===0 ? <div className="text-center py-10 text-slate-400"><CheckCircle className="w-8 h-8 mx-auto mb-2 text-green-400 opacity-60"/><p>All invoices are paid up!</p></div>
+          : invoices.length===0 ? <div className="text-center py-10 text-muted-foreground"><CheckCircle className="w-8 h-8 mx-auto mb-2 text-green-400 opacity-60"/><p>All invoices are paid up!</p></div>
           : (
             <table className="w-full text-sm whitespace-nowrap">
-              <thead><tr className="border-b border-slate-100">
-                {['Invoice #','Customer','Total','Paid','Balance Due','Status',''].map(h=><th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>)}
+              <thead><tr className="border-b border-border">
+                {['Invoice #','Customer','Total','Paid','Balance Due','Status',''].map(h=><th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>)}
               </tr></thead>
               <tbody>{invoices.map(inv=>(
-                <tr key={inv.id} className="border-b border-slate-50 hover:bg-slate-50">
-                  <td className="py-2 px-3 font-mono font-semibold text-blue-700">{inv.invoice_number}</td>
-                  <td className="py-2 px-3 text-slate-700">{inv.customer_name||'—'}</td>
+                <tr key={inv.id} className="border-b border-border hover:bg-card">
+                  <td className="py-2 px-3 font-mono font-semibold text-primary">{inv.invoice_number}</td>
+                  <td className="py-2 px-3 text-foreground">{inv.customer_name||'—'}</td>
                   <td className="py-2 px-3 font-semibold">{fmt(inv.total)}</td>
                   <td className="py-2 px-3 text-green-700">{fmt(inv.amount_paid||0)}</td>
                   <td className="py-2 px-3 font-bold text-orange-600">{fmt(inv.balance_due||0)}</td>
                   <td className="py-2 px-3"><span className="px-2 py-0.5 rounded-full text-xs font-medium capitalize bg-orange-100 text-orange-700">{inv.status}</span></td>
                   <td className="py-2 px-3">
-                    <button onClick={()=>openPayment(inv)} className="flex items-center gap-1 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors">
+                    <button onClick={()=>openPayment(inv)} className="flex items-center gap-1 px-3 py-1 bg-primary hover:opacity-90 text-white text-xs font-medium rounded-lg transition-colors">
                       <Plus className="w-3 h-3"/>Pay
                     </button>
                   </td>
@@ -121,7 +121,7 @@ export default function CARecordPayments() {
             </table>
           )}
           {total > PAGE && (
-            <div className="flex items-center justify-between mt-4 text-sm text-slate-500">
+            <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
               <span>Showing {page*PAGE+1}–{Math.min((page+1)*PAGE,total)} of {total}</span>
               <div className="flex gap-1">
                 <Button variant="outline" size="sm" disabled={page===0} onClick={()=>setPage(p=>p-1)}><ChevronLeft className="w-4 h-4"/></Button>
@@ -137,10 +137,10 @@ export default function CARecordPayments() {
           <DialogHeader><DialogTitle>Record Payment — {selected?.invoice_number}</DialogTitle></DialogHeader>
           {selected && (
             <div className="space-y-3 py-2">
-              <div className="bg-slate-50 rounded-xl p-3 text-sm space-y-0.5">
-                <div className="flex justify-between"><span className="text-slate-500">Customer</span><span className="font-medium">{selected.customer_name||'—'}</span></div>
-                <div className="flex justify-between"><span className="text-slate-500">Invoice Total</span><span className="font-semibold">{fmt(selected.total)}</span></div>
-                <div className="flex justify-between"><span className="text-slate-500">Already Paid</span><span className="text-green-700">{fmt(selected.amount_paid||0)}</span></div>
+              <div className="bg-card rounded-xl p-3 text-sm space-y-0.5">
+                <div className="flex justify-between"><span className="text-muted-foreground">Customer</span><span className="font-medium">{selected.customer_name||'—'}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Invoice Total</span><span className="font-semibold">{fmt(selected.total)}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Already Paid</span><span className="text-green-700">{fmt(selected.amount_paid||0)}</span></div>
                 <div className="flex justify-between font-bold"><span>Balance Due</span><span className="text-orange-600">{fmt(selected.balance_due||0)}</span></div>
               </div>
               <div><Label>Amount Paid</Label><Input type="number" min="0.01" max={String(selected.balance_due)} step="0.01" className={inp} value={form.amount} onChange={e=>setForm(f=>({...f,amount:e.target.value}))}/></div>
@@ -152,7 +152,7 @@ export default function CARecordPayments() {
               <div><Label>Reference (optional)</Label><Input className={inp} value={form.reference} onChange={e=>setForm(f=>({...f,reference:e.target.value}))} placeholder="Transaction ID, receipt #…"/></div>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" onClick={()=>setOpen(false)}>Cancel</Button>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={recordPayment} disabled={saving}>{saving?'Recording…':'Record Payment'}</Button>
+                <Button className="bg-primary hover:opacity-90 text-white" onClick={recordPayment} disabled={saving}>{saving?'Recording…':'Record Payment'}</Button>
               </div>
             </div>
           )}
