@@ -17,7 +17,7 @@ import { cancelInvoice, duplicateInvoice, softDeleteInvoice } from '@/services/i
 import { generateInvoicePDF } from '@/lib/invoicePDF';
 import { useAuth } from '@/contexts/AuthContext';
 
-const CARD_STYLE = { background: '#ffffff', borderColor: '#E2E8F0' };
+const CARD_STYLE = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
 const PAGE_SIZE = 15;
 
 interface Props {
@@ -113,8 +113,8 @@ export default function InvoiceList({ invoices, loading, onView, onEdit, onCreat
       {/* Summary KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: 'Total Invoices', value: stats.total.toString(), sub: 'all time', color: '#2563EB' },
-          { label: 'Total Invoiced', value: fmt(stats.totalValue), sub: 'gross amount', color: '#7C3AED' },
+          { label: 'Total Invoices', value: stats.total.toString(), sub: 'all time', color: 'hsl(var(--primary))' },
+          { label: 'Total Invoiced', value: fmt(stats.totalValue), sub: 'gross amount', color: 'hsl(var(--primary))' },
           { label: 'Outstanding', value: fmt(stats.totalBalance), sub: `${stats.outstanding} invoices`, color: '#D97706' },
           { label: 'Overdue', value: stats.overdue.toString(), sub: 'need attention', color: '#DC2626' },
         ].map(k => (
@@ -124,9 +124,9 @@ export default function InvoiceList({ invoices, loading, onView, onEdit, onCreat
                 style={{ background: `${k.color}15`, border: `1px solid ${k.color}25` }}>
                 <FileText className="w-3.5 h-3.5" style={{ color: k.color }} />
               </div>
-              <p className="text-lg font-bold text-slate-900">{k.value}</p>
-              <p className="text-xs text-slate-400 mt-0.5">{k.label}</p>
-              <p className="text-xs text-slate-500 mt-0.5">{k.sub}</p>
+              <p className="text-lg font-bold text-foreground">{k.value}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{k.label}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{k.sub}</p>
             </CardContent>
           </Card>
         ))}
@@ -135,15 +135,15 @@ export default function InvoiceList({ invoices, loading, onView, onEdit, onCreat
       {/* Toolbar */}
       <div className="flex flex-col md:flex-row md:items-center gap-3">
         <div className="relative flex-1 min-w-0">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input placeholder="Search by invoice # or customer…"
             value={searchRaw} onChange={e => { setSearchRaw(e.target.value); setPage(1); }}
-            className="pl-9 h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl" />
+            className="pl-9 h-10 bg-card border-border text-foreground placeholder:text-muted-foreground rounded-xl" />
         </div>
         <div className="flex items-center gap-2 shrink-0 flex-wrap">
           <Select value={statusFilter} onValueChange={v => { setStatusFilter(v); setPage(1); }}>
-            <SelectTrigger className="h-10 w-44 bg-slate-50 border-slate-200 rounded-xl text-sm">
-              <Filter className="w-3.5 h-3.5 mr-1.5 text-slate-400" />
+            <SelectTrigger className="h-10 w-44 bg-card border-border rounded-xl text-sm">
+              <Filter className="w-3.5 h-3.5 mr-1.5 text-muted-foreground" />
               <SelectValue placeholder="All Statuses" />
             </SelectTrigger>
             <SelectContent>
@@ -154,14 +154,14 @@ export default function InvoiceList({ invoices, loading, onView, onEdit, onCreat
             </SelectContent>
           </Select>
           <button onClick={handleExportCSV} title="Export CSV"
-            className="h-10 px-3 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-sm">
+            className="h-10 px-3 rounded-xl border border-border bg-white text-muted-foreground hover:bg-card transition-colors flex items-center gap-1.5 text-sm">
             <FileSpreadsheet className="w-4 h-4" />
             <span className="hidden md:inline">CSV</span>
           </button>
           {canEdit && (
             <button onClick={onCreate}
               className="h-10 px-4 rounded-xl text-sm font-semibold text-white flex items-center gap-2"
-              style={{ background: '#2563EB' }}>
+              style={{ background: 'hsl(var(--primary))' }}>
               <Plus className="w-4 h-4" /> New Invoice
             </button>
           )}
@@ -171,7 +171,7 @@ export default function InvoiceList({ invoices, loading, onView, onEdit, onCreat
       {/* Table */}
       <Card className="border" style={CARD_STYLE}>
         <CardHeader className="pb-2 px-5 pt-4">
-          <CardTitle className="text-sm font-semibold text-slate-900">
+          <CardTitle className="text-sm font-semibold text-foreground">
             {loading ? 'Loading…' : `${filtered.length} Invoice${filtered.length !== 1 ? 's' : ''}`}
           </CardTitle>
         </CardHeader>
@@ -179,22 +179,22 @@ export default function InvoiceList({ invoices, loading, onView, onEdit, onCreat
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-100">
+                <tr className="border-b border-border">
                   {['Invoice #','Customer','Date','Due Date','Total','Paid','Balance','Status','Actions'].map(h => (
-                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-slate-500 whitespace-nowrap">{h}</th>
+                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {loading ? Array.from({ length: 6 }).map((_, i) => (
-                  <tr key={i} className="border-b border-slate-100">
+                  <tr key={i} className="border-b border-border">
                     {Array.from({ length: 9 }).map((__, j) => (
-                      <td key={j} className="px-4 py-3"><Skeleton className="h-4 w-16 bg-slate-100" /></td>
+                      <td key={j} className="px-4 py-3"><Skeleton className="h-4 w-16 bg-secondary" /></td>
                     ))}
                   </tr>
                 )) : pageRows.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="px-4 py-12 text-center text-sm text-slate-400">
+                    <td colSpan={9} className="px-4 py-12 text-center text-sm text-muted-foreground">
                       {search || statusFilter !== 'all' ? 'No invoices match your filters.' : 'No invoices yet. Create your first invoice.'}
                     </td>
                   </tr>
@@ -202,30 +202,30 @@ export default function InvoiceList({ invoices, loading, onView, onEdit, onCreat
                   const sc = STATUS_COLORS[inv.status];
                   const isEditable = ['draft','sent','pending_payment','partially_paid'].includes(inv.status);
                   return (
-                    <tr key={inv.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                    <tr key={inv.id} className="border-b border-border hover:bg-card transition-colors">
                       <td className="px-4 py-3">
                         <button onClick={() => onView(inv.id)}
-                          className="text-sm font-mono font-medium text-blue-600 hover:underline whitespace-nowrap">
+                          className="text-sm font-mono font-medium text-primary hover:underline whitespace-nowrap">
                           {inv.invoice_number}
                         </button>
                       </td>
-                      <td className="px-4 py-3 text-sm text-slate-900 whitespace-nowrap max-w-[140px] truncate">
+                      <td className="px-4 py-3 text-sm text-foreground whitespace-nowrap max-w-[140px] truncate">
                         {inv.customer?.name ?? '—'}
                       </td>
-                      <td className="px-4 py-3 text-xs text-slate-500 whitespace-nowrap">
+                      <td className="px-4 py-3 text-xs text-muted-foreground whitespace-nowrap">
                         {format(new Date(inv.created_at), 'dd MMM yyyy')}
                       </td>
                       <td className="px-4 py-3 text-xs whitespace-nowrap">
                         {inv.due_date ? (
-                          <span className={inv.status === 'overdue' ? 'text-red-600 font-medium' : 'text-slate-500'}>
+                          <span className={inv.status === 'overdue' ? 'text-red-600 font-medium' : 'text-muted-foreground'}>
                             {format(new Date(inv.due_date), 'dd MMM yyyy')}
                           </span>
-                        ) : <span className="text-slate-300">—</span>}
+                        ) : <span className="text-muted-foreground">—</span>}
                       </td>
-                      <td className="px-4 py-3 text-sm font-semibold text-slate-900 whitespace-nowrap">{fmt(inv.total)}</td>
+                      <td className="px-4 py-3 text-sm font-semibold text-foreground whitespace-nowrap">{fmt(inv.total)}</td>
                       <td className="px-4 py-3 text-sm text-emerald-600 whitespace-nowrap">{fmt(inv.paid_amount)}</td>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <span className={`text-sm font-semibold ${inv.balance_due > 0 ? 'text-red-600' : 'text-slate-400'}`}>
+                        <span className={`text-sm font-semibold ${inv.balance_due > 0 ? 'text-red-600' : 'text-muted-foreground'}`}>
                           {fmt(inv.balance_due)}
                         </span>
                       </td>
@@ -238,23 +238,23 @@ export default function InvoiceList({ invoices, loading, onView, onEdit, onCreat
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1">
                           <button onClick={() => onView(inv.id)} title="View"
-                            className="w-7 h-7 rounded-lg hover:bg-blue-50 flex items-center justify-center transition-colors">
-                            <Eye className="w-3.5 h-3.5 text-blue-500" />
+                            className="w-7 h-7 rounded-lg hover:bg-accent flex items-center justify-center transition-colors">
+                            <Eye className="w-3.5 h-3.5 text-primary" />
                           </button>
                           {canEdit && isEditable && (
                             <button onClick={() => onEdit(inv.id)} title="Edit"
-                              className="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors">
-                              <Edit2 className="w-3.5 h-3.5 text-slate-500" />
+                              className="w-7 h-7 rounded-lg hover:bg-secondary flex items-center justify-center transition-colors">
+                              <Edit2 className="w-3.5 h-3.5 text-muted-foreground" />
                             </button>
                           )}
                           <button onClick={() => handleDownloadPDF(inv)} title="Download PDF"
-                            className="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors">
-                            <Download className="w-3.5 h-3.5 text-slate-500" />
+                            className="w-7 h-7 rounded-lg hover:bg-secondary flex items-center justify-center transition-colors">
+                            <Download className="w-3.5 h-3.5 text-muted-foreground" />
                           </button>
                           {canEdit && (
                             <button onClick={() => handleDuplicate(inv)} title="Duplicate"
-                              className="w-7 h-7 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors">
-                              <Copy className="w-3.5 h-3.5 text-slate-500" />
+                              className="w-7 h-7 rounded-lg hover:bg-secondary flex items-center justify-center transition-colors">
+                              <Copy className="w-3.5 h-3.5 text-muted-foreground" />
                             </button>
                           )}
                           {canEdit && inv.status !== 'cancelled' && inv.status !== 'paid' && (
@@ -274,18 +274,18 @@ export default function InvoiceList({ invoices, loading, onView, onEdit, onCreat
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100">
-              <span className="text-xs text-slate-500">
+            <div className="flex items-center justify-between px-5 py-3 border-t border-border">
+              <span className="text-xs text-muted-foreground">
                 Showing {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, filtered.length)} of {filtered.length}
               </span>
               <div className="flex items-center gap-1">
                 <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                  className="w-7 h-7 rounded-lg border border-slate-200 flex items-center justify-center disabled:opacity-40 hover:bg-slate-50 transition-colors">
+                  className="w-7 h-7 rounded-lg border border-border flex items-center justify-center disabled:opacity-40 hover:bg-card transition-colors">
                   <ChevronLeft className="w-3.5 h-3.5" />
                 </button>
-                <span className="text-xs px-2 text-slate-600">{page} / {totalPages}</span>
+                <span className="text-xs px-2 text-muted-foreground">{page} / {totalPages}</span>
                 <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-                  className="w-7 h-7 rounded-lg border border-slate-200 flex items-center justify-center disabled:opacity-40 hover:bg-slate-50 transition-colors">
+                  className="w-7 h-7 rounded-lg border border-border flex items-center justify-center disabled:opacity-40 hover:bg-card transition-colors">
                   <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
