@@ -11,8 +11,8 @@ import { Clock, Shield, Zap, AlertTriangle, CheckCircle, Search, RefreshCw } fro
 
 interface Tenant { id: string; business_name: string; plan: string; plan_expires_at?: string; suspended: boolean; created_at: string; email?: string; }
 const PAGE = 20;
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 function daysLeft(exp?: string) { if (!exp) return null; return Math.ceil((new Date(exp).getTime() - Date.now()) / 86400000); }
 
 export default function SATrialMgmt() {
@@ -69,7 +69,7 @@ export default function SATrialMgmt() {
   const trialBadge = (t: Tenant) => {
     const d = daysLeft(t.plan_expires_at);
     if (t.suspended) return <Badge variant="destructive">Suspended</Badge>;
-    if (t.plan !== 'trial') return <Badge className="bg-blue-100 text-blue-700 border-blue-200">{t.plan}</Badge>;
+    if (t.plan !== 'trial') return <Badge className="bg-accent text-primary border-primary">{t.plan}</Badge>;
     if (d === null) return <Badge variant="secondary">No Trial</Badge>;
     if (d < 0) return <Badge variant="destructive" className="gap-1"><AlertTriangle className="w-3 h-3"/>Expired ({Math.abs(d)}d ago)</Badge>;
     if (d <= 3) return <Badge className="bg-red-100 text-red-700 border-red-200 gap-1"><AlertTriangle className="w-3 h-3"/>Expiring ({d}d)</Badge>;
@@ -80,14 +80,14 @@ export default function SATrialMgmt() {
   return (
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center gap-2 mb-2">
-        <Clock className="w-5 h-5 text-blue-600" />
-        <h1 className="text-xl font-bold text-slate-800">14-Day Free Trial Management</h1>
+        <Clock className="w-5 h-5 text-primary" />
+        <h1 className="text-xl font-bold text-foreground">14-Day Free Trial Management</h1>
         <Badge variant="secondary">{total}</Badge>
       </div>
       <div className="flex gap-2 flex-wrap">
         {(['all','trial','expiring','expired'] as const).map(f => (
           <button key={f} onClick={() => { setFilter(f); setPage(0); }}
-            className={`px-4 py-2 rounded-xl border text-sm font-medium capitalize transition-colors ${filter === f ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}>
+            className={`px-4 py-2 rounded-xl border text-sm font-medium capitalize transition-colors ${filter === f ? 'bg-primary text-white border-primary' : 'bg-white text-muted-foreground border-border hover:bg-card'}`}>
             {f === 'expiring' ? 'Expiring Soon (≤7d)' : f}
           </button>
         ))}
@@ -95,7 +95,7 @@ export default function SATrialMgmt() {
       <Card style={CARD}>
         <CardHeader className="pb-2">
           <div className="relative max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input className={`${inp} pl-9`} placeholder="Search business…" value={search} onChange={e => { setSearch(e.target.value); setPage(0); }} />
           </div>
         </CardHeader>
@@ -103,25 +103,25 @@ export default function SATrialMgmt() {
           {loading ? (
             <div className="space-y-2">{Array.from({length:6}).map((_,i)=><Skeleton key={i} className="h-12 w-full"/>)}</div>
           ) : tenants.length === 0 ? (
-            <div className="text-center py-10 text-slate-400"><Shield className="w-8 h-8 mx-auto mb-2 opacity-40"/><p>No tenants match filter.</p></div>
+            <div className="text-center py-10 text-muted-foreground"><Shield className="w-8 h-8 mx-auto mb-2 opacity-40"/><p>No tenants match filter.</p></div>
           ) : (
             <table className="w-full text-sm whitespace-nowrap">
-              <thead><tr className="border-b border-slate-100">
+              <thead><tr className="border-b border-border">
                 {['Business','Email','Plan','Expires','Status','Actions'].map(h=>
-                  <th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>
+                  <th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>
                 )}
               </tr></thead>
               <tbody>{tenants.map(t => (
-                <tr key={t.id} className="border-b border-slate-50 hover:bg-slate-50">
-                  <td className="py-2 px-3 font-medium text-slate-800">{t.business_name}</td>
-                  <td className="py-2 px-3 text-slate-400 text-xs">{t.email||'—'}</td>
-                  <td className="py-2 px-3 capitalize font-medium text-slate-600">{t.plan||'trial'}</td>
-                  <td className="py-2 px-3 text-slate-500">{t.plan_expires_at ? new Date(t.plan_expires_at).toLocaleDateString() : '—'}</td>
+                <tr key={t.id} className="border-b border-border hover:bg-card">
+                  <td className="py-2 px-3 font-medium text-foreground">{t.business_name}</td>
+                  <td className="py-2 px-3 text-muted-foreground text-xs">{t.email||'—'}</td>
+                  <td className="py-2 px-3 capitalize font-medium text-muted-foreground">{t.plan||'trial'}</td>
+                  <td className="py-2 px-3 text-muted-foreground">{t.plan_expires_at ? new Date(t.plan_expires_at).toLocaleDateString() : '—'}</td>
                   <td className="py-2 px-3">{trialBadge(t)}</td>
                   <td className="py-2 px-3">
                     <div className="flex items-center gap-1">
                       {!t.plan_expires_at && <button onClick={() => activateTrial(t)} className="p-1 hover:bg-green-50 rounded text-green-600" title="Activate 14-day trial"><Zap className="w-4 h-4"/></button>}
-                      {t.plan === 'trial' && !t.suspended && <button onClick={() => extendTrial(t)} className="p-1 hover:bg-blue-50 rounded text-blue-600" title="Extend 7 days"><RefreshCw className="w-4 h-4"/></button>}
+                      {t.plan === 'trial' && !t.suspended && <button onClick={() => extendTrial(t)} className="p-1 hover:bg-accent rounded text-primary" title="Extend 7 days"><RefreshCw className="w-4 h-4"/></button>}
                       {t.plan === 'trial' && daysLeft(t.plan_expires_at) !== null && daysLeft(t.plan_expires_at)! > 0 && (
                         <button onClick={() => expireTrial(t)} className="p-1 hover:bg-red-50 rounded text-red-500" title="Expire trial now"><AlertTriangle className="w-4 h-4"/></button>
                       )}
@@ -132,7 +132,7 @@ export default function SATrialMgmt() {
             </table>
           )}
           {total > PAGE && (
-            <div className="flex items-center justify-between mt-4 text-sm text-slate-500">
+            <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
               <span>Showing {page*PAGE+1}–{Math.min((page+1)*PAGE,total)} of {total}</span>
               <div className="flex gap-1">
                 <Button variant="outline" size="sm" disabled={page===0} onClick={()=>setPage(p=>p-1)}>‹</Button>
@@ -143,7 +143,7 @@ export default function SATrialMgmt() {
         </CardContent>
       </Card>
       <Card style={CARD}>
-        <CardContent className="pt-4 pb-3 text-sm text-slate-500 space-y-1">
+        <CardContent className="pt-4 pb-3 text-sm text-muted-foreground space-y-1">
           <p><b>Anti-abuse:</b> Each business is eligible for one 14-day trial. Paid subscriptions required for renewals.</p>
           <p><b>Restrictions after expiry:</b> Read-only access until upgraded.</p>
           <p><b>Auto reminders:</b> Sent at 7, 3, and 1 days before expiry.</p>
