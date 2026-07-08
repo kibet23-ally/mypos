@@ -12,6 +12,7 @@ import {
   UserCheck, TrendingDown, Target, Percent,
 } from 'lucide-react';
 import { supabase } from '@/db/supabase';
+import { formatCurrency } from '@/lib/currency';
 import { toast } from 'sonner';
 
 const CHART_COLORS = [
@@ -142,11 +143,10 @@ export default function SAOverview() {
 
   useEffect(() => { load(); }, [load]);
 
-  const fmt = (n: number, prefix = '$') =>
-    n >= 1000 ? `${prefix}${(n / 1000).toFixed(1)}k` : `${prefix}${n.toFixed(0)}`;
+  const fmt = (n: number) => formatCurrency(n, 'USD');
 
   const kpis = stats ? [
-    { label: 'Total Businesses',    value: stats.totalTenants.toString(),        sub: `+${stats.newTenantsThisMonth} this month`, icon: Building2, color: 'text-blue-600' },
+    { label: 'Total Businesses',    value: stats.totalTenants.toString(),        sub: `+${stats.newTenantsThisMonth} this month`, icon: Building2, color: 'text-primary' },
     { label: 'Active Tenants',      value: stats.activeTenants.toString(),       sub: `${stats.conversionRate.toFixed(0)}% conversion`, icon: UserCheck, color: 'text-green-600' },
     { label: 'Platform Revenue',    value: fmt(stats.totalRevenue),              sub: `MRR ${fmt(stats.mrr)}`, icon: DollarSign, color: 'text-violet-600' },
     { label: 'ARR',                 value: fmt(stats.arr),                       sub: `${stats.revenueGrowth >= 0 ? '+' : ''}${stats.revenueGrowth.toFixed(1)}% growth`, icon: TrendingUp, color: 'text-emerald-600' },
