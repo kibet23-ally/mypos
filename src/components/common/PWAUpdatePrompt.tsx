@@ -34,23 +34,23 @@ export default function PWAUpdatePrompt() {
   if (!needRefresh && !offlineReady) return null;
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border border-slate-200 bg-white max-w-sm">
-      <RefreshCw className="w-4 h-4 text-blue-500 shrink-0" />
-      <p className="text-sm text-slate-700 flex-1">
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[100] flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border border-border bg-white max-w-sm">
+      <RefreshCw className="w-4 h-4 text-primary shrink-0" />
+      <p className="text-sm text-foreground flex-1">
         {needRefresh ? 'New version available — reload to update.' : 'App ready for offline use.'}
       </p>
       {needRefresh && (
         <button
           onClick={() => updateServiceWorker(true)}
           className="text-xs font-semibold text-white px-3 py-1.5 rounded-lg shrink-0"
-          style={{ background: '#2563EB' }}
+          style={{ background: 'hsl(var(--primary))' }}
         >
           Reload
         </button>
       )}
       <button
         onClick={() => { setNeedRefresh(false); setOfflineReady(false); }}
-        className="text-slate-400 hover:text-slate-600 shrink-0"
+        className="text-muted-foreground hover:text-muted-foreground shrink-0"
       >
         <X className="w-4 h-4" />
       </button>
