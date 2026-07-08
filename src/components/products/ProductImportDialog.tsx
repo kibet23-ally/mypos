@@ -263,10 +263,10 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[calc(100%-1.5rem)] md:max-w-3xl border-slate-200 max-h-[85vh] overflow-y-auto" style={{ background: '#ffffff' }}>
+      <DialogContent className="max-w-[calc(100%-1.5rem)] md:max-w-3xl border-border max-h-[85vh] overflow-y-auto" style={{ background: 'hsl(var(--card))' }}>
         <DialogHeader>
-          <DialogTitle className="text-slate-900 flex items-center gap-2">
-            <FileSpreadsheet className="w-5 h-5 text-blue-500" />
+          <DialogTitle className="text-foreground flex items-center gap-2">
+            <FileSpreadsheet className="w-5 h-5 text-primary" />
             Import Products
           </DialogTitle>
         </DialogHeader>
@@ -276,24 +276,24 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
           <div className="space-y-4 mt-2">
             <button
               onClick={downloadTemplate}
-              className="w-full flex items-center justify-center gap-2 h-10 rounded-xl border border-slate-200 bg-slate-50 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
+              className="w-full flex items-center justify-center gap-2 h-10 rounded-xl border border-border bg-card text-sm font-medium text-foreground hover:bg-secondary transition-colors"
             >
               <Download className="w-4 h-4" /> Download Template (.xlsx)
             </button>
 
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-slate-200 rounded-xl p-10 text-center cursor-pointer hover:border-blue-300 hover:bg-blue-50/30 transition-colors"
+              className="border-2 border-dashed border-border rounded-xl p-10 text-center cursor-pointer hover:border-primary hover:bg-accent/30 transition-colors"
             >
               {parsing ? (
-                <Loader2 className="w-8 h-8 text-blue-500 animate-spin mx-auto mb-3" />
+                <Loader2 className="w-8 h-8 text-primary animate-spin mx-auto mb-3" />
               ) : (
-                <Upload className="w-8 h-8 text-slate-400 mx-auto mb-3" />
+                <Upload className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
               )}
-              <p className="text-sm font-medium text-slate-700">
+              <p className="text-sm font-medium text-foreground">
                 {parsing ? `Reading ${fileName}…` : 'Click to upload .xlsx or .csv'}
               </p>
-              <p className="text-xs text-slate-400 mt-1">Up to 5,000 products per file</p>
+              <p className="text-xs text-muted-foreground mt-1">Up to 5,000 products per file</p>
             </div>
             <input
               ref={fileInputRef}
@@ -303,14 +303,14 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
               className="hidden"
             />
 
-            <div className="rounded-xl bg-slate-50 border border-slate-200 p-4">
-              <p className="text-xs font-semibold text-slate-600 mb-2">Required columns</p>
+            <div className="rounded-xl bg-card border border-border p-4">
+              <p className="text-xs font-semibold text-muted-foreground mb-2">Required columns</p>
               <div className="flex flex-wrap gap-1.5">
                 {REQUIRED_HEADERS.map(h => (
-                  <Badge key={h} className="text-xs bg-blue-50 border border-blue-200 text-blue-700">{h}</Badge>
+                  <Badge key={h} className="text-xs bg-accent border border-primary text-primary">{h}</Badge>
                 ))}
               </div>
-              <p className="text-xs text-slate-400 mt-2">SKU is auto-generated if left blank. Rows matching an existing Barcode, SKU, or Product Name will update that product instead of duplicating it.</p>
+              <p className="text-xs text-muted-foreground mt-2">SKU is auto-generated if left blank. Rows matching an existing Barcode, SKU, or Product Name will update that product instead of duplicating it.</p>
             </div>
           </div>
         )}
@@ -323,9 +323,9 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
                 <p className="text-lg font-bold text-emerald-700">{addCount}</p>
                 <p className="text-xs text-emerald-600">New products</p>
               </div>
-              <div className="rounded-xl border border-blue-200 bg-blue-50 p-3 text-center">
-                <p className="text-lg font-bold text-blue-700">{updateCount}</p>
-                <p className="text-xs text-blue-600">Will update</p>
+              <div className="rounded-xl border border-primary bg-accent p-3 text-center">
+                <p className="text-lg font-bold text-primary">{updateCount}</p>
+                <p className="text-xs text-primary">Will update</p>
               </div>
               <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-center">
                 <p className="text-lg font-bold text-red-700">{errorCount}</p>
@@ -333,31 +333,31 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
               </div>
             </div>
 
-            <div className="border border-slate-200 rounded-xl overflow-hidden">
+            <div className="border border-border rounded-xl overflow-hidden">
               <div className="max-h-80 overflow-y-auto">
                 <table className="w-full text-sm">
-                  <thead className="sticky top-0 bg-slate-50">
-                    <tr className="border-b border-slate-200">
+                  <thead className="sticky top-0 bg-card">
+                    <tr className="border-b border-border">
                       {['Row', 'Name', 'Category', 'Price', 'Stock', 'Status', ''].map(h => (
-                        <th key={h} className="px-3 py-2 text-left text-xs font-semibold text-slate-500 whitespace-nowrap">{h}</th>
+                        <th key={h} className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {rows.map(r => (
-                      <tr key={r.rowNumber} className={`border-b border-slate-100 ${r.errors.length > 0 ? 'bg-red-50/50' : ''}`}>
-                        <td className="px-3 py-2 text-xs text-slate-400">{r.rowNumber}</td>
-                        <td className="px-3 py-2 text-slate-900 whitespace-nowrap">{r.name || <span className="text-red-500">—</span>}</td>
-                        <td className="px-3 py-2 text-slate-600 whitespace-nowrap">{r.category || <span className="text-red-500">—</span>}</td>
-                        <td className="px-3 py-2 text-slate-600 whitespace-nowrap">{r.price ?? <span className="text-red-500">—</span>}</td>
-                        <td className="px-3 py-2 text-slate-600 whitespace-nowrap">{r.stock ?? <span className="text-red-500">—</span>}</td>
+                      <tr key={r.rowNumber} className={`border-b border-border ${r.errors.length > 0 ? 'bg-red-50/50' : ''}`}>
+                        <td className="px-3 py-2 text-xs text-muted-foreground">{r.rowNumber}</td>
+                        <td className="px-3 py-2 text-foreground whitespace-nowrap">{r.name || <span className="text-red-500">—</span>}</td>
+                        <td className="px-3 py-2 text-muted-foreground whitespace-nowrap">{r.category || <span className="text-red-500">—</span>}</td>
+                        <td className="px-3 py-2 text-muted-foreground whitespace-nowrap">{r.price ?? <span className="text-red-500">—</span>}</td>
+                        <td className="px-3 py-2 text-muted-foreground whitespace-nowrap">{r.stock ?? <span className="text-red-500">—</span>}</td>
                         <td className="px-3 py-2 whitespace-nowrap">
                           {r.errors.length > 0 ? (
                             <span className="inline-flex items-center gap-1 text-xs text-red-600" title={r.errors.join('; ')}>
                               <AlertTriangle className="w-3.5 h-3.5" /> {r.errors[0]}
                             </span>
                           ) : r.action === 'update' ? (
-                            <span className="inline-flex items-center gap-1 text-xs text-blue-600">
+                            <span className="inline-flex items-center gap-1 text-xs text-primary">
                               <CheckCircle2 className="w-3.5 h-3.5" /> Update existing
                             </span>
                           ) : (
@@ -367,7 +367,7 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
                           )}
                         </td>
                         <td className="px-3 py-2">
-                          <button onClick={() => removeRow(r.rowNumber)} className="text-slate-400 hover:text-red-500">
+                          <button onClick={() => removeRow(r.rowNumber)} className="text-muted-foreground hover:text-red-500">
                             <X className="w-3.5 h-3.5" />
                           </button>
                         </td>
@@ -379,7 +379,7 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
             </div>
 
             {errorCount > 0 && (
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-muted-foreground">
                 Rows with errors will be skipped automatically — fix them in your spreadsheet and re-upload, or remove them with the X above.
               </p>
             )}
@@ -387,7 +387,7 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
             <div className="flex gap-3">
               <button
                 onClick={reset}
-                className="h-10 px-4 rounded-xl border border-slate-200 text-sm font-medium text-slate-600 hover:bg-slate-50 flex items-center gap-1.5"
+                className="h-10 px-4 rounded-xl border border-border text-sm font-medium text-muted-foreground hover:bg-card flex items-center gap-1.5"
               >
                 <ArrowLeft className="w-4 h-4" /> Back
               </button>
@@ -395,7 +395,7 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
                 onClick={runImport}
                 disabled={addCount + updateCount === 0}
                 className="flex-1 h-10 rounded-xl text-sm font-semibold text-white disabled:opacity-50"
-                style={{ background: '#2563EB' }}
+                style={{ background: 'hsl(var(--primary))' }}
               >
                 Import {addCount + updateCount} Product{addCount + updateCount === 1 ? '' : 's'}
               </button>
@@ -406,10 +406,10 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
         {/* Stage: Importing */}
         {stage === 'importing' && (
           <div className="py-12 flex flex-col items-center gap-4">
-            <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-            <p className="text-sm text-slate-600">Importing products… {importProgress}%</p>
-            <div className="w-full max-w-xs h-2 rounded-full bg-slate-100 overflow-hidden">
-              <div className="h-full bg-blue-500 transition-all duration-300" style={{ width: `${importProgress}%` }} />
+            <Loader2 className="w-8 h-8 text-primary animate-spin" />
+            <p className="text-sm text-muted-foreground">Importing products… {importProgress}%</p>
+            <div className="w-full max-w-xs h-2 rounded-full bg-secondary overflow-hidden">
+              <div className="h-full bg-accent0 transition-all duration-300" style={{ width: `${importProgress}%` }} />
             </div>
           </div>
         )}
@@ -422,13 +422,13 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
                 <p className="text-2xl font-bold text-emerald-700">{summary.added}</p>
                 <p className="text-xs text-emerald-600">Added</p>
               </div>
-              <div className="rounded-xl border border-blue-200 bg-blue-50 p-4 text-center">
-                <p className="text-2xl font-bold text-blue-700">{summary.updated}</p>
-                <p className="text-xs text-blue-600">Updated</p>
+              <div className="rounded-xl border border-primary bg-accent p-4 text-center">
+                <p className="text-2xl font-bold text-primary">{summary.updated}</p>
+                <p className="text-xs text-primary">Updated</p>
               </div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center">
-                <p className="text-2xl font-bold text-slate-700">{summary.skipped}</p>
-                <p className="text-xs text-slate-500">Skipped</p>
+              <div className="rounded-xl border border-border bg-card p-4 text-center">
+                <p className="text-2xl font-bold text-foreground">{summary.skipped}</p>
+                <p className="text-xs text-muted-foreground">Skipped</p>
               </div>
               <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-center">
                 <p className="text-2xl font-bold text-red-700">{summary.failed}</p>
@@ -438,7 +438,7 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
             <button
               onClick={() => handleClose(false)}
               className="w-full h-10 rounded-xl text-sm font-semibold text-white"
-              style={{ background: '#2563EB' }}
+              style={{ background: 'hsl(var(--primary))' }}
             >
               Done
             </button>
