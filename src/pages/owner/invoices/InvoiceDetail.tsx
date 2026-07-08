@@ -17,7 +17,7 @@ import { STATUS_LABELS, STATUS_COLORS, fmt, PAYMENT_METHOD_LABELS } from '@/type
 import { format } from 'date-fns';
 import RecordPaymentModal from './RecordPaymentModal';
 
-const CARD_STYLE = { background: '#ffffff', borderColor: '#E2E8F0' };
+const CARD_STYLE = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
 
 interface Props {
   invoiceId: string;
@@ -88,15 +88,15 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
 
   if (loading) return (
     <div className="space-y-4">
-      {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-16 w-full bg-slate-100 rounded-xl" />)}
+      {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-16 w-full bg-secondary rounded-xl" />)}
     </div>
   );
 
   if (!invoice) return (
-    <div className="text-center py-20 text-slate-400">
+    <div className="text-center py-20 text-muted-foreground">
       <FileText className="w-10 h-10 mx-auto mb-3 opacity-40" />
       <p>Invoice not found.</p>
-      <button onClick={onBack} className="mt-4 text-sm text-blue-600 hover:underline">← Back to list</button>
+      <button onClick={onBack} className="mt-4 text-sm text-primary hover:underline">← Back to list</button>
     </div>
   );
 
@@ -109,25 +109,25 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center gap-3">
         <button onClick={onBack}
-          className="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors shrink-0">
-          <ArrowLeft className="w-4 h-4 text-slate-600" />
+          className="w-9 h-9 rounded-xl border border-border flex items-center justify-center hover:bg-card transition-colors shrink-0">
+          <ArrowLeft className="w-4 h-4 text-muted-foreground" />
         </button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <h2 className="text-xl font-bold text-slate-900 font-mono">{invoice.invoice_number}</h2>
+            <h2 className="text-xl font-bold text-foreground font-mono">{invoice.invoice_number}</h2>
             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border"
               style={{ background: sc.bg, color: sc.text, borderColor: sc.border }}>
               {STATUS_LABELS[invoice.status]}
             </span>
           </div>
-          <p className="text-sm text-slate-500 mt-0.5">
+          <p className="text-sm text-muted-foreground mt-0.5">
             {invoice.customer?.name} — Created {format(new Date(invoice.created_at), 'dd MMM yyyy')}
           </p>
         </div>
         <div className="flex items-center gap-2 flex-wrap shrink-0">
           {invoice.status === 'draft' && canEdit && (
             <button onClick={handleIssue}
-              className="h-9 px-4 rounded-xl text-sm font-medium border border-blue-200 text-blue-600 hover:bg-blue-50 transition-colors">
+              className="h-9 px-4 rounded-xl text-sm font-medium border border-primary text-primary hover:bg-accent transition-colors">
               Issue Invoice
             </button>
           )}
@@ -139,18 +139,18 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
             </button>
           )}
           <button onClick={handlePrint}
-            className="h-9 px-3 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-sm">
+            className="h-9 px-3 rounded-xl border border-border bg-white text-muted-foreground hover:bg-card transition-colors flex items-center gap-1.5 text-sm">
             <Download className="w-4 h-4" /> PDF
           </button>
           {canEdit && isEditable && (
             <button onClick={() => onEdit(invoice.id)}
-              className="h-9 px-3 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-sm">
+              className="h-9 px-3 rounded-xl border border-border bg-white text-muted-foreground hover:bg-card transition-colors flex items-center gap-1.5 text-sm">
               <Edit2 className="w-4 h-4" /> Edit
             </button>
           )}
           {canEdit && (
             <button onClick={handleDuplicate}
-              className="h-9 px-3 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1.5 text-sm">
+              className="h-9 px-3 rounded-xl border border-border bg-white text-muted-foreground hover:bg-card transition-colors flex items-center gap-1.5 text-sm">
               <Copy className="w-4 h-4" /> Duplicate
             </button>
           )}
@@ -171,26 +171,26 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
             <CardContent className="p-5 grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
-                    <Building2 className="w-3.5 h-3.5 text-blue-500" />
+                  <div className="w-7 h-7 rounded-lg bg-accent flex items-center justify-center">
+                    <Building2 className="w-3.5 h-3.5 text-primary" />
                   </div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">From</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">From</p>
                 </div>
-                <p className="text-sm font-bold text-slate-900">{appUser?.tenant?.business_name ?? 'My Business'}</p>
-                {appUser?.email && <p className="text-xs text-slate-500 mt-0.5">{appUser.email}</p>}
-                {appUser?.phone_number && <p className="text-xs text-slate-500">{appUser.phone_number}</p>}
+                <p className="text-sm font-bold text-foreground">{appUser?.tenant?.business_name ?? 'My Business'}</p>
+                {appUser?.email && <p className="text-xs text-muted-foreground mt-0.5">{appUser.email}</p>}
+                {appUser?.phone_number && <p className="text-xs text-muted-foreground">{appUser.phone_number}</p>}
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center">
                     <User className="w-3.5 h-3.5 text-emerald-500" />
                   </div>
-                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Bill To</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Bill To</p>
                 </div>
-                <p className="text-sm font-bold text-slate-900">{invoice.customer?.name}</p>
-                {invoice.customer?.email && <p className="text-xs text-slate-500 mt-0.5">{invoice.customer.email}</p>}
-                {invoice.customer?.phone && <p className="text-xs text-slate-500">{invoice.customer.phone}</p>}
-                {invoice.customer?.address && <p className="text-xs text-slate-500">{invoice.customer.address}</p>}
+                <p className="text-sm font-bold text-foreground">{invoice.customer?.name}</p>
+                {invoice.customer?.email && <p className="text-xs text-muted-foreground mt-0.5">{invoice.customer.email}</p>}
+                {invoice.customer?.phone && <p className="text-xs text-muted-foreground">{invoice.customer.phone}</p>}
+                {invoice.customer?.address && <p className="text-xs text-muted-foreground">{invoice.customer.address}</p>}
               </div>
             </CardContent>
           </Card>
@@ -198,9 +198,9 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
           {/* Dates */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {[
-              { label: 'Issue Date', value: invoice.issued_at ? format(new Date(invoice.issued_at), 'dd MMM yyyy') : '—', icon: Calendar, color: '#2563EB' },
+              { label: 'Issue Date', value: invoice.issued_at ? format(new Date(invoice.issued_at), 'dd MMM yyyy') : '—', icon: Calendar, color: 'hsl(var(--primary))' },
               { label: 'Due Date', value: invoice.due_date ? format(new Date(invoice.due_date), 'dd MMM yyyy') : '—', icon: Clock, color: invoice.status === 'overdue' ? '#DC2626' : '#D97706' },
-              { label: 'Payment Terms', value: invoice.payment_terms ?? '—', icon: FileText, color: '#7C3AED' },
+              { label: 'Payment Terms', value: invoice.payment_terms ?? '—', icon: FileText, color: 'hsl(var(--primary))' },
             ].map(f => (
               <Card key={f.label} className="border" style={CARD_STYLE}>
                 <CardContent className="p-4 flex items-start gap-3">
@@ -209,8 +209,8 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
                     <f.icon className="w-3.5 h-3.5" style={{ color: f.color }} />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xs text-slate-400">{f.label}</p>
-                    <p className="text-sm font-semibold text-slate-900 truncate">{f.value}</p>
+                    <p className="text-xs text-muted-foreground">{f.label}</p>
+                    <p className="text-sm font-semibold text-foreground truncate">{f.value}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -220,29 +220,29 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
           {/* Items Table */}
           <Card className="border" style={CARD_STYLE}>
             <CardHeader className="pb-2 px-5 pt-5">
-              <CardTitle className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-                <Package className="w-4 h-4 text-blue-500" /> Line Items
+              <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <Package className="w-4 h-4 text-primary" /> Line Items
               </CardTitle>
             </CardHeader>
             <CardContent className="px-0 pb-0">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-slate-100">
+                    <tr className="border-b border-border">
                       {['Item', 'SKU', 'Qty', 'Unit Price', 'Disc %', 'Total'].map(h => (
-                        <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-slate-500 whitespace-nowrap">{h}</th>
+                        <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-muted-foreground whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {items.map((item, i) => (
-                      <tr key={item.id} className={`border-b border-slate-100 ${i % 2 === 0 ? '' : 'bg-slate-50/50'}`}>
-                        <td className="px-5 py-3 text-sm font-medium text-slate-900 whitespace-nowrap">{item.name}</td>
-                        <td className="px-5 py-3 text-xs font-mono text-slate-400 whitespace-nowrap">{item.sku ?? '—'}</td>
-                        <td className="px-5 py-3 text-sm text-slate-700 whitespace-nowrap">{item.quantity}</td>
-                        <td className="px-5 py-3 text-sm text-slate-700 whitespace-nowrap">{fmt(item.unit_price)}</td>
-                        <td className="px-5 py-3 text-sm text-slate-500 whitespace-nowrap">{item.discount_pct}%</td>
-                        <td className="px-5 py-3 text-sm font-bold text-slate-900 whitespace-nowrap">{fmt(item.line_total)}</td>
+                      <tr key={item.id} className={`border-b border-border ${i % 2 === 0 ? '' : 'bg-card/50'}`}>
+                        <td className="px-5 py-3 text-sm font-medium text-foreground whitespace-nowrap">{item.name}</td>
+                        <td className="px-5 py-3 text-xs font-mono text-muted-foreground whitespace-nowrap">{item.sku ?? '—'}</td>
+                        <td className="px-5 py-3 text-sm text-foreground whitespace-nowrap">{item.quantity}</td>
+                        <td className="px-5 py-3 text-sm text-foreground whitespace-nowrap">{fmt(item.unit_price)}</td>
+                        <td className="px-5 py-3 text-sm text-muted-foreground whitespace-nowrap">{item.discount_pct}%</td>
+                        <td className="px-5 py-3 text-sm font-bold text-foreground whitespace-nowrap">{fmt(item.line_total)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -257,14 +257,14 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
               <CardContent className="p-5 space-y-4">
                 {invoice.notes && (
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Notes</p>
-                    <p className="text-sm text-slate-700 whitespace-pre-wrap">{invoice.notes}</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Notes</p>
+                    <p className="text-sm text-foreground whitespace-pre-wrap">{invoice.notes}</p>
                   </div>
                 )}
                 {invoice.payment_terms && (
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Terms & Conditions</p>
-                    <p className="text-sm text-slate-700">{invoice.payment_terms}</p>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">Terms & Conditions</p>
+                    <p className="text-sm text-foreground">{invoice.payment_terms}</p>
                   </div>
                 )}
               </CardContent>
@@ -277,31 +277,31 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
           {/* Totals */}
           <Card className="border" style={CARD_STYLE}>
             <CardHeader className="pb-2 px-5 pt-5">
-              <CardTitle className="text-sm font-semibold text-slate-900">Invoice Totals</CardTitle>
+              <CardTitle className="text-sm font-semibold text-foreground">Invoice Totals</CardTitle>
             </CardHeader>
             <CardContent className="px-5 pb-5 space-y-2.5">
               <div className="flex justify-between text-sm">
-                <span className="text-slate-500">Subtotal</span>
-                <span className="text-slate-900">{fmt(invoice.subtotal)}</span>
+                <span className="text-muted-foreground">Subtotal</span>
+                <span className="text-foreground">{fmt(invoice.subtotal)}</span>
               </div>
               {invoice.discount_amount > 0 && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-500">Discount</span>
+                  <span className="text-muted-foreground">Discount</span>
                   <span className="text-red-500">- {fmt(invoice.discount_amount)}</span>
                 </div>
               )}
               <div className="flex justify-between text-sm">
-                <span className="text-slate-500">Tax ({(invoice.tax_rate * 100).toFixed(0)}%)</span>
-                <span className="text-slate-700">{fmt(invoice.tax_amount)}</span>
+                <span className="text-muted-foreground">Tax ({(invoice.tax_rate * 100).toFixed(0)}%)</span>
+                <span className="text-foreground">{fmt(invoice.tax_amount)}</span>
               </div>
               <Separator className="my-1" />
               <div className="flex justify-between">
-                <span className="text-base font-bold text-slate-900">Total</span>
-                <span className="text-base font-bold text-blue-600">{fmt(invoice.total)}</span>
+                <span className="text-base font-bold text-foreground">Total</span>
+                <span className="text-base font-bold text-primary">{fmt(invoice.total)}</span>
               </div>
               {invoice.paid_amount > 0 && (
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-500">Paid</span>
+                  <span className="text-muted-foreground">Paid</span>
                   <span className="text-emerald-600 font-medium">- {fmt(invoice.paid_amount)}</span>
                 </div>
               )}
@@ -322,7 +322,7 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
           {/* Payment History */}
           <Card className="border" style={CARD_STYLE}>
             <CardHeader className="pb-2 px-5 pt-5">
-              <CardTitle className="text-sm font-semibold text-slate-900 flex items-center justify-between">
+              <CardTitle className="text-sm font-semibold text-foreground flex items-center justify-between">
                 Payment History
                 {canPay && canRecord && (
                   <button onClick={() => setPaymentOpen(true)}
@@ -334,15 +334,15 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
             </CardHeader>
             <CardContent className="px-5 pb-5">
               {payments.length === 0 ? (
-                <p className="text-xs text-slate-400 text-center py-4">No payments recorded yet</p>
+                <p className="text-xs text-muted-foreground text-center py-4">No payments recorded yet</p>
               ) : (
                 <div className="space-y-2">
                   {payments.map(p => (
-                    <div key={p.id} className="flex items-start justify-between gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200">
+                    <div key={p.id} className="flex items-start justify-between gap-2 p-2.5 rounded-xl bg-card border border-border">
                       <div className="min-w-0">
-                        <p className="text-xs font-semibold text-slate-900">{PAYMENT_METHOD_LABELS[p.method]}</p>
-                        <p className="text-xs text-slate-400">{format(new Date(p.paid_at), 'dd MMM yyyy HH:mm')}</p>
-                        {p.reference && <p className="text-xs text-slate-400 font-mono">{p.reference}</p>}
+                        <p className="text-xs font-semibold text-foreground">{PAYMENT_METHOD_LABELS[p.method]}</p>
+                        <p className="text-xs text-muted-foreground">{format(new Date(p.paid_at), 'dd MMM yyyy HH:mm')}</p>
+                        {p.reference && <p className="text-xs text-muted-foreground font-mono">{p.reference}</p>}
                       </div>
                       <span className="text-sm font-bold text-emerald-600 shrink-0">{fmt(p.amount)}</span>
                     </div>
@@ -356,21 +356,21 @@ export default function InvoiceDetail({ invoiceId, onBack, onEdit, onReload }: P
           {customerSummary && (
             <Card className="border" style={CARD_STYLE}>
               <CardHeader className="pb-2 px-5 pt-5">
-                <CardTitle className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-                  <User className="w-4 h-4 text-blue-500" /> Customer Profile
+                <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <User className="w-4 h-4 text-primary" /> Customer Profile
                 </CardTitle>
               </CardHeader>
               <CardContent className="px-5 pb-5">
-                <p className="text-sm font-bold text-slate-900 mb-3">{invoice.customer?.name}</p>
+                <p className="text-sm font-bold text-foreground mb-3">{invoice.customer?.name}</p>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { label: 'Total Invoices', value: customerSummary.totalInvoices.toString(), color: '#2563EB' },
+                    { label: 'Total Invoices', value: customerSummary.totalInvoices.toString(), color: 'hsl(var(--primary))' },
                     { label: 'Paid', value: customerSummary.paidInvoices.toString(), color: '#16A34A' },
                     { label: 'Overdue', value: customerSummary.overdueInvoices.toString(), color: '#DC2626' },
                     { label: 'Outstanding', value: fmt(customerSummary.outstandingBalance), color: '#D97706' },
                   ].map(k => (
-                    <div key={k.label} className="rounded-xl bg-slate-50 border border-slate-200 p-2.5">
-                      <p className="text-xs text-slate-400">{k.label}</p>
+                    <div key={k.label} className="rounded-xl bg-card border border-border p-2.5">
+                      <p className="text-xs text-muted-foreground">{k.label}</p>
                       <p className="text-sm font-bold mt-0.5" style={{ color: k.color }}>{k.value}</p>
                     </div>
                   ))}
