@@ -31,8 +31,8 @@ interface SaleReturn {
 interface Sale { id: string; receipt_number: string | null; total_amount: number; created_at: string; }
 
 const PAGE = 15;
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 
 export default function OWReturns() {
   const { appUser } = useAuth();
@@ -114,16 +114,16 @@ export default function OWReturns() {
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
-          <ArrowLeftRight className="w-5 h-5 text-blue-600" />
-          <h1 className="text-xl font-bold text-slate-800">Returns</h1>
+          <ArrowLeftRight className="w-5 h-5 text-primary" />
+          <h1 className="text-xl font-bold text-foreground">Returns</h1>
           <Badge variant="secondary">{total}</Badge>
         </div>
-        <Button onClick={() => { resetForm(); setOpen(true); }} className="bg-blue-600 hover:bg-blue-700 text-white h-9 gap-1">
+        <Button onClick={() => { resetForm(); setOpen(true); }} className="bg-primary hover:opacity-90 text-white h-9 gap-1">
           <Plus className="w-4 h-4" />Record Return
         </Button>
       </div>
 
-      <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-xl px-3 py-2 text-xs text-blue-700">
+      <div className="flex items-start gap-2 bg-accent border border-primary rounded-xl px-3 py-2 text-xs text-primary">
         <Info className="w-4 h-4 shrink-0 mt-0.5" />
         <p>
           Returns here record the refund amount only — this ties to a simpler return record, not per-item detail.
@@ -134,7 +134,7 @@ export default function OWReturns() {
       <Card style={CARD}>
         <CardHeader className="pb-2">
           <div className="relative max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input className={`${inp} pl-9`} placeholder="Search by reason…" value={search} onChange={e => { setSearch(e.target.value); setPage(0); }} />
           </div>
         </CardHeader>
@@ -142,20 +142,20 @@ export default function OWReturns() {
           {loading ? (
             <div className="space-y-2">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>
           ) : returns.length === 0 ? (
-            <div className="text-center py-12 text-slate-400"><ArrowLeftRight className="w-10 h-10 mx-auto mb-2 opacity-40" /><p>No returns yet.</p></div>
+            <div className="text-center py-12 text-muted-foreground"><ArrowLeftRight className="w-10 h-10 mx-auto mb-2 opacity-40" /><p>No returns yet.</p></div>
           ) : (
             <table className="w-full text-sm whitespace-nowrap">
-              <thead><tr className="border-b border-slate-100">
+              <thead><tr className="border-b border-border">
                 {['Sale', 'Amount', 'Reason', 'Date', 'Actions'].map(h =>
-                  <th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>
+                  <th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>
                 )}
               </tr></thead>
               <tbody>{returns.map(r => (
-                <tr key={r.id} className="border-b border-slate-50 hover:bg-slate-50">
-                  <td className="py-2 px-3 font-mono text-blue-700">{r.sale_id ? r.sale_id.slice(0, 8) : '—'}</td>
+                <tr key={r.id} className="border-b border-border hover:bg-card">
+                  <td className="py-2 px-3 font-mono text-primary">{r.sale_id ? r.sale_id.slice(0, 8) : '—'}</td>
                   <td className="py-2 px-3 font-semibold text-red-600">{fmt(r.amount)}</td>
-                  <td className="py-2 px-3 text-slate-500 max-w-[220px] truncate">{r.reason || '—'}</td>
-                  <td className="py-2 px-3 text-slate-500">{new Date(r.created_at).toLocaleDateString()}</td>
+                  <td className="py-2 px-3 text-muted-foreground max-w-[220px] truncate">{r.reason || '—'}</td>
+                  <td className="py-2 px-3 text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</td>
                   <td className="py-2 px-3">
                     {appUser?.role === 'owner' && (
                       <button onClick={() => del(r.id)} className="p-1 hover:bg-red-50 rounded text-red-500" title="Delete"><Trash2 className="w-4 h-4" /></button>
@@ -166,7 +166,7 @@ export default function OWReturns() {
             </table>
           )}
           {total > PAGE && (
-            <div className="flex items-center justify-between mt-4 text-sm text-slate-500">
+            <div className="flex items-center justify-between mt-4 text-sm text-muted-foreground">
               <span>Showing {page * PAGE + 1}–{Math.min((page + 1) * PAGE, total)} of {total}</span>
               <div className="flex gap-1">
                 <Button variant="outline" size="sm" disabled={page === 0} onClick={() => setPage(p => p - 1)}><ChevronLeft className="w-4 h-4" /></Button>
@@ -189,12 +189,12 @@ export default function OWReturns() {
                 <Button variant="outline" onClick={searchSales}>Search</Button>
               </div>
               {saleResults.length > 0 && (
-                <div className="mt-2 border border-slate-200 rounded-xl overflow-hidden">
+                <div className="mt-2 border border-border rounded-xl overflow-hidden">
                   {saleResults.map(s => (
                     <button key={s.id} onClick={() => selectSale(s)}
-                      className="w-full text-left px-3 py-2 text-sm hover:bg-blue-50 flex items-center justify-between border-b border-slate-100 last:border-0">
-                      <span className="font-medium text-slate-700">{s.receipt_number || s.id.slice(0, 8)}</span>
-                      <span className="text-slate-500">{fmt(s.total_amount)} — {new Date(s.created_at).toLocaleDateString()}</span>
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-accent flex items-center justify-between border-b border-border last:border-0">
+                      <span className="font-medium text-foreground">{s.receipt_number || s.id.slice(0, 8)}</span>
+                      <span className="text-muted-foreground">{fmt(s.total_amount)} — {new Date(s.created_at).toLocaleDateString()}</span>
                     </button>
                   ))}
                 </div>
@@ -216,13 +216,13 @@ export default function OWReturns() {
 
             <div>
               <Label>Reason</Label>
-              <Textarea className="bg-slate-50 border-slate-200 rounded-xl" rows={2} value={form.reason}
+              <Textarea className="bg-card border-border rounded-xl" rows={2} value={form.reason}
                 onChange={e => setForm(f => ({ ...f, reason: e.target.value }))} placeholder="Defective, wrong item…" />
             </div>
 
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={save} disabled={saving}>
+              <Button className="bg-primary hover:opacity-90 text-white" onClick={save} disabled={saving}>
                 {saving ? 'Saving…' : 'Save Return'}
               </Button>
             </div>
