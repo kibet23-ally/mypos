@@ -19,8 +19,8 @@ import { createInvoice, updateInvoice, fetchCustomers, createCustomer, fetchInvo
 import type { InvoiceItemDraft, InvoiceDraft, Customer } from '@/types/invoice';
 import { calcItemTotal, calcTotals, fmt } from '@/types/invoice';
 
-const inputClass = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
-const CARD_STYLE = { background: '#ffffff', borderColor: '#E2E8F0' };
+const inputClass = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
+const CARD_STYLE = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
 
 interface Product { id: string; name: string; sku: string; price: number; stock: number; category: string; }
 
@@ -166,7 +166,7 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
 
   if (loadingData) return (
     <div className="space-y-4">
-      {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12 w-full bg-slate-100 rounded-xl" />)}
+      {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-12 w-full bg-secondary rounded-xl" />)}
     </div>
   );
 
@@ -175,12 +175,12 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
       {/* Header */}
       <div className="flex items-center gap-3">
         <button onClick={onCancel}
-          className="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors">
-          <ArrowLeft className="w-4 h-4 text-slate-600" />
+          className="w-9 h-9 rounded-xl border border-border flex items-center justify-center hover:bg-card transition-colors">
+          <ArrowLeft className="w-4 h-4 text-muted-foreground" />
         </button>
         <div>
-          <h2 className="text-xl font-bold text-slate-900">{isEdit ? 'Edit Invoice' : 'New Invoice'}</h2>
-          <p className="text-sm text-slate-500">{isEdit ? 'Update invoice details' : 'Create a new invoice'}</p>
+          <h2 className="text-xl font-bold text-foreground">{isEdit ? 'Edit Invoice' : 'New Invoice'}</h2>
+          <p className="text-sm text-muted-foreground">{isEdit ? 'Update invoice details' : 'Create a new invoice'}</p>
         </div>
       </div>
 
@@ -190,31 +190,31 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
           {/* Customer Selection */}
           <Card className="border" style={CARD_STYLE}>
             <CardHeader className="pb-2 px-5 pt-5">
-              <CardTitle className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-                <User className="w-4 h-4 text-blue-500" /> Customer
+              <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <User className="w-4 h-4 text-primary" /> Customer
               </CardTitle>
             </CardHeader>
             <CardContent className="px-5 pb-5">
               <div className="flex gap-2">
                 <div className="flex-1 min-w-0">
                   <Select value={customerId} onValueChange={setCustomerId}>
-                    <SelectTrigger className="h-10 bg-slate-50 border-slate-200 rounded-xl">
+                    <SelectTrigger className="h-10 bg-card border-border rounded-xl">
                       <SelectValue placeholder="Select a customer…" />
                     </SelectTrigger>
                     <SelectContent className="max-h-60">
                       {customers.length === 0
-                        ? <div className="p-3 text-xs text-slate-400 text-center">No customers yet. Add one →</div>
+                        ? <div className="p-3 text-xs text-muted-foreground text-center">No customers yet. Add one →</div>
                         : customers.map(c => (
                           <SelectItem key={c.id} value={c.id}>
                             <span className="font-medium">{c.name}</span>
-                            {c.phone && <span className="text-slate-400 ml-2 text-xs">{c.phone}</span>}
+                            {c.phone && <span className="text-muted-foreground ml-2 text-xs">{c.phone}</span>}
                           </SelectItem>
                         ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <button onClick={() => setCustDialogOpen(true)} title="Add new customer"
-                  className="h-10 px-3 rounded-xl border border-dashed border-blue-300 text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-1.5 text-sm shrink-0">
+                  className="h-10 px-3 rounded-xl border border-dashed border-primary text-primary hover:bg-accent transition-colors flex items-center gap-1.5 text-sm shrink-0">
                   <UserPlus className="w-4 h-4" />
                   <span className="hidden md:inline">New</span>
                 </button>
@@ -223,11 +223,11 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
                 const c = customers.find(x => x.id === customerId);
                 if (!c) return null;
                 return (
-                  <div className="mt-3 rounded-xl bg-slate-50 border border-slate-200 p-3 grid grid-cols-2 gap-2">
+                  <div className="mt-3 rounded-xl bg-card border border-border p-3 grid grid-cols-2 gap-2">
                     {[['Email', c.email], ['Phone', c.phone], ['Address', c.address]].filter(([, v]) => v).map(([l, v]) => (
                       <div key={l as string}>
-                        <p className="text-xs text-slate-400">{l}</p>
-                        <p className="text-xs font-medium text-slate-700">{v}</p>
+                        <p className="text-xs text-muted-foreground">{l}</p>
+                        <p className="text-xs font-medium text-foreground">{v}</p>
                       </div>
                     ))}
                   </div>
@@ -239,19 +239,19 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
           {/* Line Items */}
           <Card className="border" style={CARD_STYLE}>
             <CardHeader className="pb-2 px-5 pt-5">
-              <CardTitle className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-                <Package className="w-4 h-4 text-blue-500" /> Line Items
+              <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <Package className="w-4 h-4 text-primary" /> Line Items
               </CardTitle>
             </CardHeader>
             <CardContent className="px-5 pb-5 space-y-3">
               {items.map((item, idx) => (
-                <div key={item._id} className="rounded-xl border border-slate-200 p-3 space-y-3">
+                <div key={item._id} className="rounded-xl border border-border p-3 space-y-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-medium text-slate-400 shrink-0">#{idx + 1}</span>
+                    <span className="text-xs font-medium text-muted-foreground shrink-0">#{idx + 1}</span>
                     {/* Product search */}
                     <div className="flex-1 min-w-0 relative">
                       <div className="relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
                         <Input
                           placeholder={item.name || 'Search product or type name…'}
                           value={productSearches[item._id] ?? ''}
@@ -262,22 +262,22 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
                           }}
                           onFocus={() => setProductDropdowns(prev => ({ ...prev, [item._id]: true }))}
                           onBlur={() => setTimeout(() => setProductDropdowns(prev => ({ ...prev, [item._id]: false })), 200)}
-                          className="pl-9 h-9 bg-slate-50 border-slate-200 rounded-xl text-sm px-3"
+                          className="pl-9 h-9 bg-card border-border rounded-xl text-sm px-3"
                         />
                       </div>
                       {productDropdowns[item._id] && filteredProducts(item._id).length > 0 && (
-                        <div className="absolute top-full left-0 right-0 z-50 bg-white border border-slate-200 rounded-xl shadow-lg mt-1 max-h-48 overflow-y-auto">
+                        <div className="absolute top-full left-0 right-0 z-50 bg-white border border-border rounded-xl shadow-lg mt-1 max-h-48 overflow-y-auto">
                           {filteredProducts(item._id).map(p => (
                             <button key={p.id} type="button"
                               onMouseDown={() => selectProduct(item._id, p)}
-                              className="w-full flex items-center justify-between px-3 py-2 hover:bg-slate-50 text-left">
+                              className="w-full flex items-center justify-between px-3 py-2 hover:bg-card text-left">
                               <div>
-                                <p className="text-sm font-medium text-slate-900">{p.name}</p>
-                                <p className="text-xs text-slate-400">{p.sku}</p>
+                                <p className="text-sm font-medium text-foreground">{p.name}</p>
+                                <p className="text-xs text-muted-foreground">{p.sku}</p>
                               </div>
                               <div className="text-right shrink-0 ml-3">
-                                <p className="text-xs font-semibold text-blue-600">{fmt(p.price)}</p>
-                                <p className="text-xs text-slate-400">Stock: {p.stock}</p>
+                                <p className="text-xs font-semibold text-primary">{fmt(p.price)}</p>
+                                <p className="text-xs text-muted-foreground">Stock: {p.stock}</p>
                               </div>
                             </button>
                           ))}
@@ -286,7 +286,7 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
                               updateItem(item._id, 'name', productSearches[item._id] ?? '');
                               setProductDropdowns(prev => ({ ...prev, [item._id]: false }));
                             }}
-                            className="w-full px-3 py-2 text-xs text-blue-600 hover:bg-blue-50 text-left border-t border-slate-100">
+                            className="w-full px-3 py-2 text-xs text-primary hover:bg-accent text-left border-t border-border">
                             + Use "{productSearches[item._id]}" as custom item
                           </button>
                         </div>
@@ -308,21 +308,21 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
 
                   <div className="grid grid-cols-3 gap-2">
                     <div>
-                      <Label className="text-xs text-slate-500 mb-1 block">Qty</Label>
+                      <Label className="text-xs text-muted-foreground mb-1 block">Qty</Label>
                       <Input type="number" min="0.01" step="0.01"
                         value={item.quantity}
                         onChange={e => updateItem(item._id, 'quantity', parseFloat(e.target.value) || 0)}
                         className={`${inputClass} text-sm`} />
                     </div>
                     <div>
-                      <Label className="text-xs text-slate-500 mb-1 block">Unit Price (KSh)</Label>
+                      <Label className="text-xs text-muted-foreground mb-1 block">Unit Price (KSh)</Label>
                       <Input type="number" min="0" step="0.01"
                         value={item.unit_price}
                         onChange={e => updateItem(item._id, 'unit_price', parseFloat(e.target.value) || 0)}
                         className={`${inputClass} text-sm`} />
                     </div>
                     <div>
-                      <Label className="text-xs text-slate-500 mb-1 block">Disc %</Label>
+                      <Label className="text-xs text-muted-foreground mb-1 block">Disc %</Label>
                       <Input type="number" min="0" max="100" step="0.1"
                         value={item.discount_pct}
                         onChange={e => updateItem(item._id, 'discount_pct', parseFloat(e.target.value) || 0)}
@@ -331,7 +331,7 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
                   </div>
 
                   <div className="flex justify-end">
-                    <span className="text-sm font-bold text-slate-900">
+                    <span className="text-sm font-bold text-foreground">
                       Line Total: {fmt(calcItemTotal(item))}
                     </span>
                   </div>
@@ -339,7 +339,7 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
               ))}
 
               <button onClick={() => setItems(prev => [...prev, newItem()])}
-                className="w-full h-10 rounded-xl border border-dashed border-slate-300 text-slate-500 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center gap-2 text-sm">
+                className="w-full h-10 rounded-xl border border-dashed border-border text-muted-foreground hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-2 text-sm">
                 <Plus className="w-4 h-4" /> Add Line Item
               </button>
             </CardContent>
@@ -351,34 +351,34 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
           {/* Totals */}
           <Card className="border" style={CARD_STYLE}>
             <CardHeader className="pb-2 px-5 pt-5">
-              <CardTitle className="text-sm font-semibold text-slate-900">Summary</CardTitle>
+              <CardTitle className="text-sm font-semibold text-foreground">Summary</CardTitle>
             </CardHeader>
             <CardContent className="px-5 pb-5 space-y-3">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-500">Subtotal</span>
-                  <span className="font-medium text-slate-900">{fmt(subtotal)}</span>
+                  <span className="text-muted-foreground">Subtotal</span>
+                  <span className="font-medium text-foreground">{fmt(subtotal)}</span>
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <Label className="text-sm text-slate-500 shrink-0">Discount (KSh)</Label>
+                  <Label className="text-sm text-muted-foreground shrink-0">Discount (KSh)</Label>
                   <Input type="number" min="0" step="0.01" value={discountAmount}
                     onChange={e => setDiscountAmount(parseFloat(e.target.value) || 0)}
-                    className="h-8 w-32 bg-slate-50 border-slate-200 rounded-xl px-2 text-sm text-right" />
+                    className="h-8 w-32 bg-card border-border rounded-xl px-2 text-sm text-right" />
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <Label className="text-sm text-slate-500 shrink-0">Tax Rate (%)</Label>
+                  <Label className="text-sm text-muted-foreground shrink-0">Tax Rate (%)</Label>
                   <Input type="number" min="0" max="100" step="0.1"
                     value={(taxRate * 100).toFixed(1)}
                     onChange={e => setTaxRate((parseFloat(e.target.value) || 0) / 100)}
-                    className="h-8 w-32 bg-slate-50 border-slate-200 rounded-xl px-2 text-sm text-right" />
+                    className="h-8 w-32 bg-card border-border rounded-xl px-2 text-sm text-right" />
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-500">Tax ({(taxRate * 100).toFixed(0)}%)</span>
-                  <span className="text-slate-700">{fmt(taxAmount)}</span>
+                  <span className="text-muted-foreground">Tax ({(taxRate * 100).toFixed(0)}%)</span>
+                  <span className="text-foreground">{fmt(taxAmount)}</span>
                 </div>
-                <div className="pt-2 border-t border-slate-200 flex justify-between">
-                  <span className="text-base font-bold text-slate-900">Total</span>
-                  <span className="text-base font-bold text-blue-600">{fmt(total)}</span>
+                <div className="pt-2 border-t border-border flex justify-between">
+                  <span className="text-base font-bold text-foreground">Total</span>
+                  <span className="text-base font-bold text-primary">{fmt(total)}</span>
                 </div>
               </div>
             </CardContent>
@@ -387,24 +387,24 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
           {/* Details */}
           <Card className="border" style={CARD_STYLE}>
             <CardHeader className="pb-2 px-5 pt-5">
-              <CardTitle className="text-sm font-semibold text-slate-900">Details</CardTitle>
+              <CardTitle className="text-sm font-semibold text-foreground">Details</CardTitle>
             </CardHeader>
             <CardContent className="px-5 pb-5 space-y-4">
               <div>
-                <Label className="text-xs text-slate-500 mb-1.5 block">Due Date</Label>
+                <Label className="text-xs text-muted-foreground mb-1.5 block">Due Date</Label>
                 <Input type="date" value={dueDate} onChange={e => setDueDate(e.target.value)}
                   className={inputClass} />
               </div>
               <div>
-                <Label className="text-xs text-slate-500 mb-1.5 block">Payment Terms</Label>
+                <Label className="text-xs text-muted-foreground mb-1.5 block">Payment Terms</Label>
                 <Input value={paymentTerms} onChange={e => setPaymentTerms(e.target.value)}
                   placeholder="e.g. Net 30" className={inputClass} />
               </div>
               <div>
-                <Label className="text-xs text-slate-500 mb-1.5 block">Notes</Label>
+                <Label className="text-xs text-muted-foreground mb-1.5 block">Notes</Label>
                 <Textarea value={notes} onChange={e => setNotes(e.target.value)}
                   placeholder="Any additional notes for the customer…" rows={3}
-                  className="bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3 py-2 text-sm" />
+                  className="bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3 py-2 text-sm" />
               </div>
             </CardContent>
           </Card>
@@ -413,19 +413,19 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
           <div className="flex flex-col gap-2">
             {!isEdit && (
               <button onClick={() => handleSave(true)} disabled={saving}
-                className="w-full h-10 rounded-xl border border-slate-200 bg-white text-slate-700 text-sm font-medium flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors disabled:opacity-60">
+                className="w-full h-10 rounded-xl border border-border bg-white text-foreground text-sm font-medium flex items-center justify-center gap-2 hover:bg-card transition-colors disabled:opacity-60">
                 <Save className="w-4 h-4" />
                 {saving ? 'Saving…' : 'Save as Draft'}
               </button>
             )}
             <button onClick={() => handleSave(false)} disabled={saving}
               className="w-full h-10 rounded-xl text-white text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-60 hover:opacity-90 transition-opacity"
-              style={{ background: '#2563EB' }}>
+              style={{ background: 'hsl(var(--primary))' }}>
               <Send className="w-4 h-4" />
               {saving ? 'Saving…' : isEdit ? 'Update Invoice' : 'Issue Invoice'}
             </button>
             <button onClick={onCancel}
-              className="w-full h-10 rounded-xl border border-slate-200 bg-white text-slate-500 text-sm hover:bg-slate-50 transition-colors">
+              className="w-full h-10 rounded-xl border border-border bg-white text-muted-foreground text-sm hover:bg-card transition-colors">
               Cancel
             </button>
           </div>
@@ -434,9 +434,9 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
 
       {/* New Customer Dialog */}
       <Dialog open={custDialogOpen} onOpenChange={setCustDialogOpen}>
-        <DialogContent className="max-w-[calc(100%-2rem)] md:max-w-md bg-white border-slate-200">
+        <DialogContent className="max-w-[calc(100%-2rem)] md:max-w-md bg-white border-border">
           <DialogHeader>
-            <DialogTitle className="text-slate-900">Add New Customer</DialogTitle>
+            <DialogTitle className="text-foreground">Add New Customer</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleAddCustomer} className="space-y-4 mt-2">
             {[
@@ -446,7 +446,7 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
               { label: 'Address', key: 'address', placeholder: 'Nairobi, Kenya', type: 'text' },
             ].map(f => (
               <div key={f.key}>
-                <Label className="text-xs font-medium text-slate-600 mb-1.5 block">{f.label}</Label>
+                <Label className="text-xs font-medium text-muted-foreground mb-1.5 block">{f.label}</Label>
                 <Input type={f.type} placeholder={f.placeholder}
                   value={(newCust as Record<string, string>)[f.key]}
                   onChange={e => setNewCust(prev => ({ ...prev, [f.key]: e.target.value }))}
@@ -455,12 +455,12 @@ export default function InvoiceForm({ editId, onCancel, onSaved }: Props) {
             ))}
             <div className="flex gap-2 pt-1">
               <button type="button" onClick={() => setCustDialogOpen(false)}
-                className="flex-1 h-10 rounded-xl border border-slate-200 text-slate-600 text-sm bg-white hover:bg-slate-50 transition-colors">
+                className="flex-1 h-10 rounded-xl border border-border text-muted-foreground text-sm bg-white hover:bg-card transition-colors">
                 Cancel
               </button>
               <button type="submit" disabled={savingCust}
                 className="flex-1 h-10 rounded-xl text-white text-sm font-semibold disabled:opacity-60"
-                style={{ background: '#2563EB' }}>
+                style={{ background: 'hsl(var(--primary))' }}>
                 {savingCust ? 'Saving…' : 'Add Customer'}
               </button>
             </div>
