@@ -9,39 +9,39 @@
 
 @layer base {
   :root {
-    --radius: 0.375rem;
+    /* PREMIUM THEME — see also .premium-* utility classes below */
+    --radius: 1.125rem; /* ~18px base; cards/kpis go larger via rounded-2xl/3xl, buttons/inputs via rounded-xl */
 
-    /* Light mode — #F8FAFC background, #0F172A text */
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    /* Light mode — #F4F7FB page background, #1E293B text */
+    --background: 214 47% 97%;
+    --foreground: 217 33% 17%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 217 33% 17%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 217 33% 17%;
 
-    /* Deep Slate primary (#0F172A) */
-    --primary: 222 47% 11%;
-    --primary-foreground: 210 40% 98%;
+    /* Purple/lavender primary (#7C6CFF → #8EA2FF gradient) */
+    --primary: 247 100% 71%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Light secondary surface (#F1F5F9) */
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    --secondary: 220 30% 95%;
+    --secondary-foreground: 217 33% 17%;
 
-    --muted: 210 40% 96%;
+    --muted: 220 30% 95%;
     --muted-foreground: 215 16% 47%;
 
-    /* Blue accent (#3B82F6) — low-saturation tint for surfaces */
-    --accent: 214 100% 97%;
-    --accent-foreground: 221 83% 53%;
+    /* Purple accent tint for surfaces */
+    --accent: 247 100% 96%;
+    --accent-foreground: 247 70% 48%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 221 83% 53%;
+    --ring: 247 100% 71%;
 
     /* Semantic status */
     --success: 142 71% 45%;
@@ -53,34 +53,34 @@
     --error: 0 72% 51%;
     --error-foreground: 0 0% 100%;
 
-    /* Sidebar — Deep Slate (#0F172A / #1E293B) */
-    --sidebar-background: 222 47% 11%;
-    --sidebar-foreground: 215 20% 70%;
-    --sidebar-primary: 221 83% 53%;
+    /* Sidebar — light mode: white surface, NOT hardcoded dark navy */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 215 16% 42%;
+    --sidebar-primary: 247 100% 71%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 40% 17%;
-    --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 222 40% 16%;
-    --sidebar-ring: 221 83% 53%;
+    --sidebar-accent: 247 100% 96%;
+    --sidebar-accent-foreground: 247 70% 40%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 247 100% 71%;
 
-    /* Charts — blue-anchored palette */
-    --chart-1: 221 83% 53%;
+    /* Charts — purple-anchored palette */
+    --chart-1: 247 100% 71%;
     --chart-2: 142 71% 45%;
     --chart-3: 38 92% 50%;
-    --chart-4: 280 55% 55%;
+    --chart-4: 229 100% 78%;
     --chart-5: 0 72% 51%;
 
     /* Gradients */
-    --gradient-main: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #3B82F6 100%);
-    --gradient-premium: linear-gradient(135deg, #0F172A 0%, #1E40AF 50%, #60A5FA 100%);
-    --gradient-button: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
-    --gradient-card: linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(96,165,250,0.03) 100%);
+    --gradient-main:    linear-gradient(135deg, #7C6CFF 0%, #8EA2FF 100%);
+    --gradient-premium: linear-gradient(135deg, #6D5BFF 0%, #7C6CFF 50%, #8EA2FF 100%);
+    --gradient-button:  linear-gradient(135deg, #7C6CFF 0%, #8EA2FF 100%);
+    --gradient-card:    linear-gradient(135deg, rgba(124,108,255,0.05) 0%, rgba(142,162,255,0.03) 100%);
 
-    /* Shadows */
-    --shadow-card: 0 1px 3px 0 rgba(15,23,42,0.06), 0 1px 2px -1px rgba(15,23,42,0.04);
-    --shadow-hover: 0 4px 16px 0 rgba(15,23,42,0.10);
-    --shadow-elevated: 0 8px 32px 0 rgba(15,23,42,0.12);
-    --shadow-modal: 0 20px 60px 0 rgba(15,23,42,0.18);
+    /* Shadows — soft, diffused (premium feel) */
+    --shadow-card: 0 1px 3px 0 rgba(30,41,59,0.05), 0 1px 2px -1px rgba(30,41,59,0.03);
+    --shadow-hover: 0 8px 24px 0 rgba(124,108,255,0.12);
+    --shadow-elevated: 0 12px 40px 0 rgba(124,108,255,0.16);
+    --shadow-modal: 0 24px 64px 0 rgba(30,41,59,0.18);
 
     /* Education compat */
     --education-blue: 221 83% 53%;
@@ -88,34 +88,34 @@
   }
 
   .dark {
-    --background: 222 47% 7%;
+    --background: 240 25% 8%;
     --foreground: 210 40% 96%;
 
-    --card: 222 47% 10%;
+    --card: 240 20% 12%;
     --card-foreground: 210 40% 96%;
 
-    --popover: 222 47% 12%;
+    --popover: 240 22% 13%;
     --popover-foreground: 210 40% 96%;
 
-    /* Blue primary in dark mode */
-    --primary: 221 83% 60%;
-    --primary-foreground: 0 0% 100%;
+    /* Brighter purple primary for dark surfaces */
+    --primary: 247 100% 75%;
+    --primary-foreground: 240 25% 9%;
 
-    --secondary: 222 40% 16%;
+    --secondary: 240 16% 18%;
     --secondary-foreground: 210 40% 96%;
 
-    --muted: 222 40% 16%;
-    --muted-foreground: 215 20% 58%;
+    --muted: 240 16% 18%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 221 83% 15%;
-    --accent-foreground: 221 83% 70%;
+    --accent: 247 55% 22%;
+    --accent-foreground: 247 100% 85%;
 
-    --destructive: 0 62% 45%;
+    --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 222 40% 18%;
-    --input: 222 40% 18%;
-    --ring: 221 83% 60%;
+    --border: 240 15% 20%;
+    --input: 240 15% 20%;
+    --ring: 247 100% 75%;
 
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
@@ -126,25 +126,31 @@
     --error: 0 72% 51%;
     --error-foreground: 0 0% 100%;
 
-    --sidebar-background: 222 47% 6%;
+    /* Sidebar — dark mode: real dark navy/purple surface (only dark when theme is dark) */
+    --sidebar-background: 240 24% 10%;
     --sidebar-foreground: 215 20% 65%;
-    --sidebar-primary: 221 83% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 222 40% 13%;
+    --sidebar-primary: 247 100% 75%;
+    --sidebar-primary-foreground: 240 25% 9%;
+    --sidebar-accent: 240 18% 17%;
     --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 222 40% 11%;
-    --sidebar-ring: 221 83% 60%;
+    --sidebar-border: 240 15% 16%;
+    --sidebar-ring: 247 100% 75%;
 
-    --chart-1: 221 83% 60%;
+    --chart-1: 247 100% 75%;
     --chart-2: 142 71% 50%;
     --chart-3: 38 92% 55%;
-    --chart-4: 280 55% 62%;
+    --chart-4: 229 100% 80%;
     --chart-5: 0 72% 58%;
 
-    --shadow-card: 0 1px 3px 0 rgba(0,0,0,0.25);
-    --shadow-hover: 0 4px 16px 0 rgba(0,0,0,0.35);
-    --shadow-elevated: 0 8px 32px 0 rgba(0,0,0,0.4);
-    --shadow-modal: 0 20px 60px 0 rgba(0,0,0,0.5);
+    --gradient-main:    linear-gradient(135deg, #6D5BFF 0%, #7C6CFF 100%);
+    --gradient-premium: linear-gradient(135deg, #4C3FE0 0%, #6D5BFF 50%, #7C6CFF 100%);
+    --gradient-button:  linear-gradient(135deg, #7C6CFF 0%, #8EA2FF 100%);
+    --gradient-card:    linear-gradient(135deg, rgba(124,108,255,0.10) 0%, rgba(142,162,255,0.04) 100%);
+
+    --shadow-card: 0 1px 3px 0 rgba(0,0,0,0.3);
+    --shadow-hover: 0 8px 24px 0 rgba(0,0,0,0.4);
+    --shadow-elevated: 0 12px 40px 0 rgba(0,0,0,0.45);
+    --shadow-modal: 0 24px 64px 0 rgba(0,0,0,0.55);
 
     --education-blue: 221 83% 60%;
     --education-green: 142 71% 50%;
@@ -190,15 +196,74 @@
   .bg-gradient-button { background: var(--gradient-button); }
   .bg-gradient-card   { background: var(--gradient-card); }
 
-  /* KPI card accent border */
+  /* ── PREMIUM THEME ── token-driven versions of the requested classes,
+     so they work correctly in both light and dark mode (unlike raw hex). */
+  .premium-page {
+    @apply min-h-screen bg-background p-6;
+  }
+
+  .premium-header {
+    @apply rounded-3xl border border-border p-6;
+    background: hsl(var(--card) / 0.8);
+    backdrop-filter: blur(12px);
+  }
+
+  .premium-card {
+    @apply rounded-3xl border border-border p-6;
+    background: hsl(var(--card) / 0.85);
+    backdrop-filter: blur(12px);
+  }
+
+  .btn-primary {
+    @apply text-primary-foreground border-none rounded-2xl px-[18px] py-3 font-medium transition-opacity;
+    background: var(--gradient-button);
+  }
+  .btn-primary:hover { opacity: 0.92; }
+
+  .btn-secondary {
+    @apply bg-card border border-border rounded-2xl px-[18px] py-3 font-medium text-foreground transition-colors;
+  }
+  .btn-secondary:hover { @apply bg-secondary; }
+
+  .premium-input,
+  .premium-select {
+    @apply w-full rounded-2xl border border-border bg-card px-[18px] py-3.5 text-foreground;
+  }
+  .premium-input:focus,
+  .premium-select:focus {
+    @apply outline-none ring-2 ring-ring border-transparent;
+  }
+
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+
+  /* KPI card — premium spec (24px radius/padding). Overrides the older,
+     tighter kpi-card definition that used to exist here. */
   .kpi-card {
-    @apply bg-card border border-border rounded-lg p-5 flex flex-col gap-3 h-full;
+    @apply bg-card border border-border rounded-3xl p-6 flex flex-col gap-3 h-full;
     box-shadow: var(--shadow-card);
     transition: box-shadow 150ms ease, transform 150ms ease;
   }
   .kpi-card:hover {
     box-shadow: var(--shadow-hover);
     transform: translateY(-1px);
+  }
+  .kpi-label { @apply text-muted-foreground text-sm; }
+  .kpi-value { @apply text-3xl font-extrabold text-foreground; }
+
+  .premium-table {
+    @apply w-full border-collapse;
+  }
+  .premium-table th,
+  .premium-table td {
+    @apply p-4 text-left border-b border-border;
+  }
+
+  .status-badge {
+    @apply px-3 py-1.5 rounded-full text-xs font-medium;
   }
 
   /* POS product button */
@@ -219,11 +284,12 @@
     @apply bg-muted animate-pulse rounded;
   }
 
-  /* Status badge variants */
+  /* Status badge variants (semantic status colors — intentionally distinct
+     from the purple brand primary, so success/warning/danger stay legible) */
   .badge-success { @apply bg-green-50 text-green-700 border border-green-200 dark:bg-green-950 dark:text-green-400 dark:border-green-800; }
   .badge-warning { @apply bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800; }
   .badge-danger  { @apply bg-red-50 text-red-700 border border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800; }
-  .badge-info    { @apply bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800; }
+  .badge-info    { @apply bg-accent text-accent-foreground border border-primary/20; }
 }
 
 @keyframes fadeIn {
