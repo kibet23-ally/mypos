@@ -8,8 +8,8 @@ import { Settings2, Save } from 'lucide-react';
 import { fetchInvoiceSettings, upsertInvoiceSettings } from '@/services/invoiceService';
 import type { InvoiceSettings as InvoiceSettingsData, StockDeductionMode } from '@/types/invoice';
 
-const CARD_STYLE = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inputClass = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD_STYLE = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inputClass = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 
 const STOCK_MODES: { value: StockDeductionMode; label: string; desc: string }[] = [
   { value: 'immediately', label: 'Deduct immediately', desc: 'Stock is deducted as soon as invoice is issued' },
@@ -49,24 +49,24 @@ export default function InvoiceSettings({ tenantId }: Props) {
     <div className="space-y-5 max-w-2xl">
       <Card className="border" style={CARD_STYLE}>
         <CardHeader className="pb-2 px-5 pt-5">
-          <CardTitle className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-            <Settings2 className="w-4 h-4 text-blue-500" /> Invoice Settings
+          <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
+            <Settings2 className="w-4 h-4 text-primary" /> Invoice Settings
           </CardTitle>
         </CardHeader>
         <CardContent className="px-5 pb-5 space-y-5">
           {/* Tax Rate */}
           <div>
-            <Label className="text-xs font-medium text-slate-600 mb-1.5 block">Default Tax Rate (%)</Label>
+            <Label className="text-xs font-medium text-muted-foreground mb-1.5 block">Default Tax Rate (%)</Label>
             <Input type="number" min="0" max="100" step="0.1"
               value={((settings.default_tax_rate ?? 0.16) * 100).toFixed(1)}
               onChange={e => setSettings((s: Partial<InvoiceSettingsData>) => ({ ...s, default_tax_rate: (parseFloat(e.target.value) || 0) / 100 }))}
               className={inputClass} placeholder="16.0" />
-            <p className="text-xs text-slate-400 mt-1">Kenya VAT default is 16%</p>
+            <p className="text-xs text-muted-foreground mt-1">Kenya VAT default is 16%</p>
           </div>
 
           {/* Payment Terms */}
           <div>
-            <Label className="text-xs font-medium text-slate-600 mb-1.5 block">Default Payment Terms</Label>
+            <Label className="text-xs font-medium text-muted-foreground mb-1.5 block">Default Payment Terms</Label>
             <Input value={settings.default_payment_terms ?? ''}
               onChange={e => setSettings((s: Partial<InvoiceSettingsData>) => ({ ...s, default_payment_terms: e.target.value }))}
               className={inputClass} placeholder="Payment due within 30 days" />
@@ -74,18 +74,18 @@ export default function InvoiceSettings({ tenantId }: Props) {
 
           {/* Stock deduction */}
           <div>
-            <Label className="text-xs font-medium text-slate-600 mb-2 block">Stock Deduction Mode</Label>
+            <Label className="text-xs font-medium text-muted-foreground mb-2 block">Stock Deduction Mode</Label>
             <div className="space-y-2">
               {STOCK_MODES.map(m => (
                 <label key={m.value}
-                  className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${settings.stock_deduction_mode === m.value ? 'border-blue-300 bg-blue-50' : 'border-slate-200 hover:bg-slate-50'}`}>
+                  className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${settings.stock_deduction_mode === m.value ? 'border-primary bg-accent' : 'border-border hover:bg-card'}`}>
                   <input type="radio" name="stock_mode" value={m.value}
                     checked={settings.stock_deduction_mode === m.value}
                     onChange={() => setSettings((s: Partial<InvoiceSettingsData>) => ({ ...s, stock_deduction_mode: m.value }))}
                     className="mt-1 accent-blue-600" />
                   <div>
-                    <p className="text-sm font-medium text-slate-900">{m.label}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">{m.desc}</p>
+                    <p className="text-sm font-medium text-foreground">{m.label}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{m.desc}</p>
                   </div>
                 </label>
               ))}
@@ -94,7 +94,7 @@ export default function InvoiceSettings({ tenantId }: Props) {
 
           <button onClick={handleSave} disabled={saving || loading}
             className="w-full h-10 rounded-xl text-white text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-60 hover:opacity-90 transition-opacity"
-            style={{ background: '#2563EB' }}>
+            style={{ background: 'hsl(var(--primary))' }}>
             <Save className="w-4 h-4" />
             {saving ? 'Saving…' : 'Save Settings'}
           </button>
@@ -104,16 +104,16 @@ export default function InvoiceSettings({ tenantId }: Props) {
       {/* Notification stubs */}
       <Card className="border" style={CARD_STYLE}>
         <CardHeader className="pb-2 px-5 pt-5">
-          <CardTitle className="text-sm font-semibold text-slate-900">Notifications</CardTitle>
+          <CardTitle className="text-sm font-semibold text-foreground">Notifications</CardTitle>
         </CardHeader>
         <CardContent className="px-5 pb-5 space-y-3">
-          <p className="text-xs text-slate-500">Configure invoice notification channels. Coming soon:</p>
+          <p className="text-xs text-muted-foreground">Configure invoice notification channels. Coming soon:</p>
           <div className="grid grid-cols-2 gap-2">
             {['Email invoices', 'WhatsApp sharing', 'SMS reminders', 'Overdue alerts', 'Payment confirmations'].map(n => (
-              <div key={n} className="flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 border border-slate-200 opacity-60">
-                <span className="w-2 h-2 rounded-full bg-slate-300" />
-                <span className="text-xs text-slate-500">{n}</span>
-                <span className="ml-auto text-xs text-slate-300 font-medium">Soon</span>
+              <div key={n} className="flex items-center gap-2 p-2.5 rounded-xl bg-card border border-border opacity-60">
+                <span className="w-2 h-2 rounded-full bg-secondary" />
+                <span className="text-xs text-muted-foreground">{n}</span>
+                <span className="ml-auto text-xs text-muted-foreground font-medium">Soon</span>
               </div>
             ))}
           </div>
