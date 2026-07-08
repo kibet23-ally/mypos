@@ -12,8 +12,8 @@ import { toast } from 'sonner';
 import { Tag, Plus, Edit2, Trash2, Search } from 'lucide-react';
 
 interface Category { id: string; name: string; description?: string; product_count?: number; }
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 
 export default function OWCategories() {
   const { appUser } = useAuth();
@@ -78,11 +78,11 @@ export default function OWCategories() {
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
-          <Tag className="w-5 h-5 text-blue-600" />
-          <h1 className="text-xl font-bold text-slate-800">Product Categories</h1>
+          <Tag className="w-5 h-5 text-primary" />
+          <h1 className="text-xl font-bold text-foreground">Product Categories</h1>
           <Badge variant="secondary">{cats.length}</Badge>
         </div>
-        <Button onClick={openCreate} className="bg-blue-600 hover:bg-blue-700 text-white h-9 gap-1">
+        <Button onClick={openCreate} className="bg-primary hover:opacity-90 text-white h-9 gap-1">
           <Plus className="w-4 h-4" />New Category
         </Button>
       </div>
@@ -90,7 +90,7 @@ export default function OWCategories() {
       <Card style={CARD}>
         <CardHeader className="pb-2">
           <div className="relative max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input className={`${inp} pl-9`} placeholder="Search categories…" value={search} onChange={e => setSearch(e.target.value)} />
           </div>
         </CardHeader>
@@ -98,22 +98,22 @@ export default function OWCategories() {
           {loading
             ? <div className="grid grid-cols-2 md:grid-cols-4 gap-3">{Array.from({length:6}).map((_,i)=><Skeleton key={i} className="h-20 rounded-2xl"/>)}</div>
             : filtered.length === 0
-              ? <div className="text-center py-10 text-slate-400"><Tag className="w-8 h-8 mx-auto mb-2 opacity-40"/><p>No categories yet. Create one to organize your products.</p></div>
+              ? <div className="text-center py-10 text-muted-foreground"><Tag className="w-8 h-8 mx-auto mb-2 opacity-40"/><p>No categories yet. Create one to organize your products.</p></div>
               : <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                   {filtered.map(c => (
-                    <div key={c.id} className="border border-slate-200 rounded-2xl p-4 hover:border-blue-200 hover:bg-blue-50 transition-colors group">
+                    <div key={c.id} className="border border-border rounded-2xl p-4 hover:border-primary hover:bg-accent transition-colors group">
                       <div className="flex items-start justify-between gap-2 mb-2">
-                        <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
-                          <Tag className="w-4 h-4 text-blue-600" />
+                        <div className="w-8 h-8 bg-accent rounded-xl flex items-center justify-center shrink-0">
+                          <Tag className="w-4 h-4 text-primary" />
                         </div>
                         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button onClick={() => openEdit(c)} className="p-1 hover:bg-white rounded-lg text-slate-500"><Edit2 className="w-3.5 h-3.5" /></button>
+                          <button onClick={() => openEdit(c)} className="p-1 hover:bg-white rounded-lg text-muted-foreground"><Edit2 className="w-3.5 h-3.5" /></button>
                           <button onClick={() => del(c)} className="p-1 hover:bg-red-50 rounded-lg text-red-400"><Trash2 className="w-3.5 h-3.5" /></button>
                         </div>
                       </div>
-                      <p className="font-semibold text-slate-800 text-sm truncate">{c.name}</p>
-                      {c.description && <p className="text-xs text-slate-400 mt-0.5 line-clamp-2">{c.description}</p>}
-                      <p className="text-xs text-slate-400 mt-2">{c.product_count ?? 0} product{c.product_count !== 1 ? 's' : ''}</p>
+                      <p className="font-semibold text-foreground text-sm truncate">{c.name}</p>
+                      {c.description && <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{c.description}</p>}
+                      <p className="text-xs text-muted-foreground mt-2">{c.product_count ?? 0} product{c.product_count !== 1 ? 's' : ''}</p>
                     </div>
                   ))}
                 </div>
@@ -129,7 +129,7 @@ export default function OWCategories() {
             <div><Label>Description (optional)</Label><Input className={inp} value={form.description} onChange={e => setForm(f => ({...f, description: e.target.value}))} placeholder="Short description" /></div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={save} disabled={saving}>{saving ? 'Saving…' : editing ? 'Update' : 'Create'}</Button>
+              <Button className="bg-primary hover:opacity-90 text-white" onClick={save} disabled={saving}>{saving ? 'Saving…' : editing ? 'Update' : 'Create'}</Button>
             </div>
           </div>
         </DialogContent>
