@@ -17,7 +17,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { supabase } from '@/db/supabase';
 import { useAuth } from '@/contexts/AuthContext';
-import { formatCurrency, formatCurrencyCompact } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 import type { Customer } from '@/types/index';
 
 interface CustomerRow extends Customer {
@@ -187,10 +187,10 @@ export default function OWCustomers() {
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {loading ? Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 bg-muted rounded-lg" />) : [
-          { label: 'Total Customers', value: customers.length.toString(),      icon: Users,     color: 'text-blue-600' },
+          { label: 'Total Customers', value: customers.length.toString(),      icon: Users,     color: 'text-primary' },
           { label: 'VIP Customers',   value: vipCount.toString(),              icon: Star,      color: 'text-violet-600' },
           { label: 'Regular',         value: regularCount.toString(),          icon: UserCircle2, color: 'text-emerald-600' },
-          { label: 'Total Lifetime Spend', value: formatCurrencyCompact(totalSpent, cc), icon: TrendingUp, color: 'text-amber-600' },
+          { label: 'Total Lifetime Spend', value: formatCurrency(totalSpent, cc), icon: TrendingUp, color: 'text-amber-600' },
         ].map(k => (
           <div key={k.label} className="kpi-card">
             <k.icon className={`w-4 h-4 ${k.color}`} />
@@ -244,7 +244,7 @@ export default function OWCustomers() {
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-sm font-semibold text-foreground">{formatCurrencyCompact(c.total_spent, cc)}</p>
+                        <p className="text-sm font-semibold text-foreground">{formatCurrency(c.total_spent, cc)}</p>
                         <p className="text-xs text-muted-foreground">{c.total_purchases} orders</p>
                       </div>
                     </button>
@@ -278,7 +278,7 @@ export default function OWCustomers() {
                   </div>
                   <div className="grid grid-cols-2 gap-3 pt-1">
                     {[
-                      { label: 'Total Spent', value: formatCurrencyCompact(selected.total_spent, cc) },
+                      { label: 'Total Spent', value: formatCurrency(selected.total_spent, cc) },
                       { label: 'Orders',      value: selected.total_purchases.toString() },
                       { label: 'Loyalty Pts', value: selected.loyaltyPoints.toLocaleString() },
                       { label: 'Member Since', value: new Date(selected.created_at).toLocaleDateString('en', { month: 'short', year: 'numeric' }) },
@@ -366,7 +366,7 @@ export default function OWCustomers() {
                 <div className="w-full min-w-0 overflow-hidden">
                   <ResponsiveContainer width="100%" height={150}>
                     <BarChart data={topSpenders} layout="vertical" barSize={12}>
-                      <XAxis type="number" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrencyCompact(v, cc)} />
+                      <XAxis type="number" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrency(v, cc)} />
                       <YAxis type="category" dataKey="name" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} width={60} />
                       <Tooltip formatter={(v: number) => [formatCurrency(v, cc), 'Spent']} />
                       <Bar dataKey="spent" fill="hsl(var(--chart-2))" radius={[0, 4, 4, 0]} name="Spent" />
