@@ -34,13 +34,13 @@ interface ActivityLog {
 type Tab = 'users' | 'roles' | 'activity';
 
 const PAGE = 20;
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-[#2563EB] rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-[#2563EB] rounded-xl px-3';
 
 const ROLE_COLORS: Record<string, string> = {
   owner:   'bg-emerald-50 text-emerald-700 border-emerald-200',
   cashier: 'bg-amber-50 text-amber-700 border-amber-200',
-  manager: 'bg-blue-50 text-blue-700 border-blue-200',
+  manager: 'bg-accent text-primary border-primary',
 };
 
 const ROLES = [
@@ -144,14 +144,14 @@ export default function OWUsers() {
     <div className="space-y-5 fade-in">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Users &amp; Roles</h2>
-          <p className="text-sm text-slate-500 mt-0.5">Manage staff access, roles and permissions</p>
+          <h2 className="text-xl font-bold text-foreground">Users &amp; Roles</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">Manage staff access, roles and permissions</p>
         </div>
         <div className="flex gap-2">
           {(['users', 'roles', 'activity'] as Tab[]).map(t => (
             <button key={t} onClick={() => setTab(t)}
-              className={`h-9 px-4 rounded-xl text-sm font-semibold capitalize transition-colors ${tab === t ? 'text-white' : 'text-slate-600 border border-slate-200 bg-white hover:bg-slate-50'}`}
-              style={tab === t ? { background: '#2563EB' } : undefined}>
+              className={`h-9 px-4 rounded-xl text-sm font-semibold capitalize transition-colors ${tab === t ? 'text-white' : 'text-muted-foreground border border-border bg-white hover:bg-card'}`}
+              style={tab === t ? { background: 'hsl(var(--primary))' } : undefined}>
               {t === 'activity' ? 'Activity Log' : t}
             </button>
           ))}
@@ -168,8 +168,8 @@ export default function OWUsers() {
         ].map(k => (
           <Card key={k.label} className="border" style={CARD}>
             <CardContent className="p-4">
-              <p className="text-xs text-slate-400 mb-1">{k.label}</p>
-              <p className="text-xl font-bold text-slate-900">{loading ? '–' : k.value}</p>
+              <p className="text-xs text-muted-foreground mb-1">{k.label}</p>
+              <p className="text-xl font-bold text-foreground">{loading ? '–' : k.value}</p>
             </CardContent>
           </Card>
         ))}
@@ -177,23 +177,23 @@ export default function OWUsers() {
 
       {tab === 'roles' ? (
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-slate-700">Role Definitions &amp; Permissions</h3>
+          <h3 className="text-sm font-semibold text-foreground">Role Definitions &amp; Permissions</h3>
           {ROLES.map(r => (
             <Card key={r.key} className="border" style={CARD}>
               <CardContent className="p-5">
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <Shield className="w-4 h-4 text-blue-500" />
-                      <span className="font-semibold text-slate-900 capitalize">{r.label}</span>
-                      <Badge className={`text-xs border capitalize ${ROLE_COLORS[r.key] ?? 'bg-slate-50 text-slate-600 border-slate-200'}`}>{roleCount(r.key)} users</Badge>
+                      <Shield className="w-4 h-4 text-primary" />
+                      <span className="font-semibold text-foreground capitalize">{r.label}</span>
+                      <Badge className={`text-xs border capitalize ${ROLE_COLORS[r.key] ?? 'bg-card text-muted-foreground border-border'}`}>{roleCount(r.key)} users</Badge>
                     </div>
-                    <p className="text-sm text-slate-500">{r.desc}</p>
+                    <p className="text-sm text-muted-foreground">{r.desc}</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {(PERMISSIONS[r.key] ?? []).map(p => (
-                    <span key={p} className="text-xs px-2.5 py-1 rounded-full border font-medium" style={{ background: '#EFF6FF', borderColor: '#BFDBFE', color: '#2563EB' }}>
+                    <span key={p} className="text-xs px-2.5 py-1 rounded-full border font-medium" style={{ background: 'hsl(var(--accent))', borderColor: 'hsl(var(--primary) / 0.3)', color: 'hsl(var(--primary))' }}>
                       {p}
                     </span>
                   ))}
@@ -205,39 +205,39 @@ export default function OWUsers() {
       ) : tab === 'activity' ? (
         <Card className="border" style={CARD}>
           <CardHeader className="px-5 pt-5 pb-2">
-            <CardTitle className="text-sm font-semibold text-slate-900 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-slate-400" /> Recent Activity
+            <CardTitle className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Clock className="w-4 h-4 text-muted-foreground" /> Recent Activity
             </CardTitle>
           </CardHeader>
           <CardContent className="px-0 pb-0">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-slate-100">
+                  <tr className="border-b border-border">
                     {['User','Action','Date & Time'].map(h => (
-                      <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-slate-500 whitespace-nowrap">{h}</th>
+                      <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-muted-foreground whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {logsLoading ? Array.from({ length: 5 }).map((_, i) => (
-                    <tr key={i} className="border-b border-slate-100">
-                      {[1,2,3].map(j => <td key={j} className="px-5 py-3"><Skeleton className="h-4 w-28 bg-slate-50" /></td>)}
+                    <tr key={i} className="border-b border-border">
+                      {[1,2,3].map(j => <td key={j} className="px-5 py-3"><Skeleton className="h-4 w-28 bg-card" /></td>)}
                     </tr>
                   )) : logs.length === 0 ? (
-                    <tr><td colSpan={3} className="px-5 py-10 text-center text-sm text-slate-400">No activity yet</td></tr>
+                    <tr><td colSpan={3} className="px-5 py-10 text-center text-sm text-muted-foreground">No activity yet</td></tr>
                   ) : logs.map(l => (
-                    <tr key={l.id} className="border-b border-slate-100 hover:bg-slate-50">
+                    <tr key={l.id} className="border-b border-border hover:bg-card">
                       <td className="px-5 py-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0" style={{ background: '#2563EB' }}>
+                          <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0" style={{ background: 'hsl(var(--primary))' }}>
                             {(l.user?.display_name ?? l.user?.email ?? 'U').charAt(0).toUpperCase()}
                           </div>
-                          <span className="text-sm text-slate-700 whitespace-nowrap">{l.user?.display_name ?? l.user?.email ?? '—'}</span>
+                          <span className="text-sm text-foreground whitespace-nowrap">{l.user?.display_name ?? l.user?.email ?? '—'}</span>
                         </div>
                       </td>
-                      <td className="px-5 py-3 text-sm text-slate-600">{l.action}</td>
-                      <td className="px-5 py-3 text-xs text-slate-400 whitespace-nowrap">{new Date(l.created_at).toLocaleString()}</td>
+                      <td className="px-5 py-3 text-sm text-muted-foreground">{l.action}</td>
+                      <td className="px-5 py-3 text-xs text-muted-foreground whitespace-nowrap">{new Date(l.created_at).toLocaleString()}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -248,55 +248,55 @@ export default function OWUsers() {
       ) : (
         <>
           <div className="relative max-w-sm">
-            {!search && <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />}
+            {!search && <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />}
             <Input placeholder="Search users…" value={search} onChange={e => { setSearch(e.target.value); setPage(0); }}
-              className={`h-10 bg-white border-slate-200 rounded-xl px-3 ${!search ? 'pl-9' : 'pl-3'}`} />
+              className={`h-10 bg-white border-border rounded-xl px-3 ${!search ? 'pl-9' : 'pl-3'}`} />
           </div>
 
           <Card className="border" style={CARD}>
             <CardHeader className="px-5 pt-5 pb-2">
-              <CardTitle className="text-sm font-semibold text-slate-900">{loading ? 'Loading…' : `${total} Staff Member${total !== 1 ? 's' : ''}`}</CardTitle>
+              <CardTitle className="text-sm font-semibold text-foreground">{loading ? 'Loading…' : `${total} Staff Member${total !== 1 ? 's' : ''}`}</CardTitle>
             </CardHeader>
             <CardContent className="px-0 pb-0">
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-slate-100">
+                    <tr className="border-b border-border">
                       {['User','Email','Phone','Role','Joined','Actions'].map(h => (
-                        <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-slate-500 whitespace-nowrap">{h}</th>
+                        <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-muted-foreground whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {loading ? Array.from({ length: 5 }).map((_, i) => (
-                      <tr key={i} className="border-b border-slate-100">
-                        {[1,2,3,4,5,6].map(j => <td key={j} className="px-5 py-3"><Skeleton className="h-4 w-20 bg-slate-50" /></td>)}
+                      <tr key={i} className="border-b border-border">
+                        {[1,2,3,4,5,6].map(j => <td key={j} className="px-5 py-3"><Skeleton className="h-4 w-20 bg-card" /></td>)}
                       </tr>
                     )) : users.length === 0 ? (
-                      <tr><td colSpan={6} className="px-5 py-10 text-center text-sm text-slate-400">No staff users found</td></tr>
+                      <tr><td colSpan={6} className="px-5 py-10 text-center text-sm text-muted-foreground">No staff users found</td></tr>
                     ) : users.map(u => (
-                      <tr key={u.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                      <tr key={u.id} className="border-b border-border hover:bg-card transition-colors">
                         <td className="px-5 py-3">
                           <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0" style={{ background: u.id === appUser?.id ? '#2563EB' : '#64748B' }}>
                               {(u.display_name ?? u.email).charAt(0).toUpperCase()}
                             </div>
                             <div>
-                              <span className="text-sm font-medium text-slate-900 whitespace-nowrap">{u.display_name ?? '—'}</span>
-                              {u.id === appUser?.id && <span className="ml-1.5 text-xs text-blue-500">(You)</span>}
+                              <span className="text-sm font-medium text-foreground whitespace-nowrap">{u.display_name ?? '—'}</span>
+                              {u.id === appUser?.id && <span className="ml-1.5 text-xs text-primary">(You)</span>}
                             </div>
                           </div>
                         </td>
-                        <td className="px-5 py-3 text-sm text-slate-600 whitespace-nowrap">{u.email}</td>
-                        <td className="px-5 py-3 text-sm text-slate-600 whitespace-nowrap">{u.phone_number ?? '—'}</td>
+                        <td className="px-5 py-3 text-sm text-muted-foreground whitespace-nowrap">{u.email}</td>
+                        <td className="px-5 py-3 text-sm text-muted-foreground whitespace-nowrap">{u.phone_number ?? '—'}</td>
                         <td className="px-5 py-3 whitespace-nowrap">
-                          <Badge className={`text-xs border capitalize ${ROLE_COLORS[u.role] ?? 'bg-slate-50 text-slate-600 border-slate-200'}`}>{u.role}</Badge>
+                          <Badge className={`text-xs border capitalize ${ROLE_COLORS[u.role] ?? 'bg-card text-muted-foreground border-border'}`}>{u.role}</Badge>
                         </td>
-                        <td className="px-5 py-3 text-xs text-slate-400 whitespace-nowrap">{u.created_at.slice(0, 10)}</td>
+                        <td className="px-5 py-3 text-xs text-muted-foreground whitespace-nowrap">{u.created_at.slice(0, 10)}</td>
                         <td className="px-5 py-3">
                           <div className="flex gap-1">
-                            <button onClick={() => setDetail(u)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100"><Eye className="w-3.5 h-3.5 text-slate-500" /></button>
-                            <button onClick={() => openEdit(u)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100"><Edit2 className="w-3.5 h-3.5 text-slate-500" /></button>
+                            <button onClick={() => setDetail(u)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-secondary"><Eye className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                            <button onClick={() => openEdit(u)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-secondary"><Edit2 className="w-3.5 h-3.5 text-muted-foreground" /></button>
                             {u.id !== appUser?.id && (
                               <button onClick={() => handleDeactivate(u)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50" title="Deactivate">
                                 <UserX className="w-3.5 h-3.5 text-red-500" />
@@ -310,11 +310,11 @@ export default function OWUsers() {
                 </table>
               </div>
               {totalPages > 1 && (
-                <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100">
-                  <span className="text-xs text-slate-400">{page * PAGE + 1}–{Math.min((page + 1) * PAGE, total)} of {total}</span>
+                <div className="flex items-center justify-between px-5 py-3 border-t border-border">
+                  <span className="text-xs text-muted-foreground">{page * PAGE + 1}–{Math.min((page + 1) * PAGE, total)} of {total}</span>
                   <div className="flex gap-1.5">
-                    <button disabled={page === 0} onClick={() => setPage(p => p - 1)} className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 disabled:opacity-40"><ChevronLeft className="w-3.5 h-3.5 text-slate-600" /></button>
-                    <button disabled={page >= totalPages - 1} onClick={() => setPage(p => p + 1)} className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 disabled:opacity-40"><ChevronRight className="w-3.5 h-3.5 text-slate-600" /></button>
+                    <button disabled={page === 0} onClick={() => setPage(p => p - 1)} className="w-7 h-7 flex items-center justify-center rounded-lg border border-border disabled:opacity-40"><ChevronLeft className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                    <button disabled={page >= totalPages - 1} onClick={() => setPage(p => p + 1)} className="w-7 h-7 flex items-center justify-center rounded-lg border border-border disabled:opacity-40"><ChevronRight className="w-3.5 h-3.5 text-muted-foreground" /></button>
                   </div>
                 </div>
               )}
@@ -325,25 +325,25 @@ export default function OWUsers() {
 
       {/* Edit Modal */}
       <Dialog open={editOpen} onOpenChange={o => { setEditOpen(o); if (!o) setEditUser(null); }}>
-        <DialogContent className="max-w-sm border-slate-200" style={{ background: '#ffffff' }}>
+        <DialogContent className="max-w-sm border-border" style={{ background: 'hsl(var(--card))' }}>
           <DialogHeader><DialogTitle>Edit User</DialogTitle></DialogHeader>
           <form onSubmit={handleSave} className="space-y-3 mt-2">
             <div>
-              <Label className="text-xs font-medium text-slate-600 mb-1.5 block">Display Name</Label>
+              <Label className="text-xs font-medium text-muted-foreground mb-1.5 block">Display Name</Label>
               <Input value={editForm.display_name} onChange={e => setEditForm(p => ({ ...p, display_name: e.target.value }))} placeholder="Full name" className={inp} />
             </div>
             <div>
-              <Label className="text-xs font-medium text-slate-600 mb-1.5 block">Phone</Label>
+              <Label className="text-xs font-medium text-muted-foreground mb-1.5 block">Phone</Label>
               <Input value={editForm.phone_number} onChange={e => setEditForm(p => ({ ...p, phone_number: e.target.value }))} placeholder="+254…" className={inp} />
             </div>
             <div>
-              <Label className="text-xs font-medium text-slate-600 mb-1.5 block">Role</Label>
+              <Label className="text-xs font-medium text-muted-foreground mb-1.5 block">Role</Label>
               <select value={editForm.role} onChange={e => setEditForm(p => ({ ...p, role: e.target.value }))}
-                className="w-full h-10 bg-slate-50 border border-slate-200 rounded-xl px-3 text-sm text-slate-900 focus:outline-none focus:border-blue-400">
+                className="w-full h-10 bg-card border border-border rounded-xl px-3 text-sm text-foreground focus:outline-none focus:border-primary">
                 {ROLES.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
               </select>
             </div>
-            <button type="submit" disabled={saving} className="w-full h-10 rounded-xl text-sm font-semibold text-white disabled:opacity-60" style={{ background: '#2563EB' }}>
+            <button type="submit" disabled={saving} className="w-full h-10 rounded-xl text-sm font-semibold text-white disabled:opacity-60" style={{ background: 'hsl(var(--primary))' }}>
               {saving ? 'Saving…' : 'Save Changes'}
             </button>
           </form>
@@ -353,19 +353,19 @@ export default function OWUsers() {
       {/* Detail Modal */}
       {detail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
-          <div className="w-full max-w-sm rounded-2xl border shadow-2xl" style={{ background: '#ffffff', borderColor: '#E2E8F0' }}>
-            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-              <p className="font-semibold text-slate-900">User Profile</p>
-              <button onClick={() => setDetail(null)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100"><X className="w-4 h-4 text-slate-500" /></button>
+          <div className="w-full max-w-sm rounded-2xl border shadow-2xl" style={{ background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' }}>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+              <p className="font-semibold text-foreground">User Profile</p>
+              <button onClick={() => setDetail(null)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary"><X className="w-4 h-4 text-muted-foreground" /></button>
             </div>
             <div className="p-5 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white" style={{ background: '#2563EB' }}>
+                <div className="w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold text-white" style={{ background: 'hsl(var(--primary))' }}>
                   {(detail.display_name ?? detail.email).charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-900">{detail.display_name ?? '—'}</p>
-                  <Badge className={`text-xs border capitalize mt-1 ${ROLE_COLORS[detail.role] ?? 'bg-slate-50 text-slate-600 border-slate-200'}`}>{detail.role}</Badge>
+                  <p className="font-semibold text-foreground">{detail.display_name ?? '—'}</p>
+                  <Badge className={`text-xs border capitalize mt-1 ${ROLE_COLORS[detail.role] ?? 'bg-card text-muted-foreground border-border'}`}>{detail.role}</Badge>
                 </div>
               </div>
               <div className="space-y-2">
@@ -374,26 +374,26 @@ export default function OWUsers() {
                   { icon: Phone, label: 'Phone', value: detail.phone_number ?? '—' },
                   { icon: Calendar, label: 'Joined', value: detail.created_at.slice(0, 10) },
                 ].map(f => (
-                  <div key={f.label} className="flex items-center gap-3 px-3 py-2.5 bg-slate-50 rounded-xl text-sm">
-                    <f.icon className="w-4 h-4 text-slate-400 shrink-0" />
+                  <div key={f.label} className="flex items-center gap-3 px-3 py-2.5 bg-card rounded-xl text-sm">
+                    <f.icon className="w-4 h-4 text-muted-foreground shrink-0" />
                     <div>
-                      <p className="text-xs text-slate-400">{f.label}</p>
-                      <p className="text-slate-800 font-medium">{f.value}</p>
+                      <p className="text-xs text-muted-foreground">{f.label}</p>
+                      <p className="text-foreground font-medium">{f.value}</p>
                     </div>
                   </div>
                 ))}
               </div>
               <div>
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Permissions</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Permissions</p>
                 <div className="flex flex-wrap gap-1.5">
                   {(PERMISSIONS[detail.role] ?? []).map(p => (
-                    <span key={p} className="text-xs px-2 py-1 rounded-full border" style={{ background: '#EFF6FF', borderColor: '#BFDBFE', color: '#2563EB' }}>{p}</span>
+                    <span key={p} className="text-xs px-2 py-1 rounded-full border" style={{ background: 'hsl(var(--accent))', borderColor: 'hsl(var(--primary) / 0.3)', color: 'hsl(var(--primary))' }}>{p}</span>
                   ))}
                 </div>
               </div>
             </div>
             <div className="px-5 pb-4">
-              <button onClick={() => setDetail(null)} className="w-full h-9 rounded-xl text-sm font-bold text-white" style={{ background: '#2563EB' }}>Close</button>
+              <button onClick={() => setDetail(null)} className="w-full h-9 rounded-xl text-sm font-bold text-white" style={{ background: 'hsl(var(--primary))' }}>Close</button>
             </div>
           </div>
         </div>
