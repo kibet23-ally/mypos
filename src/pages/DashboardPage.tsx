@@ -12,15 +12,33 @@ const SABusinesses  = lazy(() => import('./superadmin/SABusinesses'));
 const SAUsersRoles  = lazy(() => import('./superadmin/SAUsersRoles'));
 const SAReports     = lazy(() => import('./superadmin/SAReports'));
 const SASettings    = lazy(() => import('./superadmin/SASettings'));
+const SALicenses    = lazy(() => import('./superadmin/SALicenses'));
+const SASubscriptionPlans = lazy(() => import('./superadmin/SASubscriptionPlans'));
+const SASystemAnalytics   = lazy(() => import('./superadmin/SASystemAnalytics'));
 const OWOverview    = lazy(() => import('./owner/OWOverview'));
 const OWPOS         = lazy(() => import('./owner/OWPOS'));
 const OWProducts    = lazy(() => import('./owner/OWProducts'));
+const OWCategories  = lazy(() => import('./owner/OWCategories'));
 const OWInventory   = lazy(() => import('./owner/OWInventory'));
+const OWStockMovements   = lazy(() => import('./owner/OWStockMovements'));
+const OWInventoryReports = lazy(() => import('./owner/OWInventoryReports'));
+const OWPurchaseOrders   = lazy(() => import('./owner/OWPurchaseOrders'));
+const OWPurchases        = lazy(() => import('./owner/OWPurchases'));
+const OWSuppliers        = lazy(() => import('./owner/OWSuppliers'));
 const OWInvoices    = lazy(() => import('./owner/OWInvoices'));
+const OWSalesHistory = lazy(() => import('./owner/OWSalesHistory'));
+const OWQuotations   = lazy(() => import('./owner/OWQuotations'));
+const OWReturns      = lazy(() => import('./owner/OWReturns'));
 const OWCustomers   = lazy(() => import('./owner/OWCustomers'));
+const OWExpenses     = lazy(() => import('./owner/OWExpenses'));
+const OWProfitLoss   = lazy(() => import('./owner/OWProfitLoss'));
+const OWRevenueReports = lazy(() => import('./owner/OWRevenueReports'));
 const OWReports     = lazy(() => import('./owner/OWReports'));
 const OWStaff       = lazy(() => import('./owner/OWStaff'));
 const OWSettings    = lazy(() => import('./owner/OWSettings'));
+const OWReceiptSettings = lazy(() => import('./owner/OWReceiptSettings'));
+const OWTaxSettings     = lazy(() => import('./owner/OWTaxSettings'));
+const OWNotifications   = lazy(() => import('./owner/OWNotifications'));
 const CAOverview    = lazy(() => import('./cashier/CAOverview'));
 const CAPOS         = lazy(() => import('./cashier/CAPOS'));
 const CAProducts    = lazy(() => import('./cashier/CAProducts'));
@@ -43,18 +61,37 @@ const PageLoader = () => (
 const VIEWS: Record<string, React.ReactNode> = {
   'sa-overview':    <SAOverview />,
   'sa-businesses':  <SABusinesses />,
+  'sa-licenses':    <SALicenses />,
+  'sa-plans':       <SASubscriptionPlans />,
   'sa-users-roles': <SAUsersRoles />,
+  'sa-analytics':   <SASystemAnalytics />,
   'sa-reports':     <SAReports />,
   'sa-settings':    <SASettings />,
   'ow-overview':    <OWOverview />,
   'ow-pos':         <OWPOS />,
-  'ow-products':    <OWProducts />,
-  'ow-inventory':   <OWInventory />,
+  'ow-sales-history': <OWSalesHistory />,
+  'ow-quotations':  <OWQuotations />,
   'ow-invoices':    <OWInvoices />,
+  'ow-returns':     <OWReturns />,
+  'ow-products':    <OWProducts />,
+  'ow-categories':  <OWCategories />,
+  'ow-inventory':   <OWInventory />,
+  'ow-stock-movements':   <OWStockMovements />,
+  'ow-inventory-reports': <OWInventoryReports />,
+  'ow-purchase-orders':   <OWPurchaseOrders />,
+  'ow-purchases':         <OWPurchases />,
+  'ow-suppliers':         <OWSuppliers />,
   'ow-customers':   <OWCustomers />,
+  'ow-expenses':    <OWExpenses />,
+  'ow-profit-loss': <OWProfitLoss />,
+  'ow-revenue-reports': <OWRevenueReports />,
   'ow-reports':     <OWReports />,
   'ow-staff':       <OWStaff />,
   'ow-settings':    <OWSettings />,
+  'ow-receipt-settings': <OWReceiptSettings />,
+  'ow-tax-settings':     <OWTaxSettings />,
+  'ow-notifications':    <OWNotifications />,
+  'ow-profile':     <CAProfile />, // no dedicated owner profile page yet — CAProfile is generic enough to reuse (see final report)
   'ca-overview':    <CAOverview />,
   'ca-pos':         <CAPOS />,
   'ca-products':    <CAProducts />,
