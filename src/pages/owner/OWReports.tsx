@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/db/supabase';
-import { formatCurrency, formatCurrencyCompact } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 import { toast } from 'sonner';
 import {
   getFinancialSummaryByPeriod,
@@ -186,7 +186,7 @@ export default function OWReports() {
               onClick={() => { setReportType(type); setLoaded(false); setData([]); }}
               className={`flex flex-col items-start gap-1.5 p-3 rounded-lg border text-left transition-colors ${
                 reportType === type
-                  ? 'border-[hsl(var(--chart-1))] bg-blue-50 dark:bg-blue-950/30'
+                  ? 'border-[hsl(var(--chart-1))] bg-accent dark:bg-primary/30'
                   : 'border-border bg-card hover:border-primary hover:bg-secondary'
               }`}>
               <Icon className={`w-4 h-4 shrink-0 ${reportType === type ? 'text-[hsl(var(--chart-1))]' : 'text-muted-foreground'}`} />
@@ -219,12 +219,12 @@ export default function OWReports() {
       {loaded && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { label: 'Total Revenue',    value: formatCurrencyCompact(totalRevenue, cc),  icon: DollarSign, color: 'text-blue-600' },
-            { label: 'Gross Profit',     value: formatCurrencyCompact(totalProfit, cc),   icon: TrendingUp,  color: 'text-emerald-600' },
-            { label: 'COGS',             value: formatCurrencyCompact(totalCogs, cc),     icon: ShoppingBag, color: 'text-orange-500' },
+            { label: 'Total Revenue',    value: formatCurrency(totalRevenue, cc),  icon: DollarSign, color: 'text-primary' },
+            { label: 'Gross Profit',     value: formatCurrency(totalProfit, cc),   icon: TrendingUp,  color: 'text-emerald-600' },
+            { label: 'COGS',             value: formatCurrency(totalCogs, cc),     icon: ShoppingBag, color: 'text-orange-500' },
             { label: 'Gross Margin',     value: `${margin.toFixed(1)}%`,                  icon: TrendingUp,  color: 'text-amber-600' },
             { label: 'Total Orders',     value: totalOrders.toString(),                   icon: ShoppingBag, color: 'text-violet-600' },
-            { label: 'Total Discounts',  value: formatCurrencyCompact(totalDiscount, cc), icon: DollarSign,  color: 'text-sky-600' },
+            { label: 'Total Discounts',  value: formatCurrency(totalDiscount, cc), icon: DollarSign,  color: 'text-sky-600' },
           ].map(k => (
             <div key={k.label} className="kpi-card">
               <k.icon className={`w-4 h-4 ${k.color}`} />
@@ -253,7 +253,7 @@ export default function OWReports() {
                       <XAxis dataKey="period" tick={{ fontSize: 10 }} axisLine={false} tickLine={false}
                         interval={data.length > 15 ? Math.floor(data.length / 6) : 0} />
                       <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false}
-                        tickFormatter={v => formatCurrencyCompact(v, cc)} />
+                        tickFormatter={v => formatCurrency(v, cc)} />
                       <Tooltip formatter={(v: number, name: string) => [
                         name === 'orders' ? v : formatCurrency(v, cc),
                         name.charAt(0).toUpperCase() + name.slice(1),
@@ -391,4 +391,3 @@ export default function OWReports() {
     </div>
   );
 }
-
