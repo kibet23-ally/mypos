@@ -29,7 +29,7 @@ export function SubscriptionGuard({ children }: Props) {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="w-5 h-5 text-blue-500 animate-spin" />
+        <Loader2 className="w-5 h-5 text-primary animate-spin" />
       </div>
     );
   }
@@ -90,14 +90,14 @@ function PaywallScreen({ tenantId, onActivated }: { tenantId: string; onActivate
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
       <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5"
-        style={{ background: '#EFF6FF', border: '1px solid #BFDBFE' }}>
-        <CreditCard className="w-6 h-6 text-blue-500" />
+        style={{ background: 'hsl(var(--accent))', border: '1px solid #BFDBFE' }}>
+        <CreditCard className="w-6 h-6 text-primary" />
       </div>
-      <h2 className="text-2xl font-bold text-slate-900 mb-2 text-balance">Your free trial has ended</h2>
-      <p className="text-slate-500 mb-6 max-w-sm text-pretty">
+      <h2 className="text-2xl font-bold text-foreground mb-2 text-balance">Your free trial has ended</h2>
+      <p className="text-muted-foreground mb-6 max-w-sm text-pretty">
         Activate your subscription to keep access to PosifyPro — POS, reports, staff management, and more.
       </p>
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 max-w-xs w-full mb-6 text-left space-y-3">
+      <div className="bg-white border border-border rounded-2xl p-6 max-w-xs w-full mb-6 text-left space-y-3">
         {[
           'Unlimited sales & receipts',
           'Product inventory management',
@@ -105,7 +105,7 @@ function PaywallScreen({ tenantId, onActivated }: { tenantId: string; onActivate
           'Staff (cashier) accounts',
           'M-Pesa payment integration',
         ].map(f => (
-          <div key={f} className="flex items-center gap-2 text-sm text-slate-700">
+          <div key={f} className="flex items-center gap-2 text-sm text-foreground">
             <span className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 text-xs"
               style={{ background: '#DCFCE7', color: '#16A34A' }}>✓</span>
             {f}
@@ -115,11 +115,11 @@ function PaywallScreen({ tenantId, onActivated }: { tenantId: string; onActivate
       <button
         onClick={() => setOpen(true)}
         className="h-11 px-8 rounded-xl text-sm font-bold text-white"
-        style={{ background: '#2563EB' }}
+        style={{ background: 'hsl(var(--primary))' }}
       >
         Activate Subscription
       </button>
-      <p className="text-xs text-slate-400 mt-3">One-time payment • Lifetime access</p>
+      <p className="text-xs text-muted-foreground mt-3">One-time payment • Lifetime access</p>
       {open && <PaymentModal tenantId={tenantId} onSuccess={() => { setOpen(false); onActivated(); }} onClose={() => setOpen(false)} />}
     </div>
   );
@@ -175,50 +175,50 @@ function PaymentModal({ tenantId, onSuccess, onClose }: { tenantId: string; onSu
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xl p-6 w-full max-w-sm">
+      <div className="bg-white rounded-2xl border border-border shadow-xl p-6 w-full max-w-sm">
         <div className="flex items-center gap-3 mb-5">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: '#EFF6FF' }}>
-            <Smartphone className="w-4 h-4 text-blue-500" />
+          <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'hsl(var(--accent))' }}>
+            <Smartphone className="w-4 h-4 text-primary" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-slate-900">Activate via M-Pesa</h3>
-            <p className="text-xs text-slate-500">One-time payment of KES {AMOUNT.toLocaleString()}</p>
+            <h3 className="text-base font-bold text-foreground">Activate via M-Pesa</h3>
+            <p className="text-xs text-muted-foreground">One-time payment of KES {AMOUNT.toLocaleString()}</p>
           </div>
         </div>
 
         <form onSubmit={handlePay} className="space-y-4">
           <div>
-            <Label className="text-xs font-medium text-slate-600 mb-1.5 block">M-Pesa Phone Number</Label>
+            <Label className="text-xs font-medium text-muted-foreground mb-1.5 block">M-Pesa Phone Number</Label>
             <Input
               placeholder="e.g. 0712345678"
               value={phone}
               onChange={e => setPhone(e.target.value)}
-              className="h-11 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-xl"
+              className="h-11 bg-card border-border text-foreground placeholder:text-muted-foreground rounded-xl"
             />
-            <p className="text-xs text-slate-400 mt-1">You will receive an STK push on this number.</p>
+            <p className="text-xs text-muted-foreground mt-1">You will receive an STK push on this number.</p>
           </div>
 
-          <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 space-y-1.5 text-sm">
+          <div className="bg-card border border-border rounded-xl p-3 space-y-1.5 text-sm">
             <div className="flex justify-between">
-              <span className="text-slate-500">Plan</span>
-              <Badge className="text-xs border" style={{ background: '#EFF6FF', borderColor: '#BFDBFE', color: '#2563EB' }}>
+              <span className="text-muted-foreground">Plan</span>
+              <Badge className="text-xs border" style={{ background: 'hsl(var(--accent))', borderColor: 'hsl(var(--primary) / 0.3)', color: 'hsl(var(--primary))' }}>
                 <Zap className="w-3 h-3 mr-1" /> Starter — Lifetime
               </Badge>
             </div>
-            <div className="flex justify-between font-bold border-t border-slate-200 pt-1.5">
-              <span className="text-slate-900">Total</span>
-              <span className="text-blue-500">KES {AMOUNT.toLocaleString()}</span>
+            <div className="flex justify-between font-bold border-t border-border pt-1.5">
+              <span className="text-foreground">Total</span>
+              <span className="text-primary">KES {AMOUNT.toLocaleString()}</span>
             </div>
           </div>
 
           <div className="flex gap-2">
             <button type="button" onClick={onClose}
-              className="flex-1 h-11 rounded-xl text-sm font-semibold text-slate-600 border border-slate-200 hover:bg-slate-50 transition-colors">
+              className="flex-1 h-11 rounded-xl text-sm font-semibold text-muted-foreground border border-border hover:bg-card transition-colors">
               Cancel
             </button>
             <button type="submit" disabled={loading}
               className="flex-1 h-11 rounded-xl text-sm font-bold text-white disabled:opacity-60 transition-opacity flex items-center justify-center gap-2"
-              style={{ background: '#2563EB' }}>
+              style={{ background: 'hsl(var(--primary))' }}>
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? 'Sending…' : 'Pay via M-Pesa'}
             </button>
