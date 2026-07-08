@@ -11,8 +11,8 @@ import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid,
 } from 'recharts';
 
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const TT = { background: '#fff', border: '1px solid #E2E8F0', borderRadius: '8px', fontSize: 12 };
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const TT = { background: 'hsl(var(--card))', border: '1px solid #E2E8F0', borderRadius: '8px', fontSize: 12 };
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 function downloadCSV(rows: string[][], fn: string) {
@@ -99,10 +99,10 @@ export default function OWProfitLoss() {
           <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${color.replace('text-','bg-').replace('-700','-100')}`}>
             <Icon className={`w-4 h-4 ${color}`} />
           </div>
-          <p className="text-xs text-slate-500 font-medium">{label}</p>
+          <p className="text-xs text-muted-foreground font-medium">{label}</p>
         </div>
         <p className={`text-xl font-bold ${color}`}>{fmt(value)}</p>
-        {sub && <p className="text-xs text-slate-400 mt-0.5">{sub}</p>}
+        {sub && <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>}
       </CardContent>
     </Card>
   );
@@ -111,30 +111,30 @@ export default function OWProfitLoss() {
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-blue-600" />
-          <h1 className="text-xl font-bold text-slate-800">Profit & Loss</h1>
+          <TrendingUp className="w-5 h-5 text-primary" />
+          <h1 className="text-xl font-bold text-foreground">Profit & Loss</h1>
         </div>
         <div className="flex gap-2">
           <div className="flex items-center gap-1">
             {[new Date().getFullYear()-1,new Date().getFullYear()].map(y=>(
               <button key={y} onClick={()=>setYearFilter(y)}
-                className={`px-3 py-1.5 rounded-xl border text-sm font-medium transition-colors ${yearFilter===y?'bg-blue-600 text-white border-blue-600':'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}>{y}</button>
+                className={`px-3 py-1.5 rounded-xl border text-sm font-medium transition-colors ${yearFilter===y?'bg-primary text-white border-primary':'bg-white text-muted-foreground border-border hover:bg-card'}`}>{y}</button>
             ))}
           </div>
-          <Button onClick={exportCSV} variant="outline" className="gap-1 h-9 text-slate-600 shrink-0"><Download className="w-4 h-4"/>Export</Button>
+          <Button onClick={exportCSV} variant="outline" className="gap-1 h-9 text-muted-foreground shrink-0"><Download className="w-4 h-4"/>Export</Button>
         </div>
       </div>
 
       {/* Profit formula note */}
-      <div className="bg-blue-50 border border-blue-200 rounded-2xl px-4 py-3 text-xs text-blue-700">
+      <div className="bg-accent border border-primary rounded-2xl px-4 py-3 text-xs text-primary">
         <b>Formula:</b> Gross Profit = Revenue − COGS &nbsp;|&nbsp; Net Profit = Gross Profit − Expenses − Returns
       </div>
 
       {loading ? <div className="grid grid-cols-2 md:grid-cols-3 gap-3">{Array.from({length:6}).map((_,i)=><Skeleton key={i} className="h-24 rounded-2xl"/>)}</div> : (
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <StatCard label="Total Revenue" value={totals.revenue} color="text-blue-700" icon={DollarSign} />
-            <StatCard label="Total COGS" value={totals.cogs} color="text-slate-600" icon={Package} />
+            <StatCard label="Total Revenue" value={totals.revenue} color="text-primary" icon={DollarSign} />
+            <StatCard label="Total COGS" value={totals.cogs} color="text-muted-foreground" icon={Package} />
             <StatCard label="Gross Profit" value={totals.gross} sub={`${grossMargin}% margin`} color={totals.gross>=0?'text-green-700':'text-red-600'} icon={TrendingUp} />
             <StatCard label="Total Expenses" value={totals.expenses} color="text-orange-600" icon={ShoppingCart} />
             <StatCard label="Returns (Refunds)" value={totals.returns} color="text-red-500" icon={TrendingDown} />
@@ -143,7 +143,7 @@ export default function OWProfitLoss() {
 
           {/* Net Profit trend */}
           <Card style={CARD}>
-            <CardHeader className="pb-1"><CardTitle className="text-base text-slate-700">Monthly Revenue vs Net Profit — {yearFilter}</CardTitle></CardHeader>
+            <CardHeader className="pb-1"><CardTitle className="text-base text-foreground">Monthly Revenue vs Net Profit — {yearFilter}</CardTitle></CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={220}>
                 <AreaChart data={monthly} margin={{top:4,right:8,bottom:0,left:0}}>
@@ -164,7 +164,7 @@ export default function OWProfitLoss() {
 
           {/* Gross vs Expenses vs Returns bar */}
           <Card style={CARD}>
-            <CardHeader className="pb-1"><CardTitle className="text-base text-slate-700">Gross Profit vs Expenses vs Returns</CardTitle></CardHeader>
+            <CardHeader className="pb-1"><CardTitle className="text-base text-foreground">Gross Profit vs Expenses vs Returns</CardTitle></CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={200}>
                 <BarChart data={monthly} margin={{top:4,right:8,bottom:0,left:0}}>
@@ -183,41 +183,41 @@ export default function OWProfitLoss() {
 
           {/* P&L Table */}
           <Card style={CARD}>
-            <CardHeader className="pb-1"><CardTitle className="text-base text-slate-700">Monthly P&L Statement</CardTitle></CardHeader>
+            <CardHeader className="pb-1"><CardTitle className="text-base text-foreground">Monthly P&L Statement</CardTitle></CardHeader>
             <CardContent className="overflow-x-auto">
               <table className="w-full text-sm whitespace-nowrap">
-                <thead><tr className="border-b border-slate-100">
+                <thead><tr className="border-b border-border">
                   {['Month','Revenue','COGS','Gross Profit','Gross %','Expenses','Returns','Net Profit','Net %'].map(h=>
-                    <th key={h} className="text-right py-2 px-3 font-semibold text-slate-600 first:text-left">{h}</th>
+                    <th key={h} className="text-right py-2 px-3 font-semibold text-muted-foreground first:text-left">{h}</th>
                   )}
                 </tr></thead>
                 <tbody>{monthly.map(m=>{
                   const gm = m.revenue>0?(m.gross/m.revenue*100).toFixed(1):'—';
                   const nm = m.revenue>0?(m.net/m.revenue*100).toFixed(1):'—';
                   return (
-                    <tr key={m.month} className="border-b border-slate-50 hover:bg-slate-50">
-                      <td className="py-2 px-3 font-medium text-slate-700">{m.month}</td>
-                      <td className="py-2 px-3 text-right text-slate-700">{fmt(m.revenue)}</td>
-                      <td className="py-2 px-3 text-right text-slate-500">{fmt(m.cogs)}</td>
+                    <tr key={m.month} className="border-b border-border hover:bg-card">
+                      <td className="py-2 px-3 font-medium text-foreground">{m.month}</td>
+                      <td className="py-2 px-3 text-right text-foreground">{fmt(m.revenue)}</td>
+                      <td className="py-2 px-3 text-right text-muted-foreground">{fmt(m.cogs)}</td>
                       <td className={`py-2 px-3 text-right font-semibold ${m.gross>=0?'text-green-700':'text-red-600'}`}>{fmt(m.gross)}</td>
-                      <td className="py-2 px-3 text-right text-slate-400 text-xs">{gm}{gm!=='—'?'%':''}</td>
+                      <td className="py-2 px-3 text-right text-muted-foreground text-xs">{gm}{gm!=='—'?'%':''}</td>
                       <td className="py-2 px-3 text-right text-orange-600">{fmt(m.expenses)}</td>
                       <td className="py-2 px-3 text-right text-red-500">{fmt(m.returns)}</td>
                       <td className={`py-2 px-3 text-right font-bold ${m.net>=0?'text-green-700':'text-red-600'}`}>{fmt(m.net)}</td>
-                      <td className="py-2 px-3 text-right text-slate-400 text-xs">{nm}{nm!=='—'?'%':''}</td>
+                      <td className="py-2 px-3 text-right text-muted-foreground text-xs">{nm}{nm!=='—'?'%':''}</td>
                     </tr>
                   );
                 })}
-                <tr className="border-t-2 border-slate-200 bg-slate-50 font-bold">
-                  <td className="py-2 px-3 text-slate-700">TOTAL</td>
-                  <td className="py-2 px-3 text-right text-slate-700">{fmt(totals.revenue)}</td>
-                  <td className="py-2 px-3 text-right text-slate-500">{fmt(totals.cogs)}</td>
+                <tr className="border-t-2 border-border bg-card font-bold">
+                  <td className="py-2 px-3 text-foreground">TOTAL</td>
+                  <td className="py-2 px-3 text-right text-foreground">{fmt(totals.revenue)}</td>
+                  <td className="py-2 px-3 text-right text-muted-foreground">{fmt(totals.cogs)}</td>
                   <td className={`py-2 px-3 text-right ${totals.gross>=0?'text-green-700':'text-red-600'}`}>{fmt(totals.gross)}</td>
-                  <td className="py-2 px-3 text-right text-slate-400 text-xs">{grossMargin}%</td>
+                  <td className="py-2 px-3 text-right text-muted-foreground text-xs">{grossMargin}%</td>
                   <td className="py-2 px-3 text-right text-orange-600">{fmt(totals.expenses)}</td>
                   <td className="py-2 px-3 text-right text-red-500">{fmt(totals.returns)}</td>
                   <td className={`py-2 px-3 text-right ${totals.net>=0?'text-green-700':'text-red-600'}`}>{fmt(totals.net)}</td>
-                  <td className="py-2 px-3 text-right text-slate-400 text-xs">{netMargin}%</td>
+                  <td className="py-2 px-3 text-right text-muted-foreground text-xs">{netMargin}%</td>
                 </tr>
                 </tbody>
               </table>
