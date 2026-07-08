@@ -17,8 +17,8 @@ interface ProductRow {
   price: number; buying_cost: number; reorder_level: number; updated_at: string;
 }
 
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 
 type Report = 'stock' | 'low_stock' | 'valuation' | 'aging';
 
@@ -105,23 +105,23 @@ export default function OWInventoryReports() {
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
-          <FileBarChart className="w-5 h-5 text-blue-600" />
-          <h1 className="text-xl font-bold text-slate-800">Inventory Reports</h1>
+          <FileBarChart className="w-5 h-5 text-primary" />
+          <h1 className="text-xl font-bold text-foreground">Inventory Reports</h1>
         </div>
-        <Button onClick={exportCurrent} variant="outline" className="gap-1 h-9 text-slate-600"><Download className="w-4 h-4" />Export CSV</Button>
+        <Button onClick={exportCurrent} variant="outline" className="gap-1 h-9 text-muted-foreground"><Download className="w-4 h-4" />Export CSV</Button>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[
-          { label: 'Total Products', val: filtered.length, cls: 'text-blue-700' },
+          { label: 'Total Products', val: filtered.length, cls: 'text-primary' },
           { label: 'Low / Out of Stock', val: lowStock.length + ' / ' + outOfStock.length, cls: 'text-orange-600' },
           { label: 'Stock Value (Cost)', val: fmt(totalValue), cls: 'text-green-700' },
           { label: 'Retail Value', val: fmt(totalRetailValue), cls: 'text-purple-700' },
         ].map(c => (
           <Card key={c.label} style={CARD} className="rounded-2xl">
             <CardContent className="pt-4 pb-3">
-              <p className="text-xs text-slate-500 font-medium">{c.label}</p>
+              <p className="text-xs text-muted-foreground font-medium">{c.label}</p>
               <p className={`text-lg font-bold mt-0.5 ${c.cls}`}>{c.val}</p>
             </CardContent>
           </Card>
@@ -132,7 +132,7 @@ export default function OWInventoryReports() {
       <div className="flex gap-2 flex-wrap">
         {TABS.map(t => (
           <button key={t.key} onClick={() => setActiveReport(t.key)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl border text-sm font-medium transition-colors ${activeReport === t.key ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}`}>
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-xl border text-sm font-medium transition-colors ${activeReport === t.key ? 'bg-primary text-white border-primary' : 'bg-white text-muted-foreground border-border hover:bg-card'}`}>
             <t.icon className="w-3.5 h-3.5" />{t.label}
           </button>
         ))}
@@ -142,7 +142,7 @@ export default function OWInventoryReports() {
         <CardHeader className="pb-2">
           <div className="flex flex-col md:flex-row gap-2">
             <div className="relative flex-1 max-w-xs">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input className={`${inp} pl-9`} placeholder="Search product…" value={search} onChange={e => setSearch(e.target.value)} />
             </div>
             <select className={`${inp} w-full md:w-48`} value={filterCategory} onChange={e => setFilterCategory(e.target.value)}>
@@ -158,18 +158,18 @@ export default function OWInventoryReports() {
             <>
               {activeReport === 'stock' && (
                 <table className="w-full text-sm whitespace-nowrap">
-                  <thead><tr className="border-b border-slate-100">
+                  <thead><tr className="border-b border-border">
                     {['Product','SKU','Category','Stock','Reorder Level','Status'].map(h =>
-                      <th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>
+                      <th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>
                     )}
                   </tr></thead>
                   <tbody>{stockData.map(p => (
-                    <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50">
-                      <td className="py-2 px-3 font-medium text-slate-800">{p.name}</td>
-                      <td className="py-2 px-3 text-slate-400 font-mono text-xs">{p.sku || '—'}</td>
-                      <td className="py-2 px-3 text-slate-500">{p.category}</td>
+                    <tr key={p.id} className="border-b border-border hover:bg-card">
+                      <td className="py-2 px-3 font-medium text-foreground">{p.name}</td>
+                      <td className="py-2 px-3 text-muted-foreground font-mono text-xs">{p.sku || '—'}</td>
+                      <td className="py-2 px-3 text-muted-foreground">{p.category}</td>
                       <td className={`py-2 px-3 font-bold ${p.stock === 0 ? 'text-red-600' : p.stock <= (p.reorder_level ?? 5) ? 'text-orange-500' : 'text-green-700'}`}>{p.stock}</td>
-                      <td className="py-2 px-3 text-slate-500">{p.reorder_level ?? 5}</td>
+                      <td className="py-2 px-3 text-muted-foreground">{p.reorder_level ?? 5}</td>
                       <td className="py-2 px-3">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${p.stock === 0 ? 'bg-red-100 text-red-700' : p.stock <= (p.reorder_level ?? 5) ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-700'}`}>
                           {p.stock === 0 ? 'Out of Stock' : p.stock <= (p.reorder_level ?? 5) ? 'Low Stock' : 'OK'}
@@ -182,19 +182,19 @@ export default function OWInventoryReports() {
               {activeReport === 'low_stock' && (
                 lowStock.length === 0 ? <div className="text-center py-10 text-green-600 font-medium">All products are adequately stocked!</div> :
                 <table className="w-full text-sm whitespace-nowrap">
-                  <thead><tr className="border-b border-slate-100">
+                  <thead><tr className="border-b border-border">
                     {['Product','Category','Current Stock','Reorder Level','Shortage'].map(h =>
-                      <th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>
+                      <th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>
                     )}
                   </tr></thead>
                   <tbody>{lowStock.map(p => (
-                    <tr key={p.id} className="border-b border-slate-50 hover:bg-orange-50">
-                      <td className="py-2 px-3 font-medium text-slate-800 flex items-center gap-1.5">
+                    <tr key={p.id} className="border-b border-border hover:bg-orange-50">
+                      <td className="py-2 px-3 font-medium text-foreground flex items-center gap-1.5">
                         {p.stock === 0 && <AlertTriangle className="w-3.5 h-3.5 text-red-500" />}{p.name}
                       </td>
-                      <td className="py-2 px-3 text-slate-500">{p.category}</td>
+                      <td className="py-2 px-3 text-muted-foreground">{p.category}</td>
                       <td className={`py-2 px-3 font-bold ${p.stock === 0 ? 'text-red-600' : 'text-orange-500'}`}>{p.stock}</td>
-                      <td className="py-2 px-3 text-slate-500">{p.reorder_level ?? 5}</td>
+                      <td className="py-2 px-3 text-muted-foreground">{p.reorder_level ?? 5}</td>
                       <td className="py-2 px-3 text-red-600 font-semibold">{Math.max(0, (p.reorder_level ?? 5) - p.stock)}</td>
                     </tr>
                   ))}</tbody>
@@ -202,9 +202,9 @@ export default function OWInventoryReports() {
               )}
               {activeReport === 'valuation' && (
                 <table className="w-full text-sm whitespace-nowrap">
-                  <thead><tr className="border-b border-slate-100">
+                  <thead><tr className="border-b border-border">
                     {['Product','Category','Stock','Cost Price','Retail Price','Cost Value','Retail Value','Margin'].map(h =>
-                      <th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>
+                      <th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>
                     )}
                   </tr></thead>
                   <tbody>
@@ -213,13 +213,13 @@ export default function OWInventoryReports() {
                       const retVal = p.stock * p.price;
                       const margin = p.price > 0 ? ((p.price - p.buying_cost) / p.price * 100) : 0;
                       return (
-                        <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50">
-                          <td className="py-2 px-3 font-medium text-slate-800">{p.name}</td>
-                          <td className="py-2 px-3 text-slate-500">{p.category}</td>
-                          <td className="py-2 px-3 font-semibold text-slate-700">{p.stock}</td>
-                          <td className="py-2 px-3 text-slate-600">{fmt(p.buying_cost)}</td>
-                          <td className="py-2 px-3 text-slate-600">{fmt(p.price)}</td>
-                          <td className="py-2 px-3 font-semibold text-blue-700">{fmt(costVal)}</td>
+                        <tr key={p.id} className="border-b border-border hover:bg-card">
+                          <td className="py-2 px-3 font-medium text-foreground">{p.name}</td>
+                          <td className="py-2 px-3 text-muted-foreground">{p.category}</td>
+                          <td className="py-2 px-3 font-semibold text-foreground">{p.stock}</td>
+                          <td className="py-2 px-3 text-muted-foreground">{fmt(p.buying_cost)}</td>
+                          <td className="py-2 px-3 text-muted-foreground">{fmt(p.price)}</td>
+                          <td className="py-2 px-3 font-semibold text-primary">{fmt(costVal)}</td>
                           <td className="py-2 px-3 font-semibold text-green-700">{fmt(retVal)}</td>
                           <td className="py-2 px-3">
                             <span className={`font-medium ${margin >= 30 ? 'text-green-600' : margin >= 15 ? 'text-orange-500' : 'text-red-500'}`}>{margin.toFixed(1)}%</span>
@@ -227,9 +227,9 @@ export default function OWInventoryReports() {
                         </tr>
                       );
                     })}
-                    <tr className="bg-slate-50 font-bold border-t-2 border-slate-200">
-                      <td colSpan={5} className="py-2 px-3 text-right text-slate-700">Total</td>
-                      <td className="py-2 px-3 text-blue-700">{fmt(totalValue)}</td>
+                    <tr className="bg-card font-bold border-t-2 border-border">
+                      <td colSpan={5} className="py-2 px-3 text-right text-foreground">Total</td>
+                      <td className="py-2 px-3 text-primary">{fmt(totalValue)}</td>
                       <td className="py-2 px-3 text-green-700">{fmt(totalRetailValue)}</td>
                       <td></td>
                     </tr>
@@ -238,19 +238,19 @@ export default function OWInventoryReports() {
               )}
               {activeReport === 'aging' && (
                 <table className="w-full text-sm whitespace-nowrap">
-                  <thead><tr className="border-b border-slate-100">
+                  <thead><tr className="border-b border-border">
                     {['Product','Category','Stock','Last Updated','Days Since Update','Status'].map(h =>
-                      <th key={h} className="text-left py-2 px-3 font-semibold text-slate-600">{h}</th>
+                      <th key={h} className="text-left py-2 px-3 font-semibold text-muted-foreground">{h}</th>
                     )}
                   </tr></thead>
                   <tbody>{agingData.map(p => {
                     const days = Math.floor((Date.now() - new Date(p.updated_at).getTime()) / 86400000);
                     return (
-                      <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50">
-                        <td className="py-2 px-3 font-medium text-slate-800">{p.name}</td>
-                        <td className="py-2 px-3 text-slate-500">{p.category}</td>
-                        <td className="py-2 px-3 font-semibold text-slate-700">{p.stock}</td>
-                        <td className="py-2 px-3 text-slate-500">{new Date(p.updated_at).toLocaleDateString()}</td>
+                      <tr key={p.id} className="border-b border-border hover:bg-card">
+                        <td className="py-2 px-3 font-medium text-foreground">{p.name}</td>
+                        <td className="py-2 px-3 text-muted-foreground">{p.category}</td>
+                        <td className="py-2 px-3 font-semibold text-foreground">{p.stock}</td>
+                        <td className="py-2 px-3 text-muted-foreground">{new Date(p.updated_at).toLocaleDateString()}</td>
                         <td className={`py-2 px-3 font-semibold ${days > 60 ? 'text-red-600' : days > 30 ? 'text-orange-500' : 'text-green-600'}`}>{days}</td>
                         <td className="py-2 px-3">
                           <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${days > 60 ? 'bg-red-100 text-red-700' : days > 30 ? 'bg-orange-100 text-orange-600' : 'bg-green-100 text-green-700'}`}>
