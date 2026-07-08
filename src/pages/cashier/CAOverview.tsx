@@ -10,7 +10,7 @@ import {
 import { ShoppingBag, DollarSign, Clock, TrendingUp, RefreshCw, Package, Users } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/db/supabase';
-import { formatCurrency, formatCurrencyCompact } from '@/lib/currency';
+import { formatCurrency } from '@/lib/currency';
 import { toast } from 'sonner';
 import {
   getCashierShiftSummary,
@@ -97,14 +97,14 @@ export default function CAOverview() {
   const shiftDuration = `${Math.floor(elapsed / 60)}h ${elapsed % 60}m`;
 
   const kpis = stats ? [
-    { label: "Today's Revenue",   value: formatCurrencyCompact(stats.revenue, cc),          sub: 'Total shift revenue',    icon: DollarSign,  color: 'text-blue-600' },
+    { label: "Today's Revenue",   value: formatCurrency(stats.revenue, cc),          sub: 'Total shift revenue',    icon: DollarSign,  color: 'text-primary' },
     { label: 'Orders Served',     value: stats.transactionCount.toString(),                 sub: 'Completed transactions', icon: ShoppingBag, color: 'text-emerald-600' },
-    { label: 'Average Sale',      value: formatCurrencyCompact(stats.avgOrderValue, cc),    sub: 'Per transaction',        icon: TrendingUp,  color: 'text-violet-600' },
+    { label: 'Average Sale',      value: formatCurrency(stats.avgOrderValue, cc),    sub: 'Per transaction',        icon: TrendingUp,  color: 'text-violet-600' },
     { label: 'Products Sold',     value: stats.itemsSold.toString(),                        sub: 'Units today',            icon: Package,     color: 'text-amber-600' },
     { label: 'Customers Served',  value: stats.uniqueCustomers.toString(),                  sub: 'Unique customers',       icon: Users,       color: 'text-sky-600' },
     { label: 'Refunds',           value: stats.refundCount.toString(),                      sub: 'Today',                  icon: TrendingUp,  color: 'text-red-500' },
     { label: 'Shift Duration',    value: shiftDuration,                                     sub: 'Since 07:00',            icon: Clock,       color: 'text-indigo-600' },
-    { label: 'Shift Sales',       value: formatCurrencyCompact(stats.revenue, cc),          sub: 'Same as today',          icon: DollarSign,  color: 'text-teal-600' },
+    { label: 'Shift Sales',       value: formatCurrency(stats.revenue, cc),          sub: 'Same as today',          icon: DollarSign,  color: 'text-teal-600' },
   ] : [];
 
   return (
@@ -150,7 +150,7 @@ export default function CAOverview() {
                 <ResponsiveContainer width="100%" height={210}>
                   <BarChart data={hourlyData} barSize={18}>
                     <XAxis dataKey="h" tick={{ fontSize: 10 }} axisLine={false} tickLine={false} interval={2} />
-                    <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrencyCompact(v, cc)} />
+                    <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={v => formatCurrency(v, cc)} />
                     <Tooltip formatter={(v: number, name: string) => [
                       name === 'sales' ? formatCurrency(v, cc) : v,
                       name === 'sales' ? 'Revenue' : 'Orders',
