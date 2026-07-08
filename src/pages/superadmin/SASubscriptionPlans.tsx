@@ -19,8 +19,8 @@ interface Plan {
   description?: string; is_active: boolean; is_popular?: boolean;
 }
 
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = 'h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-blue-500 rounded-xl px-3';
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = 'h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-primary rounded-xl px-3';
 const INTERVALS = ['month','year','lifetime'];
 const CURRENCIES = ['KES','USD','EUR','GBP','NGN','ZAR','GHS','TZS','UGX'];
 const EMPTY = { name:'', price:'', currency:'KES', interval:'month', max_users:'5', max_products:'500', features:'', description:'', is_active:true, is_popular:false };
@@ -84,33 +84,33 @@ export default function SASubscriptionPlans() {
     <div className="p-4 md:p-6 space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
-          <CreditCard className="w-5 h-5 text-blue-600" />
-          <h1 className="text-xl font-bold text-slate-800">Subscription Plans</h1>
+          <CreditCard className="w-5 h-5 text-primary" />
+          <h1 className="text-xl font-bold text-foreground">Subscription Plans</h1>
           <Badge variant="secondary">{plans.length}</Badge>
         </div>
-        <Button onClick={openCreate} className="bg-blue-600 hover:bg-blue-700 text-white h-9 gap-1"><Plus className="w-4 h-4"/>New Plan</Button>
+        <Button onClick={openCreate} className="bg-primary hover:opacity-90 text-white h-9 gap-1"><Plus className="w-4 h-4"/>New Plan</Button>
       </div>
 
-      {loading ? <div className="grid grid-cols-1 md:grid-cols-3 gap-4">{Array.from({length:3}).map((_,i)=><div key={i} className="h-52 bg-slate-100 rounded-2xl animate-pulse"/>)}</div> : (
+      {loading ? <div className="grid grid-cols-1 md:grid-cols-3 gap-4">{Array.from({length:3}).map((_,i)=><div key={i} className="h-52 bg-secondary rounded-2xl animate-pulse"/>)}</div> : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {plans.map(p => {
             const features = Array.isArray(p.features) ? p.features : [];
             return (
-              <Card key={p.id} style={CARD} className={`rounded-2xl relative ${p.is_popular?'border-blue-400 ring-2 ring-blue-200':''} ${!p.is_active?'opacity-60':''}`}>
-                {p.is_popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2"><span className="px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full flex items-center gap-1"><Star className="w-3 h-3"/>Popular</span></div>}
+              <Card key={p.id} style={CARD} className={`rounded-2xl relative ${p.is_popular?'border-primary ring-2 ring-primary':''} ${!p.is_active?'opacity-60':''}`}>
+                {p.is_popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2"><span className="px-3 py-1 bg-primary text-white text-xs font-bold rounded-full flex items-center gap-1"><Star className="w-3 h-3"/>Popular</span></div>}
                 <CardContent className="pt-5 pb-4">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-bold text-slate-800 text-lg">{p.name}</h3>
+                    <h3 className="font-bold text-foreground text-lg">{p.name}</h3>
                     {!p.is_active && <Badge variant="secondary" className="text-xs">Inactive</Badge>}
                   </div>
-                  <p className="text-3xl font-bold text-blue-700 mb-0.5">{p.currency} {p.price.toLocaleString()}<span className="text-sm font-normal text-slate-400">/{p.interval}</span></p>
-                  {p.description && <p className="text-xs text-slate-500 mb-2">{p.description}</p>}
-                  <div className="flex gap-3 text-xs text-slate-500 mb-3">
+                  <p className="text-3xl font-bold text-primary mb-0.5">{p.currency} {p.price.toLocaleString()}<span className="text-sm font-normal text-muted-foreground">/{p.interval}</span></p>
+                  {p.description && <p className="text-xs text-muted-foreground mb-2">{p.description}</p>}
+                  <div className="flex gap-3 text-xs text-muted-foreground mb-3">
                     <span className="flex items-center gap-1"><Users className="w-3 h-3"/>{p.max_users} users</span>
                     <span className="flex items-center gap-1"><Package className="w-3 h-3"/>{p.max_products?p.max_products+' products':'Unlimited'}</span>
                   </div>
                   <ul className="space-y-1 mb-4">
-                    {features.map((f,i)=><li key={i} className="flex items-center gap-1.5 text-xs text-slate-600"><CheckCircle className="w-3 h-3 text-green-500 shrink-0"/>{f}</li>)}
+                    {features.map((f,i)=><li key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground"><CheckCircle className="w-3 h-3 text-green-500 shrink-0"/>{f}</li>)}
                   </ul>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" onClick={()=>openEdit(p)} className="flex-1 gap-1"><Edit2 className="w-3 h-3"/>Edit</Button>
@@ -146,14 +146,14 @@ export default function SASubscriptionPlans() {
               <div><Label>Max Products</Label><Input type="number" min="0" className={inp} value={form.max_products} onChange={e=>tf('max_products',e.target.value)} placeholder="0 = unlimited"/></div>
             </div>
             <div><Label>Description (optional)</Label><Input className={inp} value={form.description} onChange={e=>tf('description',e.target.value)} placeholder="One-line plan summary"/></div>
-            <div><Label>Features (one per line)</Label><Textarea className="bg-slate-50 border-slate-200 rounded-xl" rows={4} value={form.features} onChange={e=>tf('features',e.target.value)} placeholder="Inventory management&#10;Multi-user access&#10;Reports &amp; analytics"/></div>
+            <div><Label>Features (one per line)</Label><Textarea className="bg-card border-border rounded-xl" rows={4} value={form.features} onChange={e=>tf('features',e.target.value)} placeholder="Inventory management&#10;Multi-user access&#10;Reports &amp; analytics"/></div>
             <div className="flex gap-6">
               <div className="flex items-center gap-2"><Switch checked={form.is_active} onCheckedChange={v=>tf('is_active',v)}/><Label>Active</Label></div>
               <div className="flex items-center gap-2"><Switch checked={form.is_popular} onCheckedChange={v=>tf('is_popular',v)}/><Label>Mark as Popular</Label></div>
             </div>
             <div className="flex justify-end gap-2">
               <Button variant="outline" onClick={()=>setOpen(false)}>Cancel</Button>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={save} disabled={saving}>{saving?'Saving…':editing?'Update Plan':'Create Plan'}</Button>
+              <Button className="bg-primary hover:opacity-90 text-white" onClick={save} disabled={saving}>{saving?'Saving…':editing?'Update Plan':'Create Plan'}</Button>
             </div>
           </div>
         </DialogContent>
