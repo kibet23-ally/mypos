@@ -21,9 +21,9 @@ interface Supplier {
 interface PO { id: string; total: number; status: string; notes: string | null; created_at: string; }
 
 const PAGE = 20;
-const CARD = { background: '#ffffff', borderColor: '#E2E8F0' };
-const inp = "h-10 bg-slate-50 border-slate-200 text-slate-900 placeholder:text-slate-400 focus:border-[#2563EB] rounded-xl px-3";
-const inpErr = "h-10 bg-red-50 border-red-300 text-slate-900 placeholder:text-slate-400 focus:border-red-400 rounded-xl px-3";
+const CARD = { background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))' };
+const inp = "h-10 bg-card border-border text-foreground placeholder:text-muted-foreground focus:border-[#2563EB] rounded-xl px-3";
+const inpErr = "h-10 bg-red-50 border-red-300 text-foreground placeholder:text-muted-foreground focus:border-red-400 rounded-xl px-3";
 const EMPTY = { name: '', contact_name: '', phone: '', email: '', address: '', notes: '' };
 
 export default function OWSuppliers() {
@@ -126,25 +126,25 @@ export default function OWSuppliers() {
     <div className="space-y-5 fade-in">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h2 className="text-xl font-bold text-slate-900">Suppliers</h2>
-          <p className="text-sm text-slate-500 mt-0.5">Manage supplier profiles and purchase history</p>
+          <h2 className="text-xl font-bold text-foreground">Suppliers</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">Manage supplier profiles and purchase history</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={exportCSV} className="h-9 px-4 rounded-xl border border-slate-200 bg-white text-sm font-semibold text-slate-600 hover:bg-slate-50 flex items-center gap-1.5">
+          <button onClick={exportCSV} className="h-9 px-4 rounded-xl border border-border bg-white text-sm font-semibold text-muted-foreground hover:bg-card flex items-center gap-1.5">
             <Download className="w-4 h-4" /> Export CSV
           </button>
           <Dialog open={open} onOpenChange={o => { setOpen(o); if (!o) { setEditing(null); setForm(EMPTY); setNameError(''); } }}>
             <DialogTrigger asChild>
-              <button className="h-9 px-4 rounded-xl text-sm font-semibold text-white flex items-center gap-2" style={{ background: '#2563EB' }}>
+              <button className="h-9 px-4 rounded-xl text-sm font-semibold text-white flex items-center gap-2" style={{ background: 'hsl(var(--primary))' }}>
                 <Plus className="w-4 h-4" /> Add Supplier
               </button>
             </DialogTrigger>
-            <DialogContent className="max-w-md border-slate-200" style={{ background: '#ffffff' }}>
+            <DialogContent className="max-w-md border-border" style={{ background: 'hsl(var(--card))' }}>
               <DialogHeader><DialogTitle>{editing ? 'Edit Supplier' : 'Add Supplier'}</DialogTitle></DialogHeader>
               <form onSubmit={handleSave} className="space-y-3 mt-2" noValidate>
                 {/* Company Name — required */}
                 <div>
-                  <Label className="text-xs font-medium text-slate-600 mb-1.5 block">
+                  <Label className="text-xs font-medium text-muted-foreground mb-1.5 block">
                     Company Name <span className="text-red-500">*</span>
                   </Label>
                   <Input
@@ -173,24 +173,24 @@ export default function OWSuppliers() {
                   { label: 'Address', key: 'address', placeholder: 'Industrial Area, Nairobi', type: 'text' },
                 ].map(f => (
                   <div key={f.key}>
-                    <Label className="text-xs font-medium text-slate-600 mb-1.5 block">{f.label}</Label>
+                    <Label className="text-xs font-medium text-muted-foreground mb-1.5 block">{f.label}</Label>
                     <Input type={f.type} placeholder={f.placeholder} value={(form as any)[f.key]}
                       onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))} className={inp} />
                   </div>
                 ))}
 
                 <div>
-                  <Label className="text-xs font-medium text-slate-600 mb-1.5 block">Notes</Label>
+                  <Label className="text-xs font-medium text-muted-foreground mb-1.5 block">Notes</Label>
                   <textarea value={form.notes} onChange={e => setForm(p => ({ ...p, notes: e.target.value }))}
                     placeholder="Optional notes…" rows={2}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-400 resize-none" />
+                    className="w-full bg-card border border-border rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary resize-none" />
                 </div>
 
                 <button
                   type="submit"
                   disabled={saving || !form.name.trim()}
                   className="w-full h-10 rounded-xl text-sm font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ background: '#2563EB' }}
+                  style={{ background: 'hsl(var(--primary))' }}
                 >
                   {saving ? 'Saving…' : editing ? 'Save Changes' : 'Add Supplier'}
                 </button>
@@ -209,60 +209,60 @@ export default function OWSuppliers() {
         ].map(k => (
           <Card key={k.label} className="border" style={CARD}>
             <CardContent className="p-4">
-              <p className="text-xs text-slate-400 mb-1">{k.label}</p>
-              <p className="text-xl font-bold text-slate-900">{loading ? '–' : k.value}</p>
+              <p className="text-xs text-muted-foreground mb-1">{k.label}</p>
+              <p className="text-xl font-bold text-foreground">{loading ? '–' : k.value}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
       <div className="relative max-w-sm">
-        {!search && <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />}
+        {!search && <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />}
         <Input placeholder="Search suppliers…" value={search} onChange={e => { setSearch(e.target.value); setPage(0); }}
-          className={`h-10 bg-white border-slate-200 rounded-xl px-3 ${!search ? 'pl-9' : 'pl-3'}`} />
+          className={`h-10 bg-white border-border rounded-xl px-3 ${!search ? 'pl-9' : 'pl-3'}`} />
       </div>
 
       <Card className="border" style={CARD}>
         <CardHeader className="px-5 pt-5 pb-2">
-          <CardTitle className="text-sm font-semibold text-slate-900">{loading ? 'Loading…' : `${total} Supplier${total !== 1 ? 's' : ''}`}</CardTitle>
+          <CardTitle className="text-sm font-semibold text-foreground">{loading ? 'Loading…' : `${total} Supplier${total !== 1 ? 's' : ''}`}</CardTitle>
         </CardHeader>
         <CardContent className="px-0 pb-0">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-slate-100">
+                <tr className="border-b border-border">
                   {['Supplier','Contact','Phone','Email','Balance','Actions'].map(h => (
-                    <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-slate-500 whitespace-nowrap">{h}</th>
+                    <th key={h} className="px-5 py-3 text-left text-xs font-semibold text-muted-foreground whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {loading ? Array.from({ length: 5 }).map((_, i) => (
-                  <tr key={i} className="border-b border-slate-100">
-                    {Array.from({ length: 6 }).map((__, j) => <td key={j} className="px-5 py-3"><Skeleton className="h-4 w-20 bg-slate-50" /></td>)}
+                  <tr key={i} className="border-b border-border">
+                    {Array.from({ length: 6 }).map((__, j) => <td key={j} className="px-5 py-3"><Skeleton className="h-4 w-20 bg-card" /></td>)}
                   </tr>
                 )) : suppliers.length === 0 ? (
-                  <tr><td colSpan={6} className="px-5 py-10 text-center text-sm text-slate-400">No suppliers yet. Add your first supplier.</td></tr>
+                  <tr><td colSpan={6} className="px-5 py-10 text-center text-sm text-muted-foreground">No suppliers yet. Add your first supplier.</td></tr>
                 ) : suppliers.map(s => (
-                  <tr key={s.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                  <tr key={s.id} className="border-b border-border hover:bg-card transition-colors">
                     <td className="px-5 py-3">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#EFF6FF' }}>
-                          <Truck className="w-4 h-4 text-blue-500" />
+                        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'hsl(var(--accent))' }}>
+                          <Truck className="w-4 h-4 text-primary" />
                         </div>
-                        <span className="text-sm font-medium text-slate-900 whitespace-nowrap">{s.name}</span>
+                        <span className="text-sm font-medium text-foreground whitespace-nowrap">{s.name}</span>
                       </div>
                     </td>
-                    <td className="px-5 py-3 text-sm text-slate-600 whitespace-nowrap">{s.contact_name ?? '—'}</td>
-                    <td className="px-5 py-3 text-sm text-slate-600 whitespace-nowrap">{s.phone ?? '—'}</td>
-                    <td className="px-5 py-3 text-sm text-slate-600 whitespace-nowrap">{s.email ?? '—'}</td>
+                    <td className="px-5 py-3 text-sm text-muted-foreground whitespace-nowrap">{s.contact_name ?? '—'}</td>
+                    <td className="px-5 py-3 text-sm text-muted-foreground whitespace-nowrap">{s.phone ?? '—'}</td>
+                    <td className="px-5 py-3 text-sm text-muted-foreground whitespace-nowrap">{s.email ?? '—'}</td>
                     <td className="px-5 py-3 whitespace-nowrap">
-                      <span className={`text-sm font-semibold ${s.balance > 0 ? 'text-red-600' : 'text-slate-700'}`}>{fmt(s.balance)}</span>
+                      <span className={`text-sm font-semibold ${s.balance > 0 ? 'text-red-600' : 'text-foreground'}`}>{fmt(s.balance)}</span>
                     </td>
                     <td className="px-5 py-3">
                       <div className="flex gap-1">
-                        <button onClick={() => openDetail(s)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100"><Eye className="w-3.5 h-3.5 text-slate-500" /></button>
-                        <button onClick={() => openEdit(s)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-slate-100"><Edit2 className="w-3.5 h-3.5 text-slate-500" /></button>
+                        <button onClick={() => openDetail(s)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-secondary"><Eye className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                        <button onClick={() => openEdit(s)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-secondary"><Edit2 className="w-3.5 h-3.5 text-muted-foreground" /></button>
                         <button onClick={() => handleDelete(s.id)} className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-red-50"><Trash2 className="w-3.5 h-3.5 text-red-500" /></button>
                       </div>
                     </td>
@@ -272,11 +272,11 @@ export default function OWSuppliers() {
             </table>
           </div>
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100">
-              <span className="text-xs text-slate-400">{page * PAGE + 1}–{Math.min((page + 1) * PAGE, total)} of {total}</span>
+            <div className="flex items-center justify-between px-5 py-3 border-t border-border">
+              <span className="text-xs text-muted-foreground">{page * PAGE + 1}–{Math.min((page + 1) * PAGE, total)} of {total}</span>
               <div className="flex gap-1.5">
-                <button disabled={page === 0} onClick={() => setPage(p => p - 1)} className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 disabled:opacity-40"><ChevronLeft className="w-3.5 h-3.5 text-slate-600" /></button>
-                <button disabled={page >= totalPages - 1} onClick={() => setPage(p => p + 1)} className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 disabled:opacity-40"><ChevronRight className="w-3.5 h-3.5 text-slate-600" /></button>
+                <button disabled={page === 0} onClick={() => setPage(p => p - 1)} className="w-7 h-7 flex items-center justify-center rounded-lg border border-border disabled:opacity-40"><ChevronLeft className="w-3.5 h-3.5 text-muted-foreground" /></button>
+                <button disabled={page >= totalPages - 1} onClick={() => setPage(p => p + 1)} className="w-7 h-7 flex items-center justify-center rounded-lg border border-border disabled:opacity-40"><ChevronRight className="w-3.5 h-3.5 text-muted-foreground" /></button>
               </div>
             </div>
           )}
@@ -285,18 +285,18 @@ export default function OWSuppliers() {
 
       {detail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}>
-          <div className="w-full max-w-lg rounded-2xl border shadow-2xl flex flex-col" style={{ background: '#ffffff', borderColor: '#E2E8F0', maxHeight: '88vh' }}>
-            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+          <div className="w-full max-w-lg rounded-2xl border shadow-2xl flex flex-col" style={{ background: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', maxHeight: '88vh' }}>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: '#EFF6FF' }}>
-                  <Truck className="w-5 h-5 text-blue-500" />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: 'hsl(var(--accent))' }}>
+                  <Truck className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="font-semibold text-slate-900">{detail.name}</p>
-                  <p className="text-xs text-slate-400">{detail.contact_name ?? 'No contact name'}</p>
+                  <p className="font-semibold text-foreground">{detail.name}</p>
+                  <p className="text-xs text-muted-foreground">{detail.contact_name ?? 'No contact name'}</p>
                 </div>
               </div>
-              <button onClick={() => setDetail(null)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100"><X className="w-4 h-4 text-slate-500" /></button>
+              <button onClick={() => setDetail(null)} className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-secondary"><X className="w-4 h-4 text-muted-foreground" /></button>
             </div>
             <div className="flex-1 overflow-y-auto p-5 space-y-4">
               <div className="grid grid-cols-2 gap-3">
@@ -306,33 +306,33 @@ export default function OWSuppliers() {
                   { icon: MapPin, label: 'Address', value: detail.address ?? '—' },
                   { icon: CreditCard, label: 'Balance Owed', value: fmt(detail.balance) },
                 ].map(f => (
-                  <div key={f.label} className="bg-slate-50 rounded-xl p-3 flex items-start gap-2.5">
-                    <f.icon className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
+                  <div key={f.label} className="bg-card rounded-xl p-3 flex items-start gap-2.5">
+                    <f.icon className="w-4 h-4 text-muted-foreground mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-xs text-slate-400">{f.label}</p>
-                      <p className="text-sm font-medium text-slate-800">{f.value}</p>
+                      <p className="text-xs text-muted-foreground">{f.label}</p>
+                      <p className="text-sm font-medium text-foreground">{f.value}</p>
                     </div>
                   </div>
                 ))}
               </div>
               <div>
-                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Purchase Orders</p>
-                {detailLoading ? <Skeleton className="h-20 w-full bg-slate-50 rounded-xl" />
-                  : detailPOs.length === 0 ? <p className="text-sm text-slate-400 text-center py-4">No purchase orders</p>
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Purchase Orders</p>
+                {detailLoading ? <Skeleton className="h-20 w-full bg-card rounded-xl" />
+                  : detailPOs.length === 0 ? <p className="text-sm text-muted-foreground text-center py-4">No purchase orders</p>
                   : detailPOs.map(po => (
-                    <div key={po.id} className="flex justify-between items-center px-3 py-2.5 rounded-xl bg-slate-50 text-sm mb-2">
+                    <div key={po.id} className="flex justify-between items-center px-3 py-2.5 rounded-xl bg-card text-sm mb-2">
                       <div>
-                        <p className="text-xs text-slate-400">{new Date(po.created_at).toLocaleDateString()}</p>
-                        <p className="text-xs capitalize text-slate-500">{po.status}</p>
+                        <p className="text-xs text-muted-foreground">{new Date(po.created_at).toLocaleDateString()}</p>
+                        <p className="text-xs capitalize text-muted-foreground">{po.status}</p>
                       </div>
-                      <p className="font-bold text-slate-900">{fmt(po.total)}</p>
+                      <p className="font-bold text-foreground">{fmt(po.total)}</p>
                     </div>
                   ))}
               </div>
             </div>
-            <div className="px-5 py-3 border-t border-slate-100 flex gap-2">
-              <button onClick={() => { openEdit(detail); setDetail(null); }} className="flex-1 h-9 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Edit</button>
-              <button onClick={() => setDetail(null)} className="flex-1 h-9 rounded-xl text-sm font-bold text-white" style={{ background: '#2563EB' }}>Close</button>
+            <div className="px-5 py-3 border-t border-border flex gap-2">
+              <button onClick={() => { openEdit(detail); setDetail(null); }} className="flex-1 h-9 rounded-xl border border-border text-sm font-semibold text-foreground hover:bg-card">Edit</button>
+              <button onClick={() => setDetail(null)} className="flex-1 h-9 rounded-xl text-sm font-bold text-white" style={{ background: 'hsl(var(--primary))' }}>Close</button>
             </div>
           </div>
         </div>
