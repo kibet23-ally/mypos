@@ -104,11 +104,11 @@ export default function DebugPage() {
   const allOk = checks.every(c => c.status === 'ok');
 
   return (
-    <div className="min-h-screen p-8" style={{ background: '#F8FAFC' }}>
+    <div className="min-h-screen p-8" style={{ background: 'hsl(var(--background))' }}>
       <div className="max-w-2xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold" style={{ color: '#F8FAFC' }}>PosifyPro — Auth Diagnostics</h1>
-          <p className="text-sm mt-1" style={{ color: '#64748B' }}>
+          <h1 className="text-2xl font-bold" style={{ color: 'hsl(var(--background))' }}>PosifyPro — Auth Diagnostics</h1>
+          <p className="text-sm mt-1" style={{ color: 'hsl(var(--muted-foreground))' }}>
             Verifying Supabase connection and demo account availability.
           </p>
         </div>
@@ -133,15 +133,15 @@ export default function DebugPage() {
             <div
               key={c.label}
               className="rounded-xl p-4 flex items-start gap-4"
-              style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}
+              style={{ background: 'hsl(var(--card))', border: '1px solid #E2E8F0' }}
             >
               <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold shrink-0 ${badge(c.status)}`}>
                 {c.status === 'loading' ? '…' : c.status.toUpperCase()}
               </span>
               <div className="min-w-0">
-                <p className="text-sm font-semibold" style={{ color: '#F8FAFC' }}>{c.label}</p>
+                <p className="text-sm font-semibold" style={{ color: 'hsl(var(--background))' }}>{c.label}</p>
                 {c.detail && (
-                  <p className="text-xs mt-0.5 break-all" style={{ color: '#64748B' }}>{c.detail}</p>
+                  <p className="text-xs mt-0.5 break-all" style={{ color: 'hsl(var(--muted-foreground))' }}>{c.detail}</p>
                 )}
               </div>
             </div>
@@ -150,12 +150,12 @@ export default function DebugPage() {
 
         <div
           className="mt-8 rounded-xl p-5"
-          style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}
+          style={{ background: 'hsl(var(--card))', border: '1px solid #E2E8F0' }}
         >
-          <h2 className="text-sm font-bold mb-3" style={{ color: '#F8FAFC' }}>
+          <h2 className="text-sm font-bold mb-3" style={{ color: 'hsl(var(--background))' }}>
             Fix Checklist for Vercel Production
           </h2>
-          <ol className="space-y-2 text-xs" style={{ color: '#475569' }}>
+          <ol className="space-y-2 text-xs" style={{ color: 'hsl(var(--muted-foreground))' }}>
             <li>1. Go to <strong>vercel.com</strong> → your project → <strong>Settings → Environment Variables</strong></li>
             <li>2. Add <code className="bg-gray-100 px-1 rounded">VITE_SUPABASE_URL</code> = <code className="bg-gray-100 px-1 rounded">https://jnhdbpruasufwbchoyge.supabase.co</code> for <strong>Production</strong> scope</li>
             <li>3. Add <code className="bg-gray-100 px-1 rounded">VITE_SUPABASE_ANON_KEY</code> = your anon key for <strong>Production</strong> scope</li>
