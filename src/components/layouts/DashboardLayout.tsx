@@ -45,7 +45,6 @@ const BUSINESS_TYPE_META: Record<BusinessType, { label: string; Icon: React.Elem
 };
 
 const COLLAPSE_KEY = 'posify.sidebar.collapsed';
-const RECENTS_KEY  = 'posify.sidebar.recents';
 const THEME_KEY    = 'posify.theme';
 
 function useTheme() {
@@ -99,9 +98,6 @@ export default function DashboardLayout({ activeKey, onNavChange, children }: Da
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem(COLLAPSE_KEY) === '1');
   const [search, setSearch] = useState('');
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
-  const [recents, setRecents] = useState<string[]>(() => {
-    try { return JSON.parse(localStorage.getItem(RECENTS_KEY) ?? '[]'); } catch { return []; }
-  });
 
   const businessName = appUser?.tenant?.business_name || (appUser?.role === 'superadmin' ? 'PosifyPro HQ' : 'My Business');
   const username = appUser?.username || 'User';
@@ -112,12 +108,6 @@ export default function DashboardLayout({ activeKey, onNavChange, children }: Da
 
   const { isOnline, isSyncing, pendingCount, lastSyncAt } = useOfflineSync(appUser?.tenant_id ?? null);
   const unreadCount = useUnreadNotifications(appUser?.role !== 'superadmin' ? appUser?.tenant_id : null);
-
-  const allItems = useMemo(() => groups.flatMap(g => g.items), [groups]);
-  const recentItems = useMemo(
-    () => recents.map(k => allItems.find(i => i.key === k)).filter((i): i is NavItem => !!i).slice(0, 3),
-    [recents, allItems]
-  );
 
   const filteredGroups = useMemo(() => {
     if (!search.trim()) return groups;
@@ -140,11 +130,6 @@ export default function DashboardLayout({ activeKey, onNavChange, children }: Da
   const handleNav = (key: string) => {
     onNavChange(key);
     setMobileOpen(false);
-    setRecents(prev => {
-      const next = [key, ...prev.filter(k => k !== key)].slice(0, 5);
-      localStorage.setItem(RECENTS_KEY, JSON.stringify(next));
-      return next;
-    });
   };
 
   const NavButton = ({ item, showLabel }: { item: NavItem; showLabel: boolean }) => {
@@ -256,16 +241,6 @@ export default function DashboardLayout({ activeKey, onNavChange, children }: Da
             >
               <Zap className="w-3.5 h-3.5" /> New Sale
             </Button>
-          </div>
-        )}
-
-        {/* Recent pages */}
-        {showLabels && !search && recentItems.length > 0 && (
-          <div className="px-3 pb-1 shrink-0">
-            <p className="px-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-sidebar-foreground/40">Recent</p>
-            <ul className="space-y-0.5">
-              {recentItems.map(item => <NavButton key={`recent-${item.key}`} item={item} showLabel />)}
-            </ul>
           </div>
         )}
 
