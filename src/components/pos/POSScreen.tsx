@@ -18,7 +18,7 @@ import {
   ShoppingCart, Plus, Minus, Trash2, Search,
   CreditCard, Banknote, Smartphone, Loader2, WifiOff,
   Pause, Play, Receipt, Percent, ScanBarcode, X, Users,
-  Printer, CheckCircle2,
+  Printer, CheckCircle2, Download,
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/db/supabase';
@@ -29,6 +29,7 @@ import {
   type PendingSale, type PendingSaleItem,
 } from '@/db/offlineDB';
 import { formatCurrency } from '@/lib/currency';
+import { printReceipt, downloadReceipt, type ReceiptData } from '@/lib/receiptUtils';
 import type { Customer } from '@/types/index';
 
 interface CartItem {
@@ -115,6 +116,25 @@ export default function POSScreen() {
     method: string; paid: number; change: number;
     customer?: Customer | null;
   } | null>(null);
+
+  /** Maps POS checkout state into the shared thermal-receipt PDF format —
+   *  pulls the real business name from the tenant record (not hardcoded)
+   *  so printed/downloaded receipts always reflect the actual business. */
+  const buildReceiptData = useCallback((r: NonNullable<typeof lastReceipt>): ReceiptData => ({
+    transactionId: r.number,
+    businessName: appUser?.tenant?.business_name || 'PosifyPro',
+    cashierName: appUser?.display_name || appUser?.username || 'Staff',
+    items: r.items.map(i => ({ name: i.product_name, qty: i.quantity, price: i.unit_price })),
+    subtotal: r.subtotal,
+    tax: r.tax,
+    total: r.total,
+    paymentMethod: r.method,
+    timestamp: new Date(),
+    discount: r.discount,
+    cashTendered: r.paid,
+    changeDue: r.change,
+    currencyCode: cc,
+  }), [appUser, cc]);
 
   // Barcode input ref
   const barcodeRef = useRef<HTMLInputElement>(null);
@@ -402,6 +422,7 @@ export default function POSScreen() {
       </div>
 
       <div className="flex flex-col xl:flex-row gap-4">
+        {/* ── Product grid ─────────────────────────────────────────────── */}
         {/* ── Product grid ─────────────────────────────────────────────── */}
         <div className="flex-1 min-w-0 space-y-3">
           {/* Barcode + search row */}
@@ -754,8 +775,11 @@ export default function POSScreen() {
                 {lastReceipt.change > 0 && <div className="flex justify-between font-semibold text-[hsl(var(--success))]"><span>Change</span><span>{formatCurrency(lastReceipt.change, cc)}</span></div>}
               </div>
               <div className="flex gap-2 pt-1">
-                <Button variant="outline" size="sm" className="flex-1 gap-1.5 h-8 text-xs" onClick={() => window.print()}>
+                <Button variant="outline" size="sm" className="flex-1 gap-1.5 h-8 text-xs" onClick={() => printReceipt(buildReceiptData(lastReceipt))}>
                   <Printer className="w-3.5 h-3.5" /> Print
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1 gap-1.5 h-8 text-xs" onClick={() => downloadReceipt(buildReceiptData(lastReceipt))}>
+                  <Download className="w-3.5 h-3.5" /> Download
                 </Button>
                 <Button size="sm" className="flex-1 h-8 text-xs" onClick={() => setReceiptOpen(false)}>
                   New Sale
