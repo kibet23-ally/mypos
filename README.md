@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Welcome to Your Miaoda Project
 
 ## Project Info
@@ -90,6 +89,3 @@ Configure environment variables and install relevant dependencies.If you need to
 ## Learn More
 
 You can also check the help documentation: Download and Building the app（ [https://intl.cloud.baidu.com/en/doc/MIAODA/s/download-and-building-the-app-en](https://intl.cloud.baidu.com/en/doc/MIAODA/s/download-and-building-the-app-en)）to learn more detailed content.
-=======
-# mypos
->>>>>>> 714489b (Initial commit)

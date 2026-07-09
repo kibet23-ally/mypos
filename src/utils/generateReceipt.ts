@@ -60,7 +60,9 @@ export const generateReceipt = (data: ReceiptData) => {
   doc.setFontSize(11);
   doc.text(`Subtotal: ${formatCurrency(subtotal)}`, 20, finalY);
   doc.text(`Tax (${taxRate}%): ${formatCurrency(taxAmount)}`, 20, finalY + 10);
-  doc.text(`Total: ${formatCurrency(total)}`, 20, finalY + 20, { fontStyle: 'bold' });
+  doc.setFont('helvetica', 'bold');
+  doc.text(`Total: ${formatCurrency(total)}`, 20, finalY + 20);
+  doc.setFont('helvetica', 'normal');
 
   doc.text('Thank you for your business!', pageWidth / 2, finalY + 40, { align: 'center' });
 

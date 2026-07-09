@@ -1,5 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
-import { formatCurrency, getCurrencySymbol, DEFAULT_CURRENCY } from '@/lib/currency';
+import { formatCurrency, getCurrencyByCode, DEFAULT_CURRENCY } from '@/lib/currency';
 
 /**
  * Returns currency helpers scoped to the current tenant's currency setting.
@@ -7,12 +7,13 @@ import { formatCurrency, getCurrencySymbol, DEFAULT_CURRENCY } from '@/lib/curre
  */
 export function useCurrency() {
   const { appUser } = useAuth();
-  const currencyCode: string = appUser?.tenant?.currency ?? DEFAULT_CURRENCY;
+  const currencyCode: string = appUser?.tenant?.currency_code ?? DEFAULT_CURRENCY.code;
+  const currencyInfo = getCurrencyByCode(currencyCode);
 
   return {
     currencyCode,
-    symbol: getCurrencySymbol(currencyCode),
+    symbol: currencyInfo.symbol,
     /** Format a numeric amount using the tenant's currency */
-    format: (amount: number | string) => formatCurrency(amount, currencyCode),
+    format: (amount: number) => formatCurrency(amount, currencyCode),
   };
 }

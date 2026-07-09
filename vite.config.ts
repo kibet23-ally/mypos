@@ -3,10 +3,7 @@ import { miaodaDevPlugin } from "miaoda-sc-plugin";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 import path from "path";
-<<<<<<< HEAD
 import { VitePWA } from "vite-plugin-pwa";
-=======
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -20,7 +17,6 @@ export default defineConfig({
         namedExport: "ReactComponent",
       },
     }),
-<<<<<<< HEAD
     VitePWA({
       registerType: "autoUpdate",
       devOptions: { enabled: true },
@@ -41,13 +37,10 @@ export default defineConfig({
         ],
       },
       workbox: {
-        // Allow up to 3 MiB per asset in the precache manifest
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
-        // Cache shell + static assets
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
         runtimeCaching: [
           {
-            // Supabase REST API — network-first, fall back to cache
             urlPattern: /^https:\/\/.*\.supabase\.co\/rest\/v1\/.*/i,
             handler: "NetworkFirst",
             options: {
@@ -57,12 +50,10 @@ export default defineConfig({
             },
           },
           {
-            // Supabase auth — network-only (never cache tokens)
             urlPattern: /^https:\/\/.*\.supabase\.co\/auth\/.*/i,
             handler: "NetworkOnly",
           },
           {
-            // Supabase Edge Functions — network-first, short TTL
             urlPattern: /^https:\/\/.*\.supabase\.co\/functions\/.*/i,
             handler: "NetworkFirst",
             options: {
@@ -74,8 +65,6 @@ export default defineConfig({
         ],
       },
     }),
-=======
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
   ],
   resolve: {
     alias: {

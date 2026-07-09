@@ -137,18 +137,10 @@
               scriptSrc: 'https://miaoda-resource-static.s3cdn.medo.dev/sentry/browser.sentry.min.js',
               sentryDsn: 'https://e3c07b90fcb5207f333d50ac24a99d3e@sentry.miaoda.cn/233',
               environment: 'undefined',
-<<<<<<< HEAD
               appId: 'app-c786uxp01gxt'
-=======
-              appId: 'app-c8u6d72t0l4x'
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
             }
           )
         ]
       };
     });
-<<<<<<< HEAD
     
-=======
-    
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)

@@ -1,14 +1,8 @@
 /* stylelint-disable */
-<<<<<<< HEAD
-=======
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-<<<<<<< HEAD
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 /* PosifyPro Design System — Premium Enterprise SaaS */
@@ -45,51 +39,10 @@
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-=======
-/* PosifyPro — Light SaaS Design System */
-
-@layer base {
-  :root {
-    --radius: 0.625rem;
-
-    /* #F8FAFC slate-50 */
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
-
-    /* white */
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-
-    /* white */
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
-
-    /* Primary #2563EB blue-600 */
-    --primary: 221 83% 53%;
-    --primary-foreground: 0 0% 100%;
-
-    /* #F1F5F9 slate-100 */
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
-
-    /* #F1F5F9 */
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-
-    /* #EFF6FF blue-50 */
-    --accent: 214 100% 97%;
-    --accent-foreground: 221 83% 53%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-
-    /* #E2E8F0 slate-200 */
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 221 83% 53%;
 
-<<<<<<< HEAD
     /* Semantic status */
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
@@ -130,41 +83,10 @@
     --shadow-modal: 0 20px 60px 0 rgba(15,23,42,0.18);
 
     /* Education compat */
-=======
-    --success: 142 71% 45%;
-    --warning: 38 92% 50%;
-    --info: 221 83% 53%;
-    --error: 0 84% 60%;
-
-    /* Sidebar white */
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 215 16% 47%;
-    --sidebar-primary: 221 83% 53%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 96%;
-    --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 221 83% 53%;
-
-    /* Charts */
-    --chart-1: 221 83% 53%;
-    --chart-2: 263 70% 58%;
-    --chart-3: 142 71% 45%;
-    --chart-4: 38 92% 50%;
-    --chart-5: 0 84% 60%;
-
-    --gradient-primary: linear-gradient(135deg, #2563EB 0%, #3B82F6 100%);
-    --gradient-card: linear-gradient(135deg, rgba(37,99,235,0.05) 0%, rgba(59,130,246,0.03) 100%);
-    --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-hover: 0 4px 16px rgba(37,99,235,0.15);
-    --shadow-glow: 0 0 24px rgba(37,99,235,0.12);
-
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
     --education-blue: 221 83% 53%;
     --education-green: 142 71% 45%;
   }
 
-<<<<<<< HEAD
   .dark {
     --background: 222 47% 7%;
     --foreground: 210 40% 96%;
@@ -226,68 +148,16 @@
 
     --education-blue: 221 83% 60%;
     --education-green: 142 71% 50%;
-=======
-  /* Optional dark mode — only activates when user explicitly sets dark class */
-  .dark {
-    --background: 222 47% 11%;
-    --foreground: 0 0% 100%;
-    --card: 221 39% 11%;
-    --card-foreground: 0 0% 100%;
-    --popover: 215 28% 17%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 213 27% 84%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 215 28% 17%;
-    --accent-foreground: 213 27% 90%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 215 25% 27%;
-    --input: 215 25% 22%;
-    --ring: 221 83% 53%;
-    --success: 142 71% 45%;
-    --warning: 38 92% 50%;
-    --info: 221 83% 53%;
-    --error: 0 72% 51%;
-    --sidebar-background: 228 47% 8%;
-    --sidebar-foreground: 215 20% 65%;
-    --sidebar-primary: 221 83% 53%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 215 28% 15%;
-    --sidebar-accent-foreground: 213 27% 90%;
-    --sidebar-border: 215 28% 13%;
-    --sidebar-ring: 221 83% 53%;
-    --chart-1: 221 83% 53%;
-    --chart-2: 263 70% 58%;
-    --chart-3: 142 71% 45%;
-    --chart-4: 38 92% 50%;
-    --chart-5: 0 84% 60%;
-    --shadow-card: 0 1px 3px rgba(0,0,0,0.4);
-    --shadow-hover: 0 8px 32px rgba(37,99,235,0.25);
-    --education-blue: 221 83% 53%;
-    --education-green: 142 71% 45%;
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
   }
 }
 
 @layer base {
-<<<<<<< HEAD
   * {
     @apply border-border;
   }
 
   html {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-=======
-  * { @apply border-border; }
-
-  html {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color-scheme: light;
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
   }
 
   body {
@@ -296,10 +166,7 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-<<<<<<< HEAD
   /* Custom scrollbar */
-=======
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
   * {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--border)) transparent;
@@ -309,20 +176,14 @@
 }
 
 @layer utilities {
-<<<<<<< HEAD
   /* Gradient text */
   .gradient-text {
     background: var(--gradient-button);
-=======
-  .gradient-text {
-    background: var(--gradient-primary);
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
   }
 
-<<<<<<< HEAD
   /* Premium gradient background */
   .bg-gradient-main   { background: var(--gradient-main); }
   .bg-gradient-premium { background: var(--gradient-premium); }
@@ -369,36 +230,3 @@
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-=======
-  .glass-card {
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(226,232,240,0.8);
-  }
-
-  .glow-primary { box-shadow: var(--shadow-glow); }
-
-  .pos-btn-active { transition: transform 100ms ease; }
-  .pos-btn-active:active { transform: scale(0.97); }
-
-  .fade-in { animation: fadeIn 200ms ease-out; }
-
-  .hover-lift {
-    transition: transform 200ms ease, box-shadow 200ms ease;
-  }
-  .hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
-  }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse-slow {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.6; }
-}
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)

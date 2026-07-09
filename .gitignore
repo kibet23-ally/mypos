@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -38,9 +37,3 @@ package.json.[0-9]*
 # Internal platform files
 historical_context.txt
 tasks/
-=======
-historical_context.txt
-/.skills
-/tasks
-package.json.[0-9]*
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)

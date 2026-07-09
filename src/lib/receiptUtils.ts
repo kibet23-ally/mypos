@@ -13,8 +13,11 @@ export interface ReceiptData {
   items: ReceiptItem[];
   subtotal: number;
   tax: number;
+  discount?: number | null;
   total: number;
   paymentMethod: string;
+  cashTendered?: number | null;
+  changeDue?: number | null;
   timestamp: Date;
 }
 

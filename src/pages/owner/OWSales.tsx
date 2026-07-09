@@ -76,7 +76,7 @@ export default function OWSales() {
     if (dateTo) q = q.lte('created_at', dateTo + 'T23:59:59');
     if (payFilter) q = q.eq('payment_method', payFilter);
     const { data, count } = await q;
-    setSales(Array.isArray(data) ? data : []);
+    setSales(Array.isArray(data) ? data as unknown as Sale[] : []);
     setTotal(count ?? 0);
     setLoading(false);
   }, [appUser?.tenant_id, page, search, dateFrom, dateTo, payFilter]);
@@ -107,7 +107,7 @@ export default function OWSales() {
 
   const openReceipt = (s: Sale) => {
     // Use stored subtotal if available; otherwise derive from total using tenant tax rate
-    const tenantTaxRate = appUser?.tenant?.tax_rate ?? 0;
+    const tenantTaxRate = 0; // tax_rate is per-product, not per-tenant
     const subtotal = s.subtotal ?? (tenantTaxRate > 0 ? s.total / (1 + tenantTaxRate / 100) : s.total);
     const tax = s.total - subtotal;
     const r: ReceiptData = {
