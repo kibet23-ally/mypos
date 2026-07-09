@@ -12,13 +12,14 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recha
 import { toast } from 'sonner';
 import {
   Package, Search, Plus, AlertTriangle, Pencil, Trash2, Loader2,
-  PackagePlus, TrendingUp, TrendingDown, RefreshCw,
+  PackagePlus, TrendingUp, TrendingDown, RefreshCw, Upload,
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { supabase } from '@/db/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatCurrency } from '@/lib/currency';
 import type { Product, Category } from '@/types/index';
+import ProductImportDialog from '@/components/products/ProductImportDialog';
 
 // ─── types ────────────────────────────────────────────────────────────────────
 type StockStatus = 'in-stock' | 'low' | 'out';
@@ -74,6 +75,7 @@ export default function OWProducts() {
   const [search,       setSearch]       = useState('');
   const [loading,      setLoading]      = useState(true);
   const [dialogOpen,   setDialogOpen]   = useState(false);
+  const [importOpen,   setImportOpen]   = useState(false);
   const [editProduct,  setEditProduct]  = useState<ProductRow | null>(null);
   const [saving,       setSaving]       = useState(false);
   const [deleting,     setDeleting]     = useState<string | null>(null);
@@ -338,11 +340,21 @@ export default function OWProducts() {
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             <span className="hidden sm:inline">Refresh</span>
           </Button>
+          <Button variant="outline" size="sm" className="h-9 gap-1.5 shrink-0" onClick={() => setImportOpen(true)}>
+            <Upload className="w-4 h-4" />
+            <span className="hidden sm:inline">Import</span>
+          </Button>
           <Button size="sm" className="h-9 gap-1.5 shrink-0 font-medium" onClick={openAdd}>
             <Plus className="w-4 h-4" /><span className="hidden sm:inline">Add Product</span>
           </Button>
         </div>
       </div>
+
+      <ProductImportDialog
+        open={importOpen}
+        onOpenChange={setImportOpen}
+        onComplete={fetchData}
+      />
 
       {/* Summary cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
