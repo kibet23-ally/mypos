@@ -13,7 +13,7 @@ Generates high-quality videos from text prompts or reference images using the So
 | Item | Details |
 |------|---------|
 | Create Video | `POST https://api-rLobRzgWxVr9@plugin-us.openai.azure.com/openai/v1/videos` |
-| Query Status | `POST https://api-DYJwnoM46d6a@app-cfk4gxvsmygz-api-DYJwnoM46d6a.gateway.appmedo.com` |
+| Query Status | `POST https://api-DYJwnoM46d6a@app-c786uxp01gxt-api-DYJwnoM46d6a.gateway.appmedo.com` |
 | Reference Image Video | `POST https://api-GYX1blQvVAja@plugin-us.openai.azure.com/openai/v1/videos` (with `input_reference` file) |
 | Remix Video | `POST https://api-m9xKVXpN3J8a@plugin-us.openai.azure.com/openai/v1/videos/remix` |
 | Model | `sora-2` |

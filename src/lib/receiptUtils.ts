@@ -6,10 +6,6 @@ export interface ReceiptItem {
   price: number;
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 export interface ReceiptData {
   transactionId: string;
   businessName: string;
@@ -17,20 +13,9 @@ export interface ReceiptData {
   items: ReceiptItem[];
   subtotal: number;
   tax: number;
-<<<<<<< HEAD
   total: number;
   paymentMethod: string;
   timestamp: Date;
-=======
-  discount?: number;
-  total: number;
-  paymentMethod: string;
-  timestamp: Date;
-  currencySymbol?: string;
-  // Cash payment extras
-  cashTendered?: number;
-  changeDue?: number;
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 }
 
 function fmt(n: number) {
@@ -132,29 +117,7 @@ export function generateReceiptPDF(data: ReceiptData): jsPDF {
   doc.setTextColor(15, 23, 42);
   doc.text('TOTAL', 5, y);
   doc.text(`KSh ${fmt(data.total)}`, W - 5, y, { align: 'right' });
-<<<<<<< HEAD
   y += 8;
-=======
-  y += 6;
-
-  // Cash tendered / change due (cash payments only)
-  if (data.paymentMethod === 'cash' && data.cashTendered != null) {
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    doc.setTextColor(71, 85, 105);
-    y += 1;
-    doc.text('Cash Tendered', 5, y);
-    doc.text(`KSh ${fmt(data.cashTendered)}`, W - 5, y, { align: 'right' });
-    y += 5;
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(21, 128, 61); // green-700
-    doc.text('Change Due', 5, y);
-    doc.text(`KSh ${fmt(data.changeDue ?? 0)}`, W - 5, y, { align: 'right' });
-    y += 3;
-  }
-
-  y += 2;
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 
   // Footer
   doc.setFont('helvetica', 'normal');
@@ -171,7 +134,6 @@ export function generateReceiptPDF(data: ReceiptData): jsPDF {
 }
 
 export function downloadReceipt(data: ReceiptData) {
-<<<<<<< HEAD
   const doc = generateReceiptPDF(data);
   doc.save(`receipt-${data.transactionId}.pdf`);
 }
@@ -185,58 +147,5 @@ export function printReceipt(data: ReceiptData) {
     win.addEventListener('load', () => {
       win.print();
     });
-=======
-  try {
-    console.log('📄 Starting receipt PDF generation for:', data.transactionId);
-    const doc = generateReceiptPDF(data);
-    const filename = `receipt-${data.transactionId || 'sale'}.pdf`;
-    doc.save(filename);
-    console.log(`✅ Receipt downloaded successfully: ${filename}`);
-  } catch (error) {
-    console.error('❌ Receipt download failed:', error);
-    alert(`Failed to download receipt PDF.\n\nError: ${error instanceof Error ? error.message : String(error)}\n\nPlease check browser console for details.`);
-  }
-}
-
-export function printReceipt(data: ReceiptData) {
-  try {
-    console.log('🖨️ Starting receipt print for:', data.transactionId);
-    const doc = generateReceiptPDF(data);
-    const blob = doc.output('blob');
-    const url = URL.createObjectURL(blob);
-
-    const win = window.open(url, '_blank');
-
-    if (win) {
-      win.addEventListener('load', () => {
-        setTimeout(() => {
-          win.print();
-        }, 300);
-      }, { once: true });
-
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    } else {
-      console.warn('Popup blocked, using direct print fallback');
-      const printWindow = window.open('', '_blank', 'width=800,height=600');
-      if (printWindow) {
-        printWindow.document.write(`
-          <html><head><title>Receipt ${data.transactionId}</title>
-          <style>body { font-family: monospace; padding: 20px; }</style>
-          </head><body>
-            <h2>Receipt ${data.transactionId}</h2>
-            <p>Preparing for print...</p>
-          </body></html>
-        `);
-        printWindow.document.close();
-        setTimeout(() => printWindow.print(), 800);
-      } else {
-        alert('Popup blocked by browser. Please allow popups and try again.');
-      }
-    }
-    console.log('🖨️ Print window initiated successfully');
-  } catch (error) {
-    console.error('❌ Receipt print failed:', error);
-    alert(`Failed to print receipt.\n\nError: ${error instanceof Error ? error.message : String(error)}`);
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
   }
 }

@@ -4,7 +4,7 @@
 
 | Item | Details |
 |------|---------|
-| Endpoint | `POST https://app-cfk4gxvsmygz-api-rY7JZvg0dqdL.gateway.appmedo.com/v1/videos/image2video` |
+| Endpoint | `POST https://app-c786uxp01gxt-api-rY7JZvg0dqdL.gateway.appmedo.com/v1/videos/image2video` |
 | Authentication | `X-Gateway-Authorization: Bearer ${INTEGRATIONS_API_KEY}` |
 | Content-Type | `application/json` |
 | Billing | Discounted price ¥70.00 / request (billed on submission regardless of final result) |
@@ -82,7 +82,7 @@ async function submitImageToVideo(params: {
   if (params.prompt) body.prompt = params.prompt;
 
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-rY7JZvg0dqdL.gateway.appmedo.com/v1/videos/image2video",
+    "https://app-c786uxp01gxt-api-rY7JZvg0dqdL.gateway.appmedo.com/v1/videos/image2video",
     {
       method: "POST",
       headers: {
@@ -153,7 +153,7 @@ serve(async (req: Request): Promise<Response> => {
   if (prompt) requestBody.prompt = prompt;
 
   const upstream = await fetch(
-    "https://app-cfk4gxvsmygz-api-rY7JZvg0dqdL.gateway.appmedo.com/v1/videos/image2video",
+    "https://app-c786uxp01gxt-api-rY7JZvg0dqdL.gateway.appmedo.com/v1/videos/image2video",
     {
       method: "POST",
       headers: {

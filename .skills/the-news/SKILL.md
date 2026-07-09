@@ -12,13 +12,13 @@ Provide global news from thousands of sources with exceptional response times. T
 
 | Endpoint | Method | URL |
 |----------|--------|-----|
-| Top Stories | GET | `https://app-cfk4gxvsmygz-api-wL1zlEdVM6DY.gateway.appmedo.com/v1/news/top` |
-| All News | GET | `https://app-cfk4gxvsmygz-api-W9z3M6eOKQVL.gateway.appmedo.com/v1/news/all` |
-| Similar News | GET | `https://app-cfk4gxvsmygz-api-m9xKXDbR1oka.gateway.appmedo.com/v1/news/similar/{uuid}` |
-| News by UUID | GET | `https://app-cfk4gxvsmygz-api-qYGWo8XA7M7Y.gateway.appmedo.com/v1/news/uuid/{uuid}` |
-| Sources | GET | `https://app-cfk4gxvsmygz-api-oLpZ7eD5jJ5a.gateway.appmedo.com/v1/news/sources` |
+| Top Stories | GET | `https://app-c786uxp01gxt-api-wL1zlEdVM6DY.gateway.appmedo.com/v1/news/top` |
+| All News | GET | `https://app-c786uxp01gxt-api-W9z3M6eOKQVL.gateway.appmedo.com/v1/news/all` |
+| Similar News | GET | `https://app-c786uxp01gxt-api-m9xKXDbR1oka.gateway.appmedo.com/v1/news/similar/{uuid}` |
+| News by UUID | GET | `https://app-c786uxp01gxt-api-qYGWo8XA7M7Y.gateway.appmedo.com/v1/news/uuid/{uuid}` |
+| Sources | GET | `https://app-c786uxp01gxt-api-oLpZ7eD5jJ5a.gateway.appmedo.com/v1/news/sources` |
 
-Base host: `app-cfk4gxvsmygz-api-wL1zlEdVM6DY.gateway.appmedo.com`
+Base host: `app-c786uxp01gxt-api-wL1zlEdVM6DY.gateway.appmedo.com`
 
 **Authentication:** All endpoints are platform-managed. The API key is read from the environment (`INTEGRATIONS_API_KEY`) and sent via the `X-Gateway-Authorization: Bearer <key>` header. Never pass credentials as query parameters.
 

@@ -12,8 +12,8 @@ Generate videos using the Kling AI Omni model, supporting text-to-video, image-t
 
 | Property | Value |
 |----------|-------|
-| Submit Endpoint | `POST https://app-cfk4gxvsmygz-api-k93RvqRrRZba.gateway.appmedo.com/v1/videos/omni-video` |
-| Query Endpoint | `GET https://app-cfk4gxvsmygz-api-pLVzAEz1ZQOL.gateway.appmedo.com/v1/videos/omni-video/{task_id}` |
+| Submit Endpoint | `POST https://app-c786uxp01gxt-api-k93RvqRrRZba.gateway.appmedo.com/v1/videos/omni-video` |
+| Query Endpoint | `GET https://app-c786uxp01gxt-api-pLVzAEz1ZQOL.gateway.appmedo.com/v1/videos/omni-video/{task_id}` |
 | Authentication | Bearer Token (platform_managed — key injected by platform) |
 | Request Format | `application/json` |
 | Response Format | JSON (includes video URL) |

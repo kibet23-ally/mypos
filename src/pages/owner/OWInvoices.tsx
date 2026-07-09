@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useInvoices } from '@/hooks/useInvoices';
@@ -105,10 +104,4 @@ export default function OWInvoices() {
       )}
     </div>
   );
-=======
-import ComingSoonPage from '@/components/common/ComingSoonPage';
-import { FileText } from 'lucide-react';
-export default function OWInvoices() {
-  return <ComingSoonPage title="Invoices" icon={FileText} />;
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 }

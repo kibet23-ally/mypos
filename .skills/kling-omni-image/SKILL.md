@@ -29,7 +29,7 @@ const apiKey = process.env["INTEGRATIONS_API_KEY"]!;
 
 async function generateOmniImage(params: SubmitParams): Promise<ImageResult[]> {
   // Step 1: Submit task
-  const submitResp = await fetch("https://app-cfk4gxvsmygz-api-2Y00Vzbe0MBY.gateway.appmedo.com/v1/images/omni-image", {
+  const submitResp = await fetch("https://app-c786uxp01gxt-api-2Y00Vzbe0MBY.gateway.appmedo.com/v1/images/omni-image", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -53,7 +53,7 @@ async function generateOmniImage(params: SubmitParams): Promise<ImageResult[]> {
     await new Promise(r => setTimeout(r, POLL_INTERVAL_MS));
 
     const queryResp = await fetch(
-      `https://app-cfk4gxvsmygz-api-n9QVxo8blgrL.gateway.appmedo.com/v1/images/omni-image/${taskId}`,
+      `https://app-c786uxp01gxt-api-n9QVxo8blgrL.gateway.appmedo.com/v1/images/omni-image/${taskId}`,
       {
         method: "GET",
         headers: {

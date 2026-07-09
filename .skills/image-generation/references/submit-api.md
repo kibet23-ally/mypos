@@ -5,7 +5,7 @@
 | Field | Value |
 |-------|-------|
 | Method | `POST` |
-| URL | `https://app-cfk4gxvsmygz-api-zYkZzKQJrBdL.gateway.appmedo.com/image-generation/submit` |
+| URL | `https://app-c786uxp01gxt-api-zYkZzKQJrBdL.gateway.appmedo.com/image-generation/submit` |
 | Content-Type | `application/json` |
 | Auth | `X-Gateway-Authorization: Bearer <key>` |
 
@@ -69,7 +69,7 @@ interface SubmitResponse {
 
 async function submitTask(parts: Part[]): Promise<SubmitResponse> {
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-zYkZzKQJrBdL.gateway.appmedo.com/image-generation/submit",
+    "https://app-c786uxp01gxt-api-zYkZzKQJrBdL.gateway.appmedo.com/image-generation/submit",
     {
       method: "POST",
       headers: {
@@ -149,7 +149,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    "https://app-cfk4gxvsmygz-api-zYkZzKQJrBdL.gateway.appmedo.com/image-generation/submit",
+    "https://app-c786uxp01gxt-api-zYkZzKQJrBdL.gateway.appmedo.com/image-generation/submit",
     {
       method: "POST",
       headers: {

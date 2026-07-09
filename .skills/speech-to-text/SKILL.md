@@ -16,7 +16,7 @@ Powered by the Whisper large-v3 model via the LemonFox API. Converts audio files
 
 | Property | Value |
 |----------|-------|
-| Endpoint | `POST https://app-cfk4gxvsmygz-api-DY8MNQoqOnMa.gateway.appmedo.com/v1/audio/transcriptions` |
+| Endpoint | `POST https://app-c786uxp01gxt-api-DY8MNQoqOnMa.gateway.appmedo.com/v1/audio/transcriptions` |
 | Auth | Bearer Token (platform_managed, `X-Gateway-Authorization` header) |
 | Content-Type | `multipart/form-data` (file upload) or `application/x-www-form-urlencoded` (URL submission) |
 | Max File Size | Upload: 100 MB; URL submission: 1 GB |

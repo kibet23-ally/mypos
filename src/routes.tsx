@@ -2,13 +2,8 @@ import type { ReactNode } from 'react';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import ActivatePage from './pages/ActivatePage';
-<<<<<<< HEAD
 import OnboardingPage from './pages/OnboardingPage';
 import DashboardPage from './pages/DashboardPage';
-=======
-import DashboardPage from './pages/DashboardPage';
-import DebugPage from './pages/DebugPage';
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 
 export interface RouteConfig {
   name: string;
@@ -45,27 +40,15 @@ export const routes: RouteConfig[] = [
     public: false,
   },
   {
-<<<<<<< HEAD
     name: 'Onboarding',
     path: '/onboarding',
     element: <OnboardingPage />,
     public: false,
   },
   {
-=======
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
     name: 'Dashboard',
     path: '/dashboard',
     element: <DashboardPage />,
     public: false,
   },
-<<<<<<< HEAD
-=======
-  {
-    name: 'Debug',
-    path: '/debug',
-    element: <DebugPage />,
-    public: true,
-  },
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 ];

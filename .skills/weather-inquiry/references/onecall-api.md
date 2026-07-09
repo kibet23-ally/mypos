@@ -10,7 +10,7 @@ This file covers the following four synchronous GET endpoints:
 
 ## Endpoint 1 — Current Weather + Forecast
 
-**Endpoint**: `GET https://app-cfk4gxvsmygz-api-wL1zlmgJGAlY.gateway.appmedo.com/data/3.0/onecall`
+**Endpoint**: `GET https://app-c786uxp01gxt-api-wL1zlmgJGAlY.gateway.appmedo.com/data/3.0/onecall`
 
 Returns current weather conditions, minute-by-minute precipitation forecast (1 hour), hourly forecast (48 hours), daily forecast (8 days), and national weather alerts.
 
@@ -48,7 +48,7 @@ Returns current weather conditions, minute-by-minute precipitation forecast (1 h
 
 ## Endpoint 2 — Historical Weather for a Timestamp
 
-**Endpoint**: `GET https://app-cfk4gxvsmygz-api-Aa2PZmgJq5OL.gateway.appmedo.com/data/3.0/onecall/timemachine`
+**Endpoint**: `GET https://app-c786uxp01gxt-api-Aa2PZmgJq5OL.gateway.appmedo.com/data/3.0/onecall/timemachine`
 
 Returns historical weather data for a specific Unix timestamp. Supports 1979-01-01 to +4 days in the future.
 
@@ -75,7 +75,7 @@ Returns historical weather data for a specific Unix timestamp. Supports 1979-01-
 
 ## Endpoint 3 — Daily Aggregated Statistics
 
-**Endpoint**: `GET https://app-cfk4gxvsmygz-api-2Y00zmgJ8lBY.gateway.appmedo.com/data/3.0/onecall/day_summary`
+**Endpoint**: `GET https://app-c786uxp01gxt-api-2Y00zmgJ8lBY.gateway.appmedo.com/data/3.0/onecall/day_summary`
 
 Returns daily aggregated weather statistics for a given date. Supports 1979-01-02 to +1.5 years in the future.
 
@@ -115,7 +115,7 @@ Returns daily aggregated weather statistics for a given date. Supports 1979-01-0
 
 ## Endpoint 4 — AI Weather Overview
 
-**Endpoint**: `GET https://app-cfk4gxvsmygz-api-oYA6ZxVqenDa.gateway.appmedo.com/data/3.0/onecall/overview`
+**Endpoint**: `GET https://app-c786uxp01gxt-api-oYA6ZxVqenDa.gateway.appmedo.com/data/3.0/onecall/overview`
 
 Returns an AI-generated natural-language weather summary for today or tomorrow.
 
@@ -174,7 +174,7 @@ async function getCurrentAndForecast(
   });
 
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-wL1zlmgJGAlY.gateway.appmedo.com/data/3.0/onecall?${params}`,
+    `https://app-c786uxp01gxt-api-wL1zlmgJGAlY.gateway.appmedo.com/data/3.0/onecall?${params}`,
     {
       method: "GET",
       headers: {
@@ -211,7 +211,7 @@ async function getWeatherByTimestamp(
   });
 
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-Aa2PZmgJq5OL.gateway.appmedo.com/data/3.0/onecall/timemachine?${params}`,
+    `https://app-c786uxp01gxt-api-Aa2PZmgJq5OL.gateway.appmedo.com/data/3.0/onecall/timemachine?${params}`,
     {
       method: "GET",
       headers: {
@@ -255,7 +255,7 @@ async function getDailyAggregation(
   });
 
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-2Y00zmgJ8lBY.gateway.appmedo.com/data/3.0/onecall/day_summary?${params}`,
+    `https://app-c786uxp01gxt-api-2Y00zmgJ8lBY.gateway.appmedo.com/data/3.0/onecall/day_summary?${params}`,
     {
       method: "GET",
       headers: {
@@ -292,7 +292,7 @@ async function getWeatherOverview(
   });
 
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-oYA6ZxVqenDa.gateway.appmedo.com/data/3.0/onecall/overview?${params}`,
+    `https://app-c786uxp01gxt-api-oYA6ZxVqenDa.gateway.appmedo.com/data/3.0/onecall/overview?${params}`,
     {
       method: "GET",
       headers: {
@@ -355,7 +355,7 @@ serve(async (req: Request): Promise<Response> => {
   if (lang) params.set("lang", lang);
 
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-wL1zlmgJGAlY.gateway.appmedo.com/data/3.0/onecall?${params}`,
+    `https://app-c786uxp01gxt-api-wL1zlmgJGAlY.gateway.appmedo.com/data/3.0/onecall?${params}`,
     {
       method: "GET",
       headers: {
@@ -392,9 +392,9 @@ serve(async (req: Request): Promise<Response> => {
 
 | Endpoint | Function filename | Required parameters | Upstream URL |
 |----------|-------------------|---------------------|--------------|
-| Historical weather for a timestamp | `weather-timemachine.ts` | `lat`, `lon`, `dt` | `https://app-cfk4gxvsmygz-api-Aa2PZmgJq5OL.gateway.appmedo.com/data/3.0/onecall/timemachine` |
-| Daily aggregated statistics | `weather-day-summary.ts` | `lat`, `lon`, `date` | `https://app-cfk4gxvsmygz-api-2Y00zmgJ8lBY.gateway.appmedo.com/data/3.0/onecall/day_summary` |
-| AI weather overview | `weather-overview.ts` | `lat`, `lon` | `https://app-cfk4gxvsmygz-api-oYA6ZxVqenDa.gateway.appmedo.com/data/3.0/onecall/overview` |
+| Historical weather for a timestamp | `weather-timemachine.ts` | `lat`, `lon`, `dt` | `https://app-c786uxp01gxt-api-Aa2PZmgJq5OL.gateway.appmedo.com/data/3.0/onecall/timemachine` |
+| Daily aggregated statistics | `weather-day-summary.ts` | `lat`, `lon`, `date` | `https://app-c786uxp01gxt-api-2Y00zmgJ8lBY.gateway.appmedo.com/data/3.0/onecall/day_summary` |
+| AI weather overview | `weather-overview.ts` | `lat`, `lon` | `https://app-c786uxp01gxt-api-oYA6ZxVqenDa.gateway.appmedo.com/data/3.0/onecall/overview` |
 
 ### Frontend invocation examples
 

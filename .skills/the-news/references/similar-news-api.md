@@ -1,6 +1,6 @@
 # Similar News API
 
-**Endpoint:** `GET https://app-cfk4gxvsmygz-api-m9xKXDbR1oka.gateway.appmedo.com/v1/news/similar/{uuid}`
+**Endpoint:** `GET https://app-c786uxp01gxt-api-m9xKXDbR1oka.gateway.appmedo.com/v1/news/similar/{uuid}`
 
 Discover articles similar to a specific story using its UUID. Supports filtering by category, source, language, and publication date with relevance scoring to find related content.
 
@@ -114,7 +114,7 @@ async function getSimilarNews(uuid: string, params: SimilarNewsParams = {}): Pro
 
   const qs = query.toString();
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-m9xKXDbR1oka.gateway.appmedo.com/v1/news/similar/${encodeURIComponent(uuid)}${qs ? `?${qs}` : ""}`,
+    `https://app-c786uxp01gxt-api-m9xKXDbR1oka.gateway.appmedo.com/v1/news/similar/${encodeURIComponent(uuid)}${qs ? `?${qs}` : ""}`,
     {
       method: "GET",
       headers: {
@@ -172,7 +172,7 @@ serve(async (req: Request): Promise<Response> => {
   const query = new URLSearchParams(params);
   const qs = query.toString();
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-m9xKXDbR1oka.gateway.appmedo.com/v1/news/similar/${encodeURIComponent(uuid)}${qs ? `?${qs}` : ""}`,
+    `https://app-c786uxp01gxt-api-m9xKXDbR1oka.gateway.appmedo.com/v1/news/similar/${encodeURIComponent(uuid)}${qs ? `?${qs}` : ""}`,
     {
       method: "GET",
       headers: {

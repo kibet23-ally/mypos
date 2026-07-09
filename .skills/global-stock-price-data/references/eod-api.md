@@ -1,6 +1,6 @@
 # End-of-day Historical Data API
 
-**Endpoint:** `GET https://app-cfk4gxvsmygz-api-V9gDze3qV2PL.gateway.appmedo.com/v1/data/eod`
+**Endpoint:** `GET https://app-c786uxp01gxt-api-V9gDze3qV2PL.gateway.appmedo.com/v1/data/eod`
 
 Retrieve historical end-of-day OHLCV data for US stocks (adjusted for splits), plus crypto and forex history. Supports day/week/month/quarter/year intervals and date range filtering.
 
@@ -79,7 +79,7 @@ async function getEodData(symbol: string, params: EodParams = {}): Promise<EodRe
   if (params.format)             query.set("format", params.format);
 
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-V9gDze3qV2PL.gateway.appmedo.com/v1/data/eod?${query.toString()}`,
+    `https://app-c786uxp01gxt-api-V9gDze3qV2PL.gateway.appmedo.com/v1/data/eod?${query.toString()}`,
     { method: "GET", headers: { "Accept": "application/json" } }
   );
 
@@ -142,7 +142,7 @@ serve(async (req: Request): Promise<Response> => {
   const query = new URLSearchParams({ symbols, ...extraParams });
 
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-V9gDze3qV2PL.gateway.appmedo.com/v1/data/eod?${query.toString()}`,
+    `https://app-c786uxp01gxt-api-V9gDze3qV2PL.gateway.appmedo.com/v1/data/eod?${query.toString()}`,
     {
       method: "GET",
       headers: {

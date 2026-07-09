@@ -4,7 +4,7 @@
 
 | Item | Details |
 |------|---------|
-| Endpoint | `GET https://app-cfk4gxvsmygz-api-oYA6Z8wDBRDa.gateway.appmedo.com/v1/videos/image2video/{id}` |
+| Endpoint | `GET https://app-c786uxp01gxt-api-oYA6Z8wDBRDa.gateway.appmedo.com/v1/videos/image2video/{id}` |
 | Authentication | `X-Gateway-Authorization: Bearer ${INTEGRATIONS_API_KEY}` |
 | Content-Type | `application/json` |
 | Billing | Not billed |
@@ -74,7 +74,7 @@ interface QueryResponse {
 
 async function queryImageToVideoTask(taskId: string): Promise<QueryResponse> {
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-oYA6Z8wDBRDa.gateway.appmedo.com/v1/videos/image2video/${encodeURIComponent(taskId)}`,
+    `https://app-c786uxp01gxt-api-oYA6Z8wDBRDa.gateway.appmedo.com/v1/videos/image2video/${encodeURIComponent(taskId)}`,
     {
       method: "GET",
       headers: {
@@ -187,7 +187,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream query API ---
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-oYA6Z8wDBRDa.gateway.appmedo.com/v1/videos/image2video/${encodeURIComponent(taskId)}`,
+    `https://app-c786uxp01gxt-api-oYA6Z8wDBRDa.gateway.appmedo.com/v1/videos/image2video/${encodeURIComponent(taskId)}`,
     {
       method: "GET",
       headers: {

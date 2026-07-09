@@ -1,6 +1,6 @@
 # All News API
 
-**Endpoint:** `GET https://app-cfk4gxvsmygz-api-W9z3M6eOKQVL.gateway.appmedo.com/v1/news/all`
+**Endpoint:** `GET https://app-c786uxp01gxt-api-W9z3M6eOKQVL.gateway.appmedo.com/v1/news/all`
 
 Access the complete news article database with comprehensive filtering by language, category, source, and publication date. Features advanced search capabilities with Boolean operators for precise content retrieval across all collected articles.
 
@@ -117,7 +117,7 @@ async function getAllNews(params: AllNewsParams = {}): Promise<AllNewsResponse> 
 
   const qs = query.toString();
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-W9z3M6eOKQVL.gateway.appmedo.com/v1/news/all${qs ? `?${qs}` : ""}`,
+    `https://app-c786uxp01gxt-api-W9z3M6eOKQVL.gateway.appmedo.com/v1/news/all${qs ? `?${qs}` : ""}`,
     {
       method: "GET",
       headers: {
@@ -176,7 +176,7 @@ serve(async (req: Request): Promise<Response> => {
   const query = new URLSearchParams(params);
   const qs = query.toString();
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-W9z3M6eOKQVL.gateway.appmedo.com/v1/news/all${qs ? `?${qs}` : ""}`,
+    `https://app-c786uxp01gxt-api-W9z3M6eOKQVL.gateway.appmedo.com/v1/news/all${qs ? `?${qs}` : ""}`,
     {
       method: "GET",
       headers: {

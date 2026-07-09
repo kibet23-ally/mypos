@@ -4,7 +4,7 @@
 
 | Item | Value |
 |------|-------|
-| Endpoint URL | `POST https://app-cfk4gxvsmygz-api-zYm4ze3j7XvL.gateway.appmedo.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse` |
+| Endpoint URL | `POST https://app-c786uxp01gxt-api-zYm4ze3j7XvL.gateway.appmedo.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse` |
 | HTTP Method | POST |
 | Content-Type | `application/json` |
 | Auth Header | `X-Gateway-Authorization: Bearer ${INTEGRATIONS_API_KEY}` |
@@ -100,7 +100,7 @@ interface AiSearchResult {
 
 async function callAiSearch(contents: ContentItem[]): Promise<AiSearchResult> {
   const response = await fetch(
-    "https://app-cfk4gxvsmygz-api-zYm4ze3j7XvL.gateway.appmedo.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+    "https://app-c786uxp01gxt-api-zYm4ze3j7XvL.gateway.appmedo.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
     {
       method: "POST",
       headers: {
@@ -217,7 +217,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream SSE stream ---
   const upstream = await fetch(
-    "https://app-cfk4gxvsmygz-api-zYm4ze3j7XvL.gateway.appmedo.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
+    "https://app-c786uxp01gxt-api-zYm4ze3j7XvL.gateway.appmedo.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse",
     {
       method: "POST",
       headers: {

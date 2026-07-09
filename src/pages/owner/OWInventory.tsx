@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -456,10 +455,4 @@ export default function OWInventory() {
       </Dialog>
     </div>
   );
-=======
-import ComingSoonPage from '@/components/common/ComingSoonPage';
-import { Layers } from 'lucide-react';
-export default function OWInventory() {
-  return <ComingSoonPage title="Inventory" icon={Layers} />;
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
 }

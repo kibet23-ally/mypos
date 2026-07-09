@@ -1,6 +1,6 @@
 # Top Stories API
 
-**Endpoint:** `GET https://app-cfk4gxvsmygz-api-wL1zlEdVM6DY.gateway.appmedo.com/v1/news/top`
+**Endpoint:** `GET https://app-c786uxp01gxt-api-wL1zlEdVM6DY.gateway.appmedo.com/v1/news/top`
 
 Retrieve live and historical top news stories worldwide with comprehensive filtering options including country, language, category, source, and publication date. Supports advanced search queries with Boolean operators and relevance scoring.
 
@@ -120,7 +120,7 @@ async function getTopStories(params: TopStoriesParams = {}): Promise<TopStoriesR
 
   const qs = query.toString();
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-wL1zlEdVM6DY.gateway.appmedo.com/v1/news/top${qs ? `?${qs}` : ""}`,
+    `https://app-c786uxp01gxt-api-wL1zlEdVM6DY.gateway.appmedo.com/v1/news/top${qs ? `?${qs}` : ""}`,
     {
       method: "GET",
       headers: {
@@ -173,7 +173,7 @@ serve(async (req: Request): Promise<Response> => {
   const query = new URLSearchParams(params);
   const qs = query.toString();
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-wL1zlEdVM6DY.gateway.appmedo.com/v1/news/top${qs ? `?${qs}` : ""}`,
+    `https://app-c786uxp01gxt-api-wL1zlEdVM6DY.gateway.appmedo.com/v1/news/top${qs ? `?${qs}` : ""}`,
     {
       method: "GET",
       headers: {

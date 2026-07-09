@@ -4,7 +4,7 @@
 
 | Item | Details |
 |------|---------|
-| Endpoint | `GET https://app-cfk4gxvsmygz-api-M9v0wzOkZXGY.gateway.appmedo.com/v1/images/generations/{task_id}` |
+| Endpoint | `GET https://app-c786uxp01gxt-api-M9v0wzOkZXGY.gateway.appmedo.com/v1/images/generations/{task_id}` |
 | Function | Query the status and result of a single image generation task. Returns image URLs once the task completes. |
 | Billing | Free (not billed) |
 
@@ -56,7 +56,7 @@ async function queryImageTask(taskId: string): Promise<{
   };
 }> {
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-M9v0wzOkZXGY.gateway.appmedo.com/v1/images/generations/${taskId}`,
+    `https://app-c786uxp01gxt-api-M9v0wzOkZXGY.gateway.appmedo.com/v1/images/generations/${taskId}`,
     {
       method: "GET",
       headers: {
@@ -158,7 +158,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-M9v0wzOkZXGY.gateway.appmedo.com/v1/images/generations/${taskId}`,
+    `https://app-c786uxp01gxt-api-M9v0wzOkZXGY.gateway.appmedo.com/v1/images/generations/${taskId}`,
     {
       method: "GET",
       headers: {

@@ -14,8 +14,8 @@ This plugin contains two endpoints:
 
 | Endpoint | Method | Description | Billing |
 |----------|--------|-------------|---------|
-| `POST https://app-cfk4gxvsmygz-api-W9z3M6eONl3L.gateway.appmedo.com/parse/image` | POST | Core OCR endpoint supporting URL / file upload / Base64 input methods, with advanced features such as table recognition and coordinate overlay | Enabled (per-call billing) |
-| `GET https://app-cfk4gxvsmygz-api-m9xKXDbRplNa.gateway.appmedo.com/parse/imageurl` | GET | Simplified GET endpoint supporting URL-only image submission, suitable for quick integration | Not billed |
+| `POST https://app-c786uxp01gxt-api-W9z3M6eONl3L.gateway.appmedo.com/parse/image` | POST | Core OCR endpoint supporting URL / file upload / Base64 input methods, with advanced features such as table recognition and coordinate overlay | Enabled (per-call billing) |
+| `GET https://app-c786uxp01gxt-api-m9xKXDbRplNa.gateway.appmedo.com/parse/imageurl` | GET | Simplified GET endpoint supporting URL-only image submission, suitable for quick integration | Not billed |
 
 > Prefer the **GET /parse/imageurl** endpoint (free) for simple URL-based image recognition. Use the **POST /parse/image** endpoint only when you need file upload, Base64 input, table recognition, coordinate overlay, or other advanced features.
 

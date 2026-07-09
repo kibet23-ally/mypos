@@ -1,7 +1,7 @@
 # Query Task — Omni-Image (Single)
 
 **API ID:** `api-n9QVxo8blgrL`
-**Endpoint:** `GET https://app-cfk4gxvsmygz-api-n9QVxo8blgrL.gateway.appmedo.com/v1/images/omni-image/{task_id}`
+**Endpoint:** `GET https://app-c786uxp01gxt-api-n9QVxo8blgrL.gateway.appmedo.com/v1/images/omni-image/{task_id}`
 
 ## Overview
 
@@ -98,7 +98,7 @@ interface QueryResult {
 
 async function queryOmniImageTask(taskId: string): Promise<QueryResult> {
   const response = await fetch(
-    `https://app-cfk4gxvsmygz-api-n9QVxo8blgrL.gateway.appmedo.com/v1/images/omni-image/${taskId}`,
+    `https://app-c786uxp01gxt-api-n9QVxo8blgrL.gateway.appmedo.com/v1/images/omni-image/${taskId}`,
     {
       method: "GET",
       headers: {
@@ -225,7 +225,7 @@ serve(async (req: Request): Promise<Response> => {
 
   // --- Call upstream ---
   const upstream = await fetch(
-    `https://app-cfk4gxvsmygz-api-n9QVxo8blgrL.gateway.appmedo.com/v1/images/omni-image/${taskId}`,
+    `https://app-c786uxp01gxt-api-n9QVxo8blgrL.gateway.appmedo.com/v1/images/omni-image/${taskId}`,
     {
       method: "GET",
       headers: {

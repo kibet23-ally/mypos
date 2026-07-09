@@ -150,21 +150,12 @@ function PaymentModal({ tenantId, onSuccess, onClose }: { tenantId: string; onSu
         let attempts = 0;
         const poll = setInterval(async () => {
           attempts++;
-<<<<<<< HEAD
           const { data: sub } = await supabase
             .from('subscriptions')
             .select('status')
             .eq('tenant_id', tenantId)
             .maybeSingle();
           if (sub?.status === 'active') {
-=======
-          const { data: lic } = await supabase
-            .from('payment_licenses')
-            .select('status')
-            .eq('tenant_id', tenantId)
-            .maybeSingle();
-          if (lic?.status === 'active') {
->>>>>>> b72e8c4 (feat: dynamic multi-currency support, edge function fixes)
             clearInterval(poll);
             toast.success('Payment confirmed! Subscription activated.');
             onSuccess();

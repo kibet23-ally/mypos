@@ -44,7 +44,7 @@ async function submitImage2VideoTask(params: {
   external_task_id?: string;
   callback_url?: string;
 }): Promise<string> {
-  const response = await fetch("https://app-cfk4gxvsmygz-api-eLMlJj3KJD89.gateway.appmedo.com/v1/videos/image2video", {
+  const response = await fetch("https://app-c786uxp01gxt-api-eLMlJj3KJD89.gateway.appmedo.com/v1/videos/image2video", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -69,7 +69,7 @@ async function pollUntilDone(taskId: string): Promise<{ id: string; url: string;
     await new Promise(r => setTimeout(r, POLL_INTERVAL_MS));
 
     const res = await fetch(
-      `https://app-cfk4gxvsmygz-api-rLobzpqX85m9.gateway.appmedo.com/v1/videos/image2video/${taskId}`,
+      `https://app-c786uxp01gxt-api-rLobzpqX85m9.gateway.appmedo.com/v1/videos/image2video/${taskId}`,
       {
         method: "GET",
         headers: {

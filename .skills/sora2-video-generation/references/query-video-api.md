@@ -6,7 +6,7 @@ Poll the status of a Sora 2 video generation job. Call this repeatedly after sub
 
 | Item | Details |
 |------|---------|
-| Endpoint | `POST https://api-DYJwnoM46d6a@app-cfk4gxvsmygz-api-DYJwnoM46d6a.gateway.appmedo.com` |
+| Endpoint | `POST https://api-DYJwnoM46d6a@app-c786uxp01gxt-api-DYJwnoM46d6a.gateway.appmedo.com` |
 | Content-Type | `application/json` |
 | Auth | Platform-managed (`INTEGRATIONS_API_KEY`) |
 | Billing | Not billed |
@@ -103,7 +103,7 @@ interface VideoStatusResponse {
 
 async function queryVideoStatus(videoId: string): Promise<VideoStatusResponse> {
   const response = await fetch(
-    "https://api-DYJwnoM46d6a@app-cfk4gxvsmygz-api-DYJwnoM46d6a.gateway.appmedo.com",
+    "https://api-DYJwnoM46d6a@app-c786uxp01gxt-api-DYJwnoM46d6a.gateway.appmedo.com",
     {
       method: "POST",
       headers: {
@@ -195,7 +195,7 @@ serve(async (req: Request): Promise<Response> => {
   }
 
   const upstream = await fetch(
-    "https://api-DYJwnoM46d6a@app-cfk4gxvsmygz-api-DYJwnoM46d6a.gateway.appmedo.com",
+    "https://api-DYJwnoM46d6a@app-c786uxp01gxt-api-DYJwnoM46d6a.gateway.appmedo.com",
     {
       method: "POST",
       headers: {
