@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import { useNavItems } from '@/lib/navConfig';
 import { canAccessView } from '@/components/common/RouteGuard';
+import { DashboardNavContext } from '@/contexts/DashboardNavContext';
 import { ShieldOff } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -141,10 +142,12 @@ export default function DashboardPage() {
   );
 
   return (
-    <DashboardLayout activeKey={activeKey} onNavChange={setActiveKey}>
-      <Suspense fallback={<PageLoader />}>
-        {currentView}
-      </Suspense>
-    </DashboardLayout>
+    <DashboardNavContext.Provider value={{ navigate: setActiveKey }}>
+      <DashboardLayout activeKey={activeKey} onNavChange={setActiveKey}>
+        <Suspense fallback={<PageLoader />}>
+          {currentView}
+        </Suspense>
+      </DashboardLayout>
+    </DashboardNavContext.Provider>
   );
 }
