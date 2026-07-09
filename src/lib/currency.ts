@@ -39,31 +39,20 @@ export function getCurrencyByCode(code: string): CurrencyOption {
 
 // ─── Core formatter ───────────────────────────────────────────────────────────
 /**
- * Format a monetary value.
+ * Format a monetary value with full thousand-separated precision.
+ * Never abbreviates (no k/M/B) — used consistently across dashboard cards,
+ * reports, analytics, receipts, invoices, and financial summaries.
+ *
  * @param amount  numeric value
  * @param code    ISO 4217 currency code (default 'KES')
- * @param opts    optional Intl.NumberFormat options overrides
  *
  * Examples:
- *   formatCurrency(1500)           → "KSh 1,500.00"
- *   formatCurrency(1500, 'USD')    → "$ 1,500.00"
- *   formatCurrency(1500, 'KES', { symbol: true }) → "KSh 1,500.00"
+ *   formatCurrency(2000)     → "KSh 2,000.00"
+ *   formatCurrency(10800)    → "KSh 10,800.00"
+ *   formatCurrency(1500, 'USD') → "$ 1,500.00"
  */
-export function formatCurrency(
-  amount: number,
-  code = DEFAULT_CURRENCY.code,
-  opts: { compact?: boolean } = {},
-): string {
+export function formatCurrency(amount: number, code = DEFAULT_CURRENCY.code): string {
   const curr = getCurrencyByCode(code);
-
-  if (opts.compact) {
-    if (Math.abs(amount) >= 1_000_000) {
-      return `${curr.symbol} ${(amount / 1_000_000).toFixed(1)}M`;
-    }
-    if (Math.abs(amount) >= 1_000) {
-      return `${curr.symbol} ${(amount / 1_000).toFixed(1)}k`;
-    }
-  }
 
   const formatted = new Intl.NumberFormat(curr.locale, {
     minimumFractionDigits: 2,
@@ -71,13 +60,6 @@ export function formatCurrency(
   }).format(amount);
 
   return `${curr.symbol} ${formatted}`;
-}
-
-/**
- * Compact formatter for charts/dashboards: e.g. "KSh 3.8k"
- */
-export function formatCurrencyCompact(amount: number, code = DEFAULT_CURRENCY.code): string {
-  return formatCurrency(amount, code, { compact: true });
 }
 
 /**
