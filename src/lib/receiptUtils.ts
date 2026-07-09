@@ -1,4 +1,5 @@
 import jsPDF from 'jspdf';
+import { formatAmount } from '@/lib/currency';
 
 export interface ReceiptItem {
   name: string;
@@ -22,19 +23,22 @@ export interface ReceiptData {
   cashTendered?: number;
   /** Change returned to the customer */
   changeDue?: number;
+  /** ISO 4217 currency code — defaults to KES if not supplied */
+  currencyCode?: string;
 }
 
-function fmt(n: number) {
-  return n.toFixed(2);
-}
-
-const CURRENCY = 'KSh';
 const TAX_RATE_LABEL = '16% VAT'; // Kenya standard VAT
 
 export function generateReceiptPDF(data: ReceiptData): jsPDF {
   const doc = new jsPDF({ unit: 'mm', format: [80, 200], orientation: 'portrait' });
   const W = 80;
   let y = 8;
+
+  // Shared formatter — full amount with thousand separators, no k/M/B
+  // abbreviation, matching the rest of the app (src/lib/currency.ts).
+  const code = data.currencyCode ?? 'KES';
+  const symbol = code === 'KES' ? 'KSh' : code;
+  const fmt = (n: number) => `${symbol} ${formatAmount(n, code)}`;
 
   const center = (text: string, size = 9) => {
     doc.setFontSize(size);
@@ -100,7 +104,7 @@ export function generateReceiptPDF(data: ReceiptData): jsPDF {
     const name = item.name.length > 22 ? item.name.slice(0, 21) + '…' : item.name;
     doc.text(name, 5, y);
     doc.text(String(item.qty), 44, y, { align: 'center' });
-    doc.text(`KSh ${fmt(itemTotal)}`, W - 5, y, { align: 'right' });
+    doc.text(fmt(itemTotal), W - 5, y, { align: 'right' });
     y += 5;
   }
 
@@ -110,10 +114,10 @@ export function generateReceiptPDF(data: ReceiptData): jsPDF {
   doc.setFontSize(8);
   doc.setTextColor(71, 85, 105);
   doc.text('Subtotal', 5, y);
-  doc.text(`KSh ${fmt(data.subtotal)}`, W - 5, y, { align: 'right' });
+  doc.text(fmt(data.subtotal), W - 5, y, { align: 'right' });
   y += 5;
   doc.text('Tax (16% VAT)', 5, y);
-  doc.text(`KSh ${fmt(data.tax)}`, W - 5, y, { align: 'right' });
+  doc.text(fmt(data.tax), W - 5, y, { align: 'right' });
   y += 3;
 
   line();
@@ -122,7 +126,7 @@ export function generateReceiptPDF(data: ReceiptData): jsPDF {
   doc.setFontSize(11);
   doc.setTextColor(15, 23, 42);
   doc.text('TOTAL', 5, y);
-  doc.text(`KSh ${fmt(data.total)}`, W - 5, y, { align: 'right' });
+  doc.text(fmt(data.total), W - 5, y, { align: 'right' });
   y += 8;
 
   // Footer
