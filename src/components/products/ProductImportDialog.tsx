@@ -20,6 +20,7 @@ interface ParsedRow {
   rowNumber: number;
   name: string;
   category: string;
+  category_id: string | null;
   price: number | null;
   stock: number | null;
   sku: string;
@@ -114,12 +115,34 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
         return;
       }
 
-      // Fetch existing products once, for dedup matching
-      const { data: existing } = await supabase
-        .from('products')
-        .select('id, name, sku, barcode')
-        .eq('tenant_id', appUser?.tenant_id);
+      // Fetch existing products AND categories once, for dedup/category matching
+      const [{ data: existing }, { data: existingCats }] = await Promise.all([
+        supabase.from('products').select('id, name, sku, barcode').eq('tenant_id', appUser?.tenant_id),
+        supabase.from('categories').select('id, name').eq('tenant_id', appUser?.tenant_id),
+      ]);
       const existingProducts = existing ?? [];
+      const categoryMap = new Map<string, string>(
+        (existingCats ?? []).map(c => [c.name.trim().toLowerCase(), c.id])
+      );
+
+      // Auto-create any categories mentioned in the file that don't exist yet —
+      // non-technical users type category names, not UUIDs, so the template
+      // asks for a name and we resolve/create the FK behind the scenes.
+      const fileCategoryNames = new Set(
+        raw.map(r => String(r[headerMap[normalizeHeader('Category')]] ?? '').trim()).filter(Boolean)
+      );
+      const missingCategoryNames = [...fileCategoryNames].filter(n => !categoryMap.has(n.toLowerCase()));
+      if (missingCategoryNames.length > 0) {
+        const { data: created, error: catErr } = await supabase
+          .from('categories')
+          .insert(missingCategoryNames.map(name => ({ name, tenant_id: appUser?.tenant_id })))
+          .select('id, name');
+        if (catErr) {
+          console.error('[ProductImport] Category auto-create failed:', catErr);
+        } else {
+          (created ?? []).forEach(c => categoryMap.set(c.name.trim().toLowerCase(), c.id));
+        }
+      }
 
       const seenInFile = new Set<string>(); // tracks sku/barcode/name already claimed within this file
 
@@ -170,6 +193,7 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
         return {
           rowNumber: i + 2,
           name, category,
+          category_id: category ? categoryMap.get(category.toLowerCase()) ?? null : null,
           price: price ?? null,
           stock: stock ?? null,
           sku: sku || genSku(name || 'PRODUCT', i),
@@ -219,8 +243,9 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
         sku: r.sku,
         barcode: r.barcode || null,
         category: r.category,
+        category_id: r.category_id,
         price: r.price,
-        buying_cost: r.buying_cost,
+        cost_price: r.buying_cost,
         stock: r.stock,
         unit: r.unit,
       }));
@@ -241,8 +266,9 @@ export default function ProductImportDialog({ open, onOpenChange, onComplete }: 
         supabase.from('products').update({
           name: r.name,
           category: r.category,
+          category_id: r.category_id,
           price: r.price,
-          buying_cost: r.buying_cost,
+          cost_price: r.buying_cost,
           stock: r.stock,
           unit: r.unit,
           ...(r.barcode ? { barcode: r.barcode } : {}),
