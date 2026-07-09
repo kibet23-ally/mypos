@@ -15,11 +15,14 @@ import { toast } from 'sonner';
 import {
   Boxes, Search, AlertTriangle, TrendingDown, TrendingUp,
   RefreshCw, PackagePlus, Loader2, DollarSign, Package,
+  Upload, Download,
 } from 'lucide-react';
+import * as XLSX from 'xlsx';
 import { useForm } from 'react-hook-form';
 import { supabase } from '@/db/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatCurrency } from '@/lib/currency';
+import InventoryImportDialog from '@/components/inventory/InventoryImportDialog';
 
 interface InventoryRow {
   id: string;
@@ -70,6 +73,7 @@ export default function OWInventory() {
   const [loading,   setLoading]   = useState(true);
   const [adjustRow, setAdjustRow] = useState<InventoryRow | null>(null);
   const [saving,    setSaving]    = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
 
   const form = useForm<AdjustForm>({
     defaultValues: { mode: 'add', quantity: '', reason: 'adjustment', notes: '' },
@@ -194,6 +198,23 @@ export default function OWInventory() {
     .slice(0, 8)
     .map(r => ({ name: r.product_name.substring(0, 14), qty: r.quantity_on_hand }));
 
+  const exportInventory = () => {
+    if (rows.length === 0) { toast.error('Nothing to export yet'); return; }
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet([
+      ['Product', 'SKU', 'Category', 'Quantity On Hand', 'Reorder Level', 'Unit', 'Cost Price', 'Selling Price', 'Stock Value', 'Status'],
+      ...rows.map(r => [
+        r.product_name, r.sku ?? '', r.category_name, r.quantity_on_hand, r.reorder_level,
+        r.unit, r.cost_price, r.price, r.stock_value, STATUS_CFG[r.status].label,
+      ]),
+    ]);
+    ws['!cols'] = [{ wch: 26 }, { wch: 14 }, { wch: 16 }, { wch: 16 }, { wch: 14 }, { wch: 8 }, { wch: 12 }, { wch: 12 }, { wch: 14 }, { wch: 12 }];
+    XLSX.utils.book_append_sheet(wb, ws, 'Inventory');
+    const dateStr = new Date().toISOString().slice(0, 10);
+    XLSX.writeFile(wb, `posifypro_inventory_export_${dateStr}.xlsx`);
+    toast.success(`Exported ${rows.length} products`);
+  };
+
   return (
     <div className="space-y-6 fade-in">
       <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -201,11 +222,23 @@ export default function OWInventory() {
           <h2 className="text-xl font-bold text-foreground text-balance">Inventory Management</h2>
           <p className="text-sm text-muted-foreground mt-0.5">Stock levels, movements, and valuation</p>
         </div>
-        <Button variant="outline" size="sm" onClick={load} disabled={loading} className="gap-2 shrink-0">
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-          Refresh
-        </Button>
+        <div className="flex items-center gap-2 flex-wrap">
+          <Button variant="outline" size="sm" onClick={load} disabled={loading} className="gap-2 shrink-0">
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+          <Button variant="outline" size="sm" onClick={exportInventory} className="gap-2 shrink-0">
+            <Download className="w-3.5 h-3.5" />
+            Export
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => setImportOpen(true)} className="gap-2 shrink-0">
+            <Upload className="w-3.5 h-3.5" />
+            Import
+          </Button>
+        </div>
       </div>
+
+      <InventoryImportDialog open={importOpen} onOpenChange={setImportOpen} onComplete={load} />
 
       {/* KPI row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
